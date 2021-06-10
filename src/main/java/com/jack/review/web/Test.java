@@ -1,5 +1,6 @@
 package com.jack.review.web;
 
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Test {
 
     @GetMapping("/hello")
-    public String hello(){
+    public String hello(@Nullable String str){
         return "hello world!";
     }
 }

@@ -1,5 +1,7 @@
 package com.jack.review.web;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -21,6 +23,17 @@ public class FunctionTest {
     }
 
     public static void main(String[] args) {
+
+        List<Long> list = new ArrayList<>();
+        list.add(1L);
+        list.add(2L);
+        list.add(3L);
+
+       Long[] arr =  list.toArray(new Long[0]);;
+        System.out.println(arr[0]);
+        System.out.println(arr[1]);
+        System.out.println(arr[2]);
+
         // 定义一个字符串数组
         String s = "123456789";
         // 调用change方法，传递字符串类型的整数，和Lambda表达式
