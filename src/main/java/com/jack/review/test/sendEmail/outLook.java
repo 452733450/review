@@ -1,5 +1,7 @@
 package com.jack.review.test.sendEmail;
 
+import com.jack.review.exception.ServiceException;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -116,15 +118,17 @@ public class outLook {
     /*static String  USER_NAME   ="client@mingshiim.com";
     static String  PASSWORD    = "Ms5665404361";*/
 
-    static String  USER_NAME   ="meishi@mingshiim.com";
-    static String  PASSWORD    = "Mn123321";
+    /*static String  USER_NAME   ="meishi@mingshiim.com";
+    static String  PASSWORD    = "Mn123321";*/
 
-    /*static String  USER_NAME   ="xiayouJack@outlook.com";
-    static String  PASSWORD    = "pb951028";*/
+    static String  USER_NAME   ="xiayouJack@outlook.com";
+    static String  PASSWORD    = "pb951028";
 
     public static boolean sendSMTPMail(String to, String text, String title) {
         // smtp.partner.outlook.cn   smtp.office365.com  40.73.164.194 pop3
-        String host = "smtp.partner.outlook.cn";
+        /*String host = "smtp.partner.outlook.cn";*/
+        /*outLook用smtp.office365.com这个地址*/
+        String host = "smtp.office365.com";
         String mailStoreType = "smtp";
         String popPort = "587";
         final Properties props = new Properties();
@@ -161,6 +165,9 @@ public class outLook {
             Transport.send(message);
             return true;
         } catch (Exception e) {
+            if(e instanceof AuthenticationFailedException){
+                throw new ServiceException("账号或密码不正确");
+            }
             e.printStackTrace();
         }
         return false;

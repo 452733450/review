@@ -1,8 +1,6 @@
 package com.jack.review.test.stream;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,9 +11,16 @@ import java.util.stream.Stream;
  */
 public class map_flatMap {
 
+    /*List<Long> userIds = Stream.of(productDetailReq.getSaleUserIds(), productDetailReq.getProjectSaleUserIds())
+            .filter(Objects::nonNull)
+            .flatMap(Collection::stream)
+            .distinct()
+            .collect(Collectors.toList());*/
+
     public static void main(String[] args) {
         // map：接收一个函数作为参数，该函数会被应用到每个元素上，并将其映射成一个新的元素。
         // flatMap：接收一个函数作为参数，将流中的每个值都换成另一个流，然后把所有流连接成一个流。
+        test2();
     }
 
     // 英文字符串数组的元素全部改为大写。整数数组每个元素+3。 map
