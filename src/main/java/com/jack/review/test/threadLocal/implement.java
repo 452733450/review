@@ -7,12 +7,30 @@ package com.jack.review.test.threadLocal;
  * @see: https://mp.weixin.qq.com/s/XXtjJF7jMKs9S5TCplKhvw
  */
 public class implement {
-    static ThreadLocal<User> threadLocal = new ThreadLocal<>();
+    static ThreadLocal<User> userThreadLocal = new ThreadLocal<>();
     // ThreadLocal 主要用来做线程变量的隔离
+
+    public static ThreadLocal<String> threadLocal = ThreadLocal.withInitial(()->"java金融");
     public static void main(String[] args) {
-        System.out.println(threadLocal.get());
+        /*System.out.println(threadLocal.get());
         Thread t = new Thread();
-        threadLocal.remove();
+        threadLocal.remove();*/
+        Thread t1 = new Thread(() -> {
+            System.out.println("获取初始值："+threadLocal.get());
+            threadLocal.set("关注：【java金融】");
+            System.out.println("获取修改后的值："+threadLocal.get());
+            threadLocal.remove();
+            System.out.println("-----------------");
+        });
+        t1.start();
+
+        Thread t2 = new Thread(()->{
+            System.out.println("获取初始值："+threadLocal.get());
+            threadLocal.set("关注：【java科技】");
+            System.out.println("获取修改后的值："+threadLocal.get());
+            threadLocal.remove();
+        });
+        t2.start();
     }
 
     private static void test(){
@@ -21,6 +39,6 @@ public class implement {
         int len = tab.length;
         int i = key.threadLocalHashCode & (len-1);
         hashcode & 操作其实就是 %数组长度取余数，例如：数组长度是4，hashCode % (4-1) 就找到要存放元素的数组下标*/
-        threadLocal.set(user);
+        userThreadLocal.set(user);
     }
 }

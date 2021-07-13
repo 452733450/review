@@ -20,6 +20,7 @@ public enum ChineseFoodFactory implements FoodFactory {
     B(){
         @Override
         public Food makeFood() {
+            System.out.println("要开始生产ChineseFoodB了");
             return new ChineseFoodB();
         }
     }

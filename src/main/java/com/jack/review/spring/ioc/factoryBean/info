@@ -1,0 +1,3 @@
+BeanFactory和FactoryBean其实没有什么比较性的，只是两者的名称特别接近，所以有时候会拿出来比较一番，BeanFactory是提供了IOC容器最基本的形式，给具体的IOC容器的实现提供了规范
+FactoryBean在IOC容器的基础上给Bean的实现加上了一个简单工厂模式和装饰模式，我们可以在getObject()方法中灵活配置
+FactoryBean 适用于 Bean 的创建过程比较复杂的场景，比如数据库连接池的创建

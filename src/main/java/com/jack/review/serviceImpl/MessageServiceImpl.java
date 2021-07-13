@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class MessageServiceImpl implements MessageService {
     @Override
     public String getMessage() {
-        Test.test();
+        /*Test.test();*/
         return "hello world";
     }
 

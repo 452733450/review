@@ -1,0 +1,3 @@
+https://www.cnblogs.com/hujunzheng/p/12570921.html(SpringMvc @Validated注解执行原理)
+https://bigbird.blog.csdn.net/article/details/117918138(SpringBoot参数校验及统一异常处理最佳实践)
+使用@Validated或者@Valid在基本验证功能上没有太多区别。但是在分组、注解地方、嵌套验证等功能上两个有所不同。

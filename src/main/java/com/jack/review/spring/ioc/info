@@ -1,0 +1,35 @@
+对于 IoC 来说，最重要的就是容器。容器管理着 Bean 的生命周期，控制着 Bean 的依赖注入。
+那么， Spring 如何设计容器的呢？
+Spring 作者 Rod Johnson 设计了两个接口用以表示容器。
+BeanFactory
+ApplicationContext
+BeanFactory 粗暴简单，可以理解为就是个 HashMap，Key 是 BeanName，Value 是 Bean 实例。通常只提供注册（put），获取（get）这两个功能。我们可以称之为 “低级容器”。
+ApplicationContext 可以称之为 “高级容器”。因为他比 BeanFactory 多了更多的功能。他继承了多个接口。因此具备了更多的功能。，该接口定义了一个refresh方法，用于刷新整个容器，即重新加载\刷新所有的bean
+高级容器依赖着低级容器，依赖着低级容器的getBean功能
+高级容器拥有更多的功能：支持不同的信息源头，可以访问资源文件，支持应用事件（Observer模式）
+
+ ClassPathXmlApplicationContext 的构造过程，实际就是 Spring IoC 的初始化过程。
+1.用户构造CPAC
+2.CPAC首先访问了“抽象高级容器”的final的refresh方法，这个方法是模板方法，
+所以需要回调子类（低级容器）的refreshBeanFactory方法，这个方法的作用是使用低级容器加载所有BeanDefinition和Properties到容器中
+3.低级容器加载成功后，高级容器开始处理一些回调，例如Bean后置处理器。回调setBeanFactory 方法。或者注册监听器等，发布事件，实例化单例 Bean 等等功能
+
+简单说就是：
+低级容器 加载配置文件（从 XML，数据库，Applet），并解析成 BeanDefinition 到低级容器中。
+加载成功后，高级容器启动高级功能，例如接口回调，监听器，自动实例化单例，发布事件等等功能。
+好，当我们创建好容器，就会使用 getBean 方法，获取 Bean
+从图中可以看出，getBean 的操作都是在低级容器里操作的。其中有个递归操作，这个是什么意思呢？
+假设：当 Bean_A 依赖着 Bean_B，而这个 Bean_A 在加载的时候，其配置的 ref = “Bean_B” 在解析的时候只是一个占位符，被放入了 Bean_A 的属性集合中，当调用 getBean 时，需要真正 Bean_B 注入到 Bean_A 内部时，就需要从容器中获取这个 Bean_B，因此产生了递归。
+为什么不是在加载的时候，就直接注入呢？因为加载的顺序不同，很可能 Bean_A 依赖的 Bean_B 还没有加载好，也就无法从容器中获取，你不能要求用户把 Bean 的加载顺序排列好，这是不人道的。
+所以，Spring 将其分为了 2 个步骤：
+加载所有的 Bean 配置成 BeanDefinition 到容器中，如果 Bean 有依赖关系，则使用占位符暂时代替。
+然后，在调用 getBean 的时候，进行真正的依赖注入，即如果碰到了属性是 ref 的（占位符），那么就从容器里获取这个 Bean，然后注入到实例中 —— 称之为依赖注入。
+可以看到，依赖注入实际上，只需要 “低级容器” 就可以实现。
+这就是 IoC。
+IoC 在 Spring 里，只需要低级容器就可以实现，2 个步骤：
+加载配置文件，解析成 BeanDefinition 放在 Map 里。
+调用 getBean 的时候，从 BeanDefinition 所属的 Map 里，拿出 Class 对象进行实例化，同时，如果有依赖关系，将递归调用 getBean 方法 —— 完成依赖注入。
+上面就是 Spring 低级容器（BeanFactory）的 IoC。
+至于高级容器 ApplicationContext，他包含了低级容器的功能，当他执行 refresh 模板方法的时候，将刷新整个容器的 Bean。同时其作为高级容器，包含了太多的功能。一句话，他不仅仅是 IoC。他支持不同信息源头，支持 BeanFactory 工具类，支持层级容器，支持访问文件资源，支持事件发布通知，支持接口回调等等。
+
+https://zhuanlan.zhihu.com/p/29344811(Spring IOC原理总结)

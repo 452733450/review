@@ -1,0 +1,25 @@
+https://bigbird.blog.csdn.net/article/details/118459958(Java线程池实战及JDK8的CompletableFuture详解)
+
+如果此时线程数小于核心线程数，那么就会新起一个线程来执行当前的任务。
+如果此时线程数大于核心线程数，那么就会将任务塞入阻塞队列中，等待被执行。
+如果阻塞队列满了，并且此时线程数小于最大线程数，那么会创建新线程来执行当前任务。
+如果阻塞队列满了，并且此时线程数大于最大线程数，那么会采取拒绝策略。
+
+以上就是任务提交给线程池后各种状况汇总，一个很容易出现理解错误的地方就是当线程数达到核心数的时候，任务是先入队，而不是先创建最大线程数。
+
+从上述可知，线程池里的线程不是一开始就直接拉满的，是根据任务量开始慢慢增多的，这就算一种懒加载，到用的时候再创建线程，节省资源。
+
+当线程池的任务缓存队列已满并且线程池中的线程数目达到maximumPoolSize时，如果还有任务到来就会采取任务拒绝策略，通常有以下四种策略：
+ThreadPoolExecutor.AbortPolicy:丢弃任务并抛出RejectedExecutionException异常。
+ThreadPoolExecutor.DiscardPolicy：丢弃任务，但是不抛出异常。
+ThreadPoolExecutor.DiscardOldestPolicy：丢弃队列最前面的任务，然后重新提交被拒绝的任务
+ThreadPoolExecutor.CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务
+
+AbortPolicy:直接抛出一个异常，默认策略
+DiscardPolicy: 直接丢弃任务
+DiscardOldestPolicy:抛弃下一个将要被执行的任务(最旧任务)
+CallerRunsPolicy:主线程中执行任务
+
+FixedThreadPool
+创建线程数量固定的线程池。核心线程数等于最大线程数，空闲时间为0，由于没有核心线程以外的线程，因此空闲时间不再起作用。不过可以使用allowCoreThreadTimeOut(true)来设置核心线程的销毁策略。
+等待队列使用的是没有指定容量的LinkedBlockingQueue，该队列默认容量是Integer.MAX_VALUE。因此可能会堆积大量的请求，从而导致OOM。

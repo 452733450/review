@@ -3,6 +3,7 @@ package com.jack.review.web;
 import com.jack.review.service.MessageService;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +29,7 @@ public class Test {
 </beans>*/
 
     @GetMapping("/hello")
-    public String hello(@Nullable String str){
+    public String hello(@Nullable @RequestBody String str){
         messageService.getMessage();
         return "hello world!";
     }

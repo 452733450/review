@@ -6,6 +6,7 @@ package com.jack.review.test.hashMap;
  * @Date: 2021/05/25/11:00
  */
 public class Principle {
+    /*https://mp.weixin.qq.com/s/jQX4hUKA0ac18njGAn1FQw*/
     public static void main(String[] args) {
 
     }
