@@ -2,6 +2,9 @@ https://www.jianshu.com/p/5097fde06d50
 https://blog.csdn.net/a745233700/article/details/110914620
 https://www.jianshu.com/p/8bb67ca11831
 https://zhuanlan.zhihu.com/p/84267654
+Spring三级缓存解决循环依赖(步骤)https://www.jianshu.com/p/d17795a605de
+
+
 
 一级缓存：单例池
 /** 保存所有的singletonBean的实例 */
@@ -78,6 +81,31 @@ doCreateBean()
 结果就是：a 最终的产物是代理 a，那 b 中其实也应该用代理 a，而现在 b 中用的却是原始的 a 代理 a 和原始的 a 不是一个对象，现在这就有问题了。
 
 
+为什么要使用三级缓存？
+解决代理对象（如aop）循环依赖的问题。
+例： a依赖b,b依赖a，同时a,b都被aop增强。
+首先明确aop的实现是通过 postBeanProcess后置处理器，在初始化之后做代理操作的。
+1 只使用二级缓存，且二级缓存缓存的是一个不完整的bean
+如果只使用二级缓存，且二级缓存缓存的是一个不完整的bean，这个时候a在设置属性的过程中去获取b（这个时候a还没有被aop的后置处理器增强），创建b的过程中，b依赖a，b去缓存中拿a拿到的是没有经过代理的a。就有问题。
 
+2 使用二级缓存，且二级缓存是一个工厂方法的缓存
+a依赖b，b依赖a，c。c又依赖a。a,b，c均aop增强。
+加载开始： a实例化，放入工厂缓存，装配b，b实例化，装配属性，拿到a,此时从工厂缓存中拿到代理后的a。a(b(a))
+由于a没加载完毕，不会放入一级缓存。这个时候b开始装配c,c实例化，装配属性a,又去工厂缓存中拿对象a。a(b(a、c(a)))
+这个时候拿到的a和b从工厂缓存不是一个对象。出现问题。（主要原因就是每次去工厂缓存中去拿代理后的对象时，都会调用一遍创建代理对象的方法，导致每次拿出来的代理对象不是同一个）
 
+https://www.cnblogs.com/semi-sub/p/13548479.html
+我们会发现再执行一遍singleFactory.getObject()方法又是一个新的代理对象，这就会有问题了，
+因为AService是单例的，每次执行singleFactory.getObject()方法又会产生新的代理对象，
+假设这里只有一级和三级缓存的话，我每次从三级缓存中拿到singleFactory对象，执行getObject()方法又会产生新的代理对象，这是不行的，
+因为AService是单例的，所有这里我们要借助二级缓存来解决这个问题，将执行了singleFactory.getObject()产生的对象放到二级缓存中去，
+后面去二级缓存中拿，没必要再执行一遍singletonFactory.getObject()方法再产生一个新的代理对象，保证始终只有一个代理对象。
+还有一个注意的点
+既然singleFactory.getObject()返回的是代理对象，那么注入的也应该是代理对象，我们可以看到注入的确实是经过CGLIB代理的AService对象。
+所以如果没有AOP的话确实可以两级缓存就可以解决循环依赖的问题，如果加上AOP，两级缓存是无法解决的，
+不可能每次执行singleFactory.getObject()方法都给我产生一个新的代理对象，所以还要借助另外一个缓存来保存产生的代理对象
+总结
+    前面先讲到bean的加载流程，了解了bean加载流程对spring如何解决循环依赖的问题很有帮助，
+    后面再分析到spring为什么需要利用到三级缓存解决循环依赖问题，而不是二级缓存。
+    网上可以试试AOP的情形，实践一下就能明白二级缓存为什么解决不了AOP代理的场景了
 
