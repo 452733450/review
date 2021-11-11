@@ -1,0 +1,26 @@
+https://zhuanlan.zhihu.com/p/408115006
+redo log
+redo log（重做日志）是InnoDB存储引擎独有的，它让MySQL拥有了崩溃恢复能力。
+比如MySQL实例挂了或宕机了，重启时，InnoDB存储引擎会使用redo log恢复数据，保证数据的持久性与完整性。
+
+每条redo记录由“表空间号+数据页号+偏移量+修改数据长度+具体修改的数据”组成
+
+刷盘策略
+innodb_flush_log_at_trx_commit
+设置为0的时候，表示每次事务提交时不进行刷盘操作(为0时，如果MySQL挂了或宕机可能会有1秒数据的丢失。)
+设置为1的时候，表示每次事务提交时都将进行刷盘操作（默认值）(为1时， 只要事务提交成功，redo log记录就 一定在硬盘里，不会有任何数据丢失。)
+设置为2的时候，表示每次事务提交时都只把redo log buffer内容写入page cache(如果仅仅只是MySQL挂了不会有任何数据丢失，但是宕机可能会有1秒数据的丢失。)
+
+外InnoDB存储引擎有一个后台线程，每隔1秒，就会把redo log buffer中的内容写到文件系统缓存（page cache）OS cache，然后调用fsync刷盘。
+除了后台线程每秒1次的轮询操作，还有一种情况，当redo log buffer占用的空间即将达到innodb_log_buffer_size一半的时候，后台线程会主动刷盘。
+
+日志文件组
+硬盘上存储的redo log日志文件不只一个，而是以一个日志文件组的形式出现的，每个的redo日志文件大小都是一样的。
+比如可以配置为一组4个文件，每个文件的大小是1GB，整个redo log日志文件组可以记录4G的内容。
+
+在个日志文件组中还有两个重要的属性，分别是write pos、checkpoint
+write pos是当前记录的位置，一边写一边后移
+checkpoint是当前要擦除的位置，也是往后推移
+每次刷盘redo log记录到日志文件组中，write pos位置就会后移更新。
+每次MySQL加载日志文件组恢复数据时，会清空加载过的redo log记录，并把checkpoint后移更新。
+write pos和checkpoint之间的还空着的部分可以用来写入新的redo log记录。

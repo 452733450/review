@@ -2,9 +2,9 @@ package com.jack.review.test.hashMap;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.collections4.MapUtils;
-import org.springframework.data.relational.core.sql.In;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Description:
@@ -18,8 +18,13 @@ public class mapUtils {
 
     private static void test(){
         HashMap<String,String> map = Maps.newHashMap();
+        ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap();
+        concurrentHashMap.put("1","2");
+        concurrentHashMap.get("1");
         map.put("1","2");
         map.put("2","2");
+        map.get("1");
+        HashMap<String,String> map1 = new HashMap<>(16);
         Long l = MapUtils.getLong(map,"1");
         System.out.println(l);
     }

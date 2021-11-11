@@ -1,1 +1,79 @@
 https://mp.weixin.qq.com/s/6m7_w4dqKs3hP5lAQGWdng(为什么我一定要彻底搞懂AOP？)
+https://juejin.cn/post/6844903856778772494#heading-11
+https://javadoop.com/post/spring-aop-source
+https://www.cnblogs.com/yanggb/p/11004887.html
+AOP是什么？
+AOP的编程思想就是把业务逻辑和横切的问题进行分离，从而达到解耦的目的，使代码的重用性和开发效率高（目的是重用代码，把公共的代码抽取出来）
+AOP的应用场景有哪些呢？
+1、日志记录
+2、权限验证
+3、效率检查（个人在代码上，喜欢用注解+切面，实现校验，redis分布式锁等功能）
+4、事务管理（spring 的事务就是用AOP实现的）
+springAop的底层是怎样实现的？
+1、JDK动态代理
+2、CGLIB代理
+是编译时期进行织入，还是运行期进行织入？
+---->运行期，生成字节码，再加载到虚拟机中，JDK是利用反射原理，CGLIB使用了ASM原理。
+初始化时期织入还是获取对象时织入？
+----》初始化的时候，已经将目标对象进行代理，放入到spring 容器中
+spring AOP 默认使用jdk动态代理还是cglib？
+-----》要看条件，如果实现了接口的类，是使用jdk。如果没实现接口，就使用cglib。
+spring AOP 和 AspectJ的关系？
+两者都是为了实现AOP这个目的，而出现的技术，spring aop 参考 AspectJ编程风格
+---》这里有个故事就是，原本spring aop 初期的时候所用的编程风格，让人用起来，很不方便，而且让人看不懂。后来，spring aop 就开始取用了Aspectj的编程风格去进行编程
+能不能简单说下AOP中的切面、切点、连接点、通知，四者的关系？
+aspect 切面
+Point cut （如果理解了这个切点的概念，就在应用方面完全是可以的了）表示连接点的集合（类似一个表）
+Join point 目标对象中的方法（每一条记录）
+连接点是程序执行的一个点。例如，一个方法的执行或者一个异常的处理。在 Spring AOP 中，一个连接点总是代表一个方法执行
+weaving 把代理逻辑加入到目标对象上的过程叫做织入
+advice 通知类型，请下下图官网说明
+下面代码是说明切面，切点，连接点，通知，四者的关系！
+Advisor 的概念，它也比较简单，它内部需要指定一个 Advice，Advisor 决定该拦截哪些方法，拦截后需要完成的工作还是内部的 Advice 来做
+
+
+/**
+ *
+ * 切面
+ * 一定要给spring 管理
+ */
+@Component
+@Aspect
+public class VingAspectJ {
+
+    /**
+     * 切点
+     * 为什么切点要声明在一个方法上?目的是为了将注解写在上面而已
+     * pointcut是连接点的集合（就是方法的集合）
+     */
+    @Pointcut("execution(* com.ving.dao.*.*(..))")
+    public void pointCut(){
+
+    }
+
+    /**
+     * 通知---》配置切点
+     */
+    @After("com.ving.config.VingAspectJ.pointCut()")
+    public void after(){
+        System.out.println("after");
+    }
+
+    @Before("com.ving.config.VingAspectJ.pointCut()")
+    public void before(){
+        System.out.println("before");
+    }
+}
+Spring AOP通过以下两种方式来使用。但是最广泛使用的方式是Spring AspectJ 注解风格(Spring AspectJ Annotation Style)
+
+使用AspectJ 注解风格
+使用Spring XML 配置风格
+
+Spring中有哪些不同的通知类型
+通知(advice)是你在你的程序中想要应用在其他模块中的横切关注点的实现。Advice主要有以下5种类型：
+
+前置通知(Before Advice): 在连接点之前执行的Advice，不过除非它抛出异常，否则没有能力中断执行流。使用 @Before 注解使用这个Advice。
+返回之后通知(After Retuning Advice): 在连接点正常结束之后执行的Advice。例如，如果一个方法没有抛出异常正常返回。通过 @AfterReturning 关注使用它。
+抛出（异常）后执行通知(After Throwing Advice): 如果一个方法通过抛出异常来退出的话，这个Advice就会被执行。通用 @AfterThrowing 注解来使用。
+后置通知(After Advice): 无论连接点是通过什么方式退出的(正常返回或者抛出异常)都会执行在结束后执行这些Advice。通过 @After 注解使用。
+围绕通知(Around Advice): 围绕连接点执行的Advice，就你一个方法调用。这是最强大的Advice。通过 @Around 注解使用。

@@ -1,0 +1,21 @@
+https://juejin.cn/post/6860252224930070536
+https://mp.weixin.qq.com/s/Ubj6Khb1c8JOh-i1RH9Z6g
+
+binlog是mysql的逻辑日志
+逻辑日志：可以简单理解为记录的就是sql语句。
+
+binlog使用场景
+在实际应用中，binlog的主要使用场景有两个，分别是主从复制和数据恢复。
+主从复制：在Master端开启binlog，然后将binlog发送到各个Slave端，Slave端重放binlog从而达到主从数据一致。
+数据恢复：通过使用mysqlbinlog工具来恢复数据。
+
+binlog刷盘时机
+对于InnoDB存储引擎而言，只有在事务提交时才会记录biglog，此时记录还在内存中，那么biglog是什么时候刷到磁盘中的呢？
+mysql通过sync_binlog参数控制biglog的刷盘时机，取值范围是0-N：
+0：不去强制要求，由系统自行判断何时写入磁盘；
+1：每次commit的时候都要将binlog写入磁盘；
+N：每N个事务，才会将binlog写入磁盘。
+从上面可以看出，sync_binlog最安全的是设置是1，这也是MySQL 5.7.7之后版本的默认值。但是设置一个大一些的值可以提升数据库性能，因此实际情况下也可以将值适当调大，牺牲一定的一致性来获取更好的性能。
+
+
+https://mp.weixin.qq.com/s/Qeby_ASZJEjbpqt9Jjk1Fw

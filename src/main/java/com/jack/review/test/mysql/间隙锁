@@ -1,0 +1,6 @@
+https://mp.weixin.qq.com/s/fmSHG0SejfD0IdnpIYHT9w
+https://blog.csdn.net/qq_21729419/article/details/113643359#commentBox
+https://zhuanlan.zhihu.com/p/48269420
+
+查看 innodb_locks_unsafe_for_binlog 是否禁用：
+show variables like 'innodb_locks_unsafe_for_binlog';

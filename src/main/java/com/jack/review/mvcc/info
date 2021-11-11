@@ -1,0 +1,10 @@
+https://blog.csdn.net/SnailMann/article/details/94724197
+
+
+Mysql官方给出的幻读解释是：只要在一个事务中，第二次select多出了row就算幻读。
+1.a事务先select，b事务insert确实会加一个gap锁，但是如果b事务commit，这个gap锁就会释放（释放后a事务可以随意dml操作），
+2.a事务再select出来的结果在MVCC下还和第一次select一样，
+3.接着a事务不加条件地update，这个update会作用在所有行上（包括b事务新加的），
+4.a事务再次select就会出现b事务中的新行，并且这个新行已经被update修改了
+原因是前面的UPDATE语句执行之后，会将当前记录上存储的事务信息更新为当前的事务，而当前事务所做的任何更新，对本事务所有SELECT查询都变的可见，因此最后输出的结果是UPDATE执行后更新的所有记录。
+https://www.cnblogs.com/liyus/p/10556563.html

@@ -1,5 +1,6 @@
 package com.jack.review.web.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +17,7 @@ import java.math.BigDecimal;
 @Data
 @Validated
 @Builder
+@AllArgsConstructor
 public class User implements Serializable {
 
     private Integer age;

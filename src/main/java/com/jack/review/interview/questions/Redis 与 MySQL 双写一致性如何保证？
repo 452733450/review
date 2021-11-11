@@ -1,0 +1,6 @@
+https://mp.weixin.qq.com/s?__biz=Mzg2MjEwMjI1Mg==&mid=2247520253&idx=3&sn=604c1efac771c1681f5ab4fe7936d77b&chksm=ce0e387ef979b1686cb45d8e6852d939350a1cdb708bb2e50afd3f97ce9204e00bc9fd2a0545&scene=132#wechat_redirect
+一致性就是数据保持一致，在分布式系统中，可以理解为多个节点中数据的值是一致的。
+
+https://blog.csdn.net/qq_35890572/article/details/108538712
+延时是确保 (修改数据库 -> 清空缓存)这个操作前，其他事务的更改缓存操作已经执行完
+这个休眠时间 =  读业务逻辑数据的耗时 + 几百毫秒。为了确保读请求结束，写请求可以删除读请求可能带来的缓存脏数据。

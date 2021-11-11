@@ -7,4 +7,5 @@ package com.jack.review.test.linux;
  */
 public class less {
     // https://www.cnblogs.com/lemon-flm/p/9284673.html
+    // cp manager-service.jar /tmp/
 }
