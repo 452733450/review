@@ -1,5 +1,12 @@
-https://bigbird.blog.csdn.net/article/details/118459958(Java线程池实战及JDK8的CompletableFuture详解)
 https://blog.csdn.net/u013332124/article/details/79587436
+https://lovelybear.blog.csdn.net/article/details/87856121
+https://blog.csdn.net/mu_wind/article/details/113806680
+
+其实java线程池的实现原理很简单，说白了就是一个线程集合workerSet和一个阻塞队列workQueue。
+当用户向线程池提交一个任务(也就是线程)时，线程池会先将任务放入workQueue中。
+workerSet中的线程会不断的从workQueue中获取线程然后执行。
+当workQueue中没有任务的时候，worker就会阻塞，直到队列中有任务了就取出来继续执行。
+
 
 如果此时线程数小于核心线程数，那么就会新起一个线程来执行当前的任务。
 如果此时线程数大于核心线程数，那么就会将任务塞入阻塞队列中，等待被执行。
@@ -24,3 +31,20 @@ CallerRunsPolicy:主线程中执行任务
 FixedThreadPool
 创建线程数量固定的线程池。核心线程数等于最大线程数，空闲时间为0，由于没有核心线程以外的线程，因此空闲时间不再起作用。不过可以使用allowCoreThreadTimeOut(true)来设置核心线程的销毁策略。
 等待队列使用的是没有指定容量的LinkedBlockingQueue，该队列默认容量是Integer.MAX_VALUE。因此可能会堆积大量的请求，从而导致OOM。
+
+
+RUNNING : 运行态，也是线程池的默认状态，当new一个ThreadPoolExecutor实例之后，这个ThreadPoolExecutor的状态就是运行态。运行态能够接受新添加任务，也能够对阻塞队列中的任务进行处理。
+SHOWDOWN : 关闭态，当调用ThreadPoolExecutor实例的showdown()方法之后，这个ThreadPoolExecutor实例就会进入关闭态。关闭态能够对阻塞队列中的任务进行处理，不能够接受新添加的非空任务，但是可以接受新添加的空任务。
+STOP : 停止态，当调用ThreadPoolExecutor实例的shutdownNow()方法之后，这个ThreadPoolExecutor实例就会进入停止态。停止态不能接受新添加任务，也不能够对阻塞队列中的任务进行处理，并且会中断正在运行的任务。
+TIDYING : 整理态，当线程池中所有任务已被终止， 这个ThreadPoolExecutor实例就会进入停止态。
+TERMINATED : 结束态，当线程池处于整理态，并调用terminated()方法，执行完毕之后，就会进入结束态，此状态也表示整个线程池生命周期的结束。
+
+
+RUNNING：当创建线程池后，初始时，线程池处于RUNNING状态；
+SHUTDOWN：如果调用了shutdown()方法，则线程池处于SHUTDOWN状态，此时线程池不能够接受新的任务，它会等待所有任务执行完毕；
+STOP：如果调用了shutdownNow()方法，则线程池处于STOP状态，此时线程池不能接受新的任务，并且会去尝试终止正在执行的任务；
+TERMINATED：当线程池处于SHUTDOWN或STOP状态，并且所有工作线程已经销毁，任务缓存队列已经清空或执行结束后，线程池被设置为TERMINATED状态。
+
+
+private static int workerCountOf(int c)  { return c & CAPACITY; }
+计算逻辑很简单，传入的c代表的是ctl的值，即高3位为线程池运行状态runState，低29位为线程池中当前活动的线程数量workerCount，将其与CAPACITY进行与操作&，也就是与000 11111 11111111 11111111 11111111进行与操作，c的前三位通过与000进行与操作，无论c前三位为何值，最终都会变成000，也就是舍弃前三位的值，而c的低29位与29个1进行与操作，c的低29位还是会保持原值，这样就从AtomicInteger ctl中解析出了workerCount的值。

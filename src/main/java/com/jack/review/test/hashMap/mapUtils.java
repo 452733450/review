@@ -25,6 +25,7 @@ public class mapUtils {
         map.put("2","2");
         map.get("1");
         HashMap<String,String> map1 = new HashMap<>(16);
+        map1.put("1","1");
         Long l = MapUtils.getLong(map,"1");
         System.out.println(l);
     }

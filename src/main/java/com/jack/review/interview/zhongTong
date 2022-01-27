@@ -10,6 +10,7 @@ binlog、redolog、undolog是什么
 建索引的时候，选择的索引的类型
 b树和b+树的区别
 调接口的时候出错，怎么实现限流降级的
+https://mp.weixin.qq.com/s?__biz=MzI4Njg5MDA5NA==&mid=2247485652&idx=1&sn=dbcc843869bd94228cb71980cd84cc8c&chksm=ebd749d5dca0c0c30c0b11c0535005a9def3c66aa3f5c56d816256122b53f367de5f5ba6a6c3&token=1948873548&lang=zh_CN#rd
 dubbo的重试次数
 下单接口重试，会下重复的单子吗，怎么处理
 幂等性的方式有哪几种

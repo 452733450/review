@@ -1,0 +1,166 @@
+<!DOCTYPE html><!--[if IE]>
+<html class="ie"> <![endif]-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8"/>
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <title>产品要素表</title>
+    <style type="text/css">
+        * {
+            /*此属性必须有，不然中文不显示*/
+            font-family: SimSun;
+        }
+
+        body {
+            width: 600px;
+            margin: 0 auto
+        }
+
+        .headTitlte {
+            text-align: center;
+        }
+
+        .tips {
+            text-align: right;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: none;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        th {
+            border-right: 1px solid #000;
+        }
+
+        tr,
+        td {
+            text-align: center;
+            border: solid #000 1px;
+            height: 30px;
+        }
+
+        .dataInfo {
+            text-align: right;
+        }
+
+        .footer {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <table border="1" cellspacing="0">
+        <thead>
+            <tr>
+                <td colspan="3" style="text-align: center;font-size: 24px;" th:text="${tableName}"></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="2">产品名称</td>
+                <td th:text="${productFullName}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">资产管理人</td>
+                <td th:text="${custodian}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">托管人</td>
+                <td th:text="${investment}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">证券经纪商</td>
+                <td th:text="${securitiesBroker}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">期货经纪商</td>
+                <td th:text="${futuresDealer}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">是否分级</td>
+                <td th:text="${fundLevel}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">投资经理</td>
+                <td th:text="${saleUserIds}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">认购起点</td>
+                <td th:text="${personalBuyCondition}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">产品期限</td>
+                <td style="color:red" th:text="${productDeadlineDescription}">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">认购和申购</td>
+                <td style="color:red" th:text="${subscribeDescription}">
+                </td>
+            </tr>
+            <tr>
+                <td>开放情况</td>
+                <td>封闭期</td>
+                <td th:text="${closurePeriodDescription}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">投资范围</td>
+                <td th:text="${investRange}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">投资限制</td>
+                <td th:text="${investmentRestriction}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">分红</td>
+                <td style="color:red" th:text="${dividendDescription}">
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="5">产品费用</td>
+                <td>认/申购费</td>
+                <td th:text="${subscriptionfee}">
+                </td>
+            </tr>
+            <tr>
+                <td>管理费</td>
+                <td th:text="${fixedFee}">
+                </td>
+            </tr>
+            <tr>
+                <td>托管费、运营服务费</td>
+                <td th:text="${trusteeFee}">
+                </td>
+            </tr>
+            <tr>
+                <td>赎回费</td>
+                <td th:text="${redeemfee}">
+                </td>
+            </tr>
+            <tr>
+                <td>业绩报酬</td>
+                <td th:text="${meritPay}">
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" style="text-align: left">
+                    【风险提示】<strong th:text="${riskTipText}">
+                    </strong>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+
+</html>
