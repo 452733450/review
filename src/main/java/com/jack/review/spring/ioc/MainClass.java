@@ -11,6 +11,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.SpringBootVersion;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.SpringVersion;
 
 /**
  * @Description:
@@ -25,6 +26,7 @@ public class MainClass {
         ApplicationContext context = new ClassPathXmlApplicationContext("classpath:application.xml");
 
         System.out.println(SpringBootVersion.getVersion());
+        System.out.println(SpringVersion.getVersion());
         System.out.println("context 启动成功");
 
         // 从 context 中取出我们的 Bean，而不是用 new MessageServiceImpl() 这种方式
