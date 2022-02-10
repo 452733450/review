@@ -1,10 +1,13 @@
 package com.jack.review.test.stream;
 
+import lombok.Data;
+
 /**
  * @Description:
  * @Auther: Jack You
  * @Date: 2021/05/11/14:23
  */
+@Data
 public class Person {
     private String name;
     private Integer salary;
@@ -59,4 +62,6 @@ public class Person {
     public void setArea(String area) {
         this.area = area;
     }
+
+
 }

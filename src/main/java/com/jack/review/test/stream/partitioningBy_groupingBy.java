@@ -1,5 +1,8 @@
 package com.jack.review.test.stream;
 
+import com.jack.review.util.ModelUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +24,7 @@ public class partitioningBy_groupingBy {
         personList.add(new Person("Anni", 8200, 1, "female", "New York"));
         personList.add(new Person("Owen", 9500, 1, "male", "New York"));
         personList.add(new Person("Alisa", 7900, 1, "female", "New York"));
+        personList.add(new Person("Alisa", 7900, 1, "male", "New York"));
 
         // 将员工按薪资是否高于8000分组
         Map<Boolean, List<Person>> part = personList.stream().collect(Collectors.partitioningBy(x -> x.getSalary() > 8000));
@@ -32,5 +36,44 @@ public class partitioningBy_groupingBy {
         System.out.println("员工按薪资是否大于8000分组情况：" + part);
         System.out.println("员工按性别分组情况：" + group);
         System.out.println("员工按性别、地区：" + group2);
+        Map<String,List<Person>> map = ModelUtils.groupToMap(personList,e->e.getName()+ "-" +e.getSex());
+        System.out.println(map.size());
+    }
+
+    public void test(){
+
+        /*if (StringUtils.isNotBlank(productNo)) {
+            url.append("?productNo=");
+            url.append(productNo);
+        }
+
+        if (StringUtils.isNotBlank(productNo)) {
+            url.append("?productNo=");
+            url.append(productNo);
+        }
+        if (StringUtils.isNotBlank(ywrq)) {
+            url.append("&ywrq=");
+            url.append(ywrq);
+        }
+
+
+        if (StringUtils.isNotBlank(v_vc_code)) {
+            url.append("?v_vc_code=");
+            url.append(v_vc_code);
+        }
+        if (StringUtils.isNotBlank(v_d_date)) {
+            url.append("&v_d_date=");
+            url.append(v_d_date);
+        }
+
+
+        if (StringUtils.isNotBlank(userId)) {
+            url.append("?userId=");
+            url.append(userId);
+        }
+        if (StringUtils.isNotBlank(productNo)) {
+            url.append("&productNo=");
+            url.append(productNo);
+        }*/
     }
 }

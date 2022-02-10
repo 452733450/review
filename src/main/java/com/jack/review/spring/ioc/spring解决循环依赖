@@ -1,0 +1,111 @@
+https://www.jianshu.com/p/5097fde06d50
+https://blog.csdn.net/a745233700/article/details/110914620
+https://www.jianshu.com/p/8bb67ca11831
+https://zhuanlan.zhihu.com/p/84267654
+Spring三级缓存解决循环依赖(步骤)https://www.jianshu.com/p/d17795a605de
+
+
+
+一级缓存：单例池
+/** 保存所有的singletonBean的实例 */
+private final Map<String, Object> singletonObjects = new ConcurrentHashMap<String, Object>(64);
+
+二级缓存：未完成单例集
+/** 保存所有早期创建的Bean对象，这个Bean还没有完成依赖注入 */
+private final Map<String, Object> earlySingletonObjects = new HashMap<String, Object>(16);
+三级缓存：单例工厂集
+/** singletonBean的生产工厂*/
+private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<String, ObjectFactory<?>>(16);
+
+/** 保存所有已经完成初始化的Bean的名字（name） */
+private final Set<String> registeredSingletons = new LinkedHashSet<String>(64);
+
+/** 标识指定name的Bean对象是否处于创建状态  这个状态非常重要 */
+private final Set<String> singletonsCurrentlyInCreation =
+    Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>(16));
+
+
+总结，Spring 就是靠获取未完成的Bean对象来填充属性，解决循环依赖的。
+
+为什么不直接把对象放入 earlySingletonObjects，而是先放入 singletonFactories 中？
+创建对象是需要消耗性能的，假如创建没有循环依赖的对象，是不需要创建未完成的Bean对象的，所以不是直接创建未完成对象放入未完成单例集 earlySingletonObjects，而是把未完成单例工厂放入 singletonFactories。
+比如以下这段代码，在运行时就不会调用 getSingleton 中的 ObjectFactory.getObject() 方法来创建 TestService 未完成 Bean 对象。
+
+
+说了这么多，总结下三级缓存：
+
+第一级缓存（也叫单例池）：Map<String, Object> singletonObjects，存放已经经历了完整生命周期的 Bean 对象
+
+第二级缓存：Map<String, Object> earlySingletonObjects，存放早期暴露出来的 Bean 对象，Bean 的生命周期未结束（属性还未填充完），可能是代理对象，也可能是原始对象
+
+第三级缓存：Map<String, ObjectFactory<?>> singletonFactories，存放可以生成 Bean 的工厂，工厂主要用来生成 Bean 的代理对象
+
+自我总结：
+spring 使用了三级缓存来解决循环依赖
+1.singleObjects:保存经历了完整生命周期的bean
+2.earlySingleObjects:存放早期暴露出来的bean，bean的生命周期未结束（属性未装配），可以是原对象bean，也可以是代理对象
+3.singletonFactories:singletonBean对应的生产工厂
+A依赖B，B依赖A
+    A在实例化之后，装备属性前，把实例化后的A放入三级缓存，
+        this.addSingletonFactory(beanName, () -> {
+                        return this.getEarlyBeanReference(beanName, mbd, bean);
+                                // 第一步：根据 beanName 将它对应的实例化后且未初始化完的 Bean，存入 Map<Object, Object> earlyProxyReferences = new ConcurrentHashMap<>(16)
+                                this.earlyProxyReferences.put(cacheKey, bean);
+                                // 第二步：生成该 Bean 对应的代理类返回
+                                return this.wrapIfNecessary(bean, beanName, cacheKey);
+                                    this.isInfrastructureClass(bean.getClass())
+                                        boolean retVal = Advice.class.isAssignableFrom(beanClass) || Pointcut.class.isAssignableFrom(beanClass) || Advisor.class.isAssignableFrom(beanClass) || AopInfrastructureBean.class.isAssignableFrom(beanClass);
+                                            A.class.isAssignableFrom(B.class) 判断B是不是A的子类或者子接口
+                    });
+        装配属性时，需要注入B,这时再去调用getBean(B),走第二个getSingleton()
+        B在实例化之后，装配属性时，需要注入A，这时候再去调用getBean(A),这时候走第一个getSingleton()
+A先调用getBean(A)
+doCreateBean()
+    getSingleton(beanName,allowEarlyReference)
+    先尝试从一级缓存中获取成品的目标对象，如果存在，则直接返回，
+    如果缓存中不存在目标对象，则判断当前对象是否已经处于创建过程中，如果在创建中，尝试从二级缓存中去获取
+    二级缓存中如没有，则判断这个bean是否允许循环依赖，如允许，则继续依次尝试一，二，三级缓存中去获取，且这个过程是加锁的，如果在三级缓存中获取到了
+    把它放入二级缓存，并从三级缓存中移除
+
+    从第一个getSingleton(beanName,allowEarlyReference)没有获取到
+    则通过第二个getSingleton(String beanName, ObjectFactory<?> singletonFactory)来创建
+        从三级缓存中获取bean，然后放入一级缓存
+
+
+二级缓存有什么问题？
+如果 Bean 没有 AOP，那么用二级缓存其实没有什么问题的，一旦有上述生命周期中第四步，就会导致的一个问题。因为 AOP 处理后，往往是需要生成代理对象的，代理对象和原来的对象根本就不是 1 个对象。
+生成 a 的实例，然后放入缓存，a 需要 b
+再生成 b ，填充 b 的时候，需要 a，从缓存中取到了 a，完成 b 的初始化；
+紧接着 a 把初始化好的 b 拿过来用，完成 a 的属性填充和初始化
+由于 A 类涉及到了 AOP，再然后 a 要生成一个代理类，这里就叫：代理 a 吧
+结果就是：a 最终的产物是代理 a，那 b 中其实也应该用代理 a，而现在 b 中用的却是原始的 a 代理 a 和原始的 a 不是一个对象，现在这就有问题了。
+
+
+为什么要使用三级缓存？
+解决代理对象（如aop）循环依赖的问题。
+例： a依赖b,b依赖a，同时a,b都被aop增强。
+首先明确aop的实现是通过 postBeanProcess后置处理器，在初始化之后做代理操作的。
+1 只使用二级缓存，且二级缓存缓存的是一个不完整的bean
+如果只使用二级缓存，且二级缓存缓存的是一个不完整的bean，这个时候a在设置属性的过程中去获取b（这个时候a还没有被aop的后置处理器增强），创建b的过程中，b依赖a，b去缓存中拿a拿到的是没有经过代理的a。就有问题。
+
+2 使用二级缓存，且二级缓存是一个工厂方法的缓存
+a依赖b，b依赖a，c。c又依赖a。a,b，c均aop增强。
+加载开始： a实例化，放入工厂缓存，装配b，b实例化，装配属性，拿到a,此时从工厂缓存中拿到代理后的a。a(b(a))
+由于a没加载完毕，不会放入一级缓存。这个时候b开始装配c,c实例化，装配属性a,又去工厂缓存中拿对象a。a(b(a、c(a)))
+这个时候拿到的a和b从工厂缓存不是一个对象。出现问题。（主要原因就是每次去工厂缓存中去拿代理后的对象时，都会调用一遍创建代理对象的方法，导致每次拿出来的代理对象不是同一个）
+
+https://www.cnblogs.com/semi-sub/p/13548479.html
+我们会发现再执行一遍singleFactory.getObject()方法又是一个新的代理对象，这就会有问题了，
+因为AService是单例的，每次执行singleFactory.getObject()方法又会产生新的代理对象，
+假设这里只有一级和三级缓存的话，我每次从三级缓存中拿到singleFactory对象，执行getObject()方法又会产生新的代理对象，这是不行的，
+因为AService是单例的，所有这里我们要借助二级缓存来解决这个问题，将执行了singleFactory.getObject()产生的对象放到二级缓存中去，
+后面去二级缓存中拿，没必要再执行一遍singletonFactory.getObject()方法再产生一个新的代理对象，保证始终只有一个代理对象。
+还有一个注意的点
+既然singleFactory.getObject()返回的是代理对象，那么注入的也应该是代理对象，我们可以看到注入的确实是经过CGLIB代理的AService对象。
+所以如果没有AOP的话确实可以两级缓存就可以解决循环依赖的问题，如果加上AOP，两级缓存是无法解决的，
+不可能每次执行singleFactory.getObject()方法都给我产生一个新的代理对象，所以还要借助另外一个缓存来保存产生的代理对象
+总结
+    前面先讲到bean的加载流程，了解了bean加载流程对spring如何解决循环依赖的问题很有帮助，
+    后面再分析到spring为什么需要利用到三级缓存解决循环依赖问题，而不是二级缓存。
+    网上可以试试AOP的情形，实践一下就能明白二级缓存为什么解决不了AOP代理的场景了
+

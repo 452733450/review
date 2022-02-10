@@ -17,14 +17,11 @@ public enum ChineseFoodFactory implements FoodFactory {
             return new ChineseFoodA();
         }
     },
-    B(){
+    B() {
         @Override
         public Food makeFood() {
             System.out.println("要开始生产ChineseFoodB了");
             return new ChineseFoodB();
         }
     }
-
-
-
 }

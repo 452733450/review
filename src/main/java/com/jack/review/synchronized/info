@@ -1,0 +1,49 @@
+https://blog.csdn.net/javazejian/article/details/72828483
+造成线程安全问题的主要诱因有两点
+一是存在共享数据(也称临界资源)，二是存在多条线程共同操作共享数据
+
+同时我们还应该注意到synchronized另外一个重要的作用，
+synchronized可保证一个线程的变化(主要是共享数据的变化)被其他线程所看到（保证可见性，完全可以替代Volatile功能），这点确实也是很重要的
+
+synchronized的三种应用方式
+修饰实例方法，作用于当前实例加锁，进入同步代码前要获得当前实例的锁
+修饰静态方法，作用于当前类对象加锁，进入同步代码前要获得当前类对象的锁
+修饰代码块，指定加锁对象，对给定对象加锁，进入同步代码库前要获得给定对象的锁。
+
+synchronized底层语义原理
+Java 虚拟机中的同步(Synchronization)基于进入和退出管程(Monitor)对象实现
+无论是显式同步(有明确的 monitorenter 和 monitorexit 指令,即同步代码块)还是隐式同步都是如此
+同步方法 并不是由 monitorenter 和 monitorexit 指令来实现同步的,而是由方法调用指令读取运行时常量池中方法的 ACC_SYNCHRONIZED 标志来隐式实现的
+
+理解Java对象头与Monitor
+在JVM中，对象在内存中的布局分为三块区域：对象头、实例数据和对齐填充
+实例变量：存放类的属性数据信息，包括父类的属性信息，如果是数组的实例部分还包括数组的长度，这部分内存按4字节对齐。
+填充数据：由于虚拟机要求对象起始地址必须是8字节的整数倍。填充数据不是必须存在的，仅仅是为了字节对齐，这点了解即可。
+一般而言，synchronized使用的锁对象是存储在Java对象头里的，jvm中采用2个字来存储对象头(如果对象是数组则会分配3个字，多出来的1个字记录的是数组长度)
+
+其主要结构是由Mark Word 和 Class Metadata Address 组成
+Mark Word	存储对象的hashCode、锁信息或分代年龄或GC标志等信息
+Class Metadata Address	类型指针指向对象的类元数据，JVM通过这个指针确定该对象是哪个类的实例。
+其中Mark Word在默认情况下存储着对象的HashCode、分代年龄、锁标记位等以下是32位JVM的Mark Word默认存储结构
+考虑到JVM的空间效率，Mark Word 被设计成为一个非固定的数据结构，以便存储更多有效的数据，它会根据对象本身的状态复用自己的存储空间
+
+锁的状态总共有四种，无锁状态、偏向锁、轻量级锁和重量级锁
+偏向锁
+在大多数情况下，锁不仅不存在多线程竞争，而且总是由同一线程多次获得，因此为了减少同一线程获取锁(会涉及到一些CAS操作,耗时)的代价而引入偏向锁
+偏向锁的核心思想是，如果一个线程获得了锁，那么锁就进入偏向模式，此时Mark Word 的结构也变为偏向锁结构，
+当这个线程再次请求锁时，无需再做任何同步操作，即获取锁的过程，这样就省去了大量有关锁申请的操作，从而也就提供程序的性能
+所以，对于没有锁竞争的场合，偏向锁有很好的优化效果，毕竟极有可能连续多次是同一个线程申请相同的锁。
+但是对于锁竞争比较激烈的场合，偏向锁就失效了，因为这样场合极有可能每次申请锁的线程都是不相同的，因此这种场合下不应该使用偏向锁，否则会得不偿失，
+需要注意的是，偏向锁失败后，并不会立即膨胀为重量级锁，而是先升级为轻量级锁
+
+轻量级锁
+。轻量级锁能够提升程序性能的依据是“对绝大部分的锁，在整个同步周期内都不存在竞争”，注意这是经验数据。
+需要了解的是，轻量级锁所适应的场景是线程交替执行同步块的场合，如果存在同一时间访问同一锁的场合，就会导致轻量级锁膨胀为重量级锁
+
+https://blog.csdn.net/tongdanping/article/details/79647337
+https://blog.csdn.net/guokekanhai/article/details/90514167
+
+https://blog.csdn.net/tongdanping/article/details/79647337?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-6.no_search_link&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-6.no_search_link
+
+锁升级
+https://blog.csdn.net/tongdanping/article/details/79647337

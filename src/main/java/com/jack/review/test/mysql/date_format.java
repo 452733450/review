@@ -7,4 +7,5 @@ package com.jack.review.test.mysql;
  */
 public class date_format {
     // '%Y-%m-%d %H:%i:%s'
+//    str_to_date(#{tradeApplyTimeStart}, '%Y-%m-%d')
 }

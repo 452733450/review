@@ -1,0 +1,3 @@
+Spring 事务失效？
+https://mp.weixin.qq.com/s/mms25yg_HPRXY4UhC1_lvg
+声明式事务唯一不足地方是，它的最细粒度只能作用到方法级别，无法做到像编程式事务那样可以作用到代码块级别。

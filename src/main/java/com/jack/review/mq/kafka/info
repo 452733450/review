@@ -1,0 +1,7 @@
+指令
+生产者：./bin/kafka-console-producer.sh --broker-list 192.168.2.2:9092 --topic test1
+
+消费者：./bin/kafka-console-consumer.sh --zookeeper 192.168.2.2:2181 --topic test1 --from-beginning
+
+https://www.bilibili.com/video/BV1n54y1b7F6?p=5
+我昨天纠结了一整个白天的kafka 这视频一晚上30分钟就让我部署好了

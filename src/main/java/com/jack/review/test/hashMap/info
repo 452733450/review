@@ -3,3 +3,75 @@ https://mp.weixin.qq.com/s/m0nddFilaL4CRtcO0vrxMQ
 
 源码阅读方法
 https://mp.weixin.qq.com/s/G6bQz1XW5eixR1k0VRgHOg
+
+1.7头插法
+indexFor(e.hash, newCapacity);这个方法
+https://blog.csdn.net/lkforce/article/details/89521318
+    /**
+     * Returns index for hash code h.
+     */
+    static int indexFor(int h, int length) {
+        // assert Integer.bitCount(length) == 1 : "length must be a non-zero power of 2";
+        return h & (length-1);
+    }
+计算下标的算法很简单，hash值 和 (length-1)按位与，使用length-1的意义在于，length是2的倍数，
+所以length-1在二进制来说每位都是1，这样可以保证最大的程度的散列hash值，否则，当有一位是0时，不管hash值对应位是1还是0，
+按位与后的结果都是0，会造成散列结果的重复。
+
+
+JDK7的ConcurrentHashMap扩容
+https://blog.csdn.net/u010454030/article/details/82458413
+
+https://blog.csdn.net/argleary/article/details/100940228?utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
+hash % n 为什么等于 (n - 1) & hash
+
+HashMap中的hash函数
+https://www.cnblogs.com/zhengwang/p/8136164.html
+右位移16位，正好是32bit的一半，自己的高半区和低半区做异或，就是为了混合原始哈希码的高位和低位，以此来加大低位的随机性
+
+解读HashMap-对比JDK7和JDK8
+https://juejin.cn/post/6844904066653356040#heading-4
+
+
+1.7
+HashMap put()
+// 当插入第一个元素的时候，需要先初始化数组大小
+// 如果 key 为 null，感兴趣的可以往里看，最终会将这个 entry 放到 table[0] 中
+// 1. 求 key 的 hash 值
+// 2. 找到对应的数组下标
+// 3. 遍历一下对应下标处的链表，看是否有重复的 key 已经存在，
+//    如果有，直接覆盖，put 方法返回旧值就结束了
+// 4. 不存在重复的 key，将此 entry 添加到链表中
+    addEntry(hash, key, value, i);
+    扩容就是用一个新的大数组替换原来的小数组，并将原来数组中的值迁移到新的数组中。
+    由于是双倍扩容，迁移过程中，会将原来 table[i] 中的链表的所有节点，分拆到新的数组的 newTable[i] 和 newTable[i + oldLength] 位置上。
+    如原来数组长度是 16，那么扩容后，原来 table[0] 处的链表中的所有元素会被分配到新数组中 newTable[0] 和 newTable[16] 这两个位置
+get 过程分析
+根据 key 计算 hash 值。
+找到相应的数组下标：hash & (length - 1)。
+遍历该数组位置处的链表，直到找到相等(==或equals)的 key。
+
+1.8
+put()
+和 Java7 稍微有点不一样的地方就是，Java7 是先扩容后插入新值的，Java8 先插值再扩容，不过这个不重要。
+// 第一次 put 值的时候，会触发下面的 resize()，类似 java7 的第一次 put 也要初始化数组长度
+// 第一次 resize 和后续的扩容有些不一样，因为这次是数组从 null 初始化到默认的 16 或自定义的初始容量
+// 找到具体的数组下标，如果此位置没有值，那么直接初始化一下 Node 并放置在这个位置就可以了
+    // 数组该位置有数据
+    // 首先，判断该位置的第一个数据和我们要插入的数据，key 是不是"相等"，如果是，取出这个节点
+    // 如果该节点是代表红黑树的节点，调用红黑树的插值方法，本文不展开说红黑树
+    // 到这里，说明数组该位置上是一个链表
+    // 插入到链表的最后面(Java7 是插入到链表的最前面)
+        // TREEIFY_THRESHOLD 为 8，所以，如果新插入的值是链表中的第 8 个
+        // 会触发下面的 treeifyBin，也就是将链表转换为红黑树
+和 Java7 稍微有点不一样的地方就是，Java7 是先扩容后插入新值的，Java8 先插值再扩容，
+
+数据迁移分为高位链表和低位链表是为了不用重新计算hash值（像1.7那样），提高效率
+
+get 过程分析
+计算 key 的 hash 值，根据 hash 值找到对应数组下标: hash & (length-1)
+判断数组该位置处的元素是否刚好就是我们要找的，如果不是，走第三步
+判断该元素类型是否是 TreeNode，如果是，用红黑树的方法取数据，如果不是，走第四步
+遍历链表，直到找到相等(==或equals)的 key
+
+
