@@ -1,8 +1,12 @@
 package com.jack.review.test.stream;
 
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -54,5 +58,45 @@ public class sorted {
         System.out.println("先按工资再按年龄升序排序：" + newList3);
         System.out.println("先按工资再按年龄自定义降序排序：" + newList4);
 
+    }
+
+    // List<Map<String, Object>>多字段排序
+    private List<Map<String, Object>> sortVotedProducts(List<Map<String, Object>> list, Integer shareSortType, Integer valueSortType) {
+        /*if (CollectionUtils.isEmpty(list)) {
+            return list;
+        }
+        return list.stream()
+                .sorted((v1, v2) -> {
+                    // 份额排序
+                    BigDecimal b1 = new BigDecimal(v1.get("tradeShare").toString());
+                    BigDecimal b2 = new BigDecimal(v2.get("tradeShare").toString());
+                    int tradeShare = YesOrNoEnum.YES.getCodeValue().equals(shareSortType) ? b2.compareTo(b1) : b1.compareTo(b2);
+                    if (tradeShare != 0) {
+                        return tradeShare;
+                    }
+
+                    // 市值排序
+                    BigDecimal b3 = new BigDecimal(v1.get("holdingEarnings").toString());
+                    BigDecimal b4 = new BigDecimal(v2.get("holdingEarnings").toString());
+                    int holdingEarnings = YesOrNoEnum.YES.getCodeValue().equals(valueSortType) ? b4.compareTo(b3) : b3.compareTo(b4);
+                    if (holdingEarnings != 0) {
+                        return holdingEarnings;
+                    }
+
+                    // 每个产品的最新交易时间倒序
+                    Long l1 = (Long) v1.get("latestTradeApplyTime");
+                    Long l2 = (Long) v2.get("latestTradeApplyTime");
+                    int tmp = l2.compareTo(l1);
+                    if (tmp != 0) {
+                        return tmp;
+                    }
+
+                    // 产品id倒序
+                    Long l3 = (Long) v1.get("productId");
+                    Long l4 = (Long) v2.get("productId");
+                    return l4.compareTo(l3);
+                })
+                .collect(Collectors.toList());*/
+        return null;
     }
 }
