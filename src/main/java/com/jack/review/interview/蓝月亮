@@ -1,0 +1,9 @@
+redis为啥比较快，
+基于内存
+单线程
+kafka和rabbitmq区别，
+kafka为啥吞吐量高，
+事务的隔离级别和mysql默认级别还有，
+可重复读会遇到的情况,
+redis和数据库同步,
+ioc和di，ioc好处
