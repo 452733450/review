@@ -26,6 +26,22 @@ public class MergeTwoLists {
         return res.next;
     }
 
+    /*特判：如果有一个链表为空，返回另一个链表
+    如果l1节点值比l2小，下一个节点应该是l1，应该return l1，在return之前，指定l1的下一个节点应该是l1.next和l2俩链表的合并后的头结点
+    如果l1节点值比l2大，下一个节点应该是l2，应该return l2，在return之前，指定l2的下一个节点应该是l1和l2.next俩链表的合并后的头结点*/
+//    https://leetcode-cn.com/problems/he-bing-liang-ge-pai-xu-de-lian-biao-lcof/solution/mian-shi-ti-25-he-bing-liang-ge-pai-xu-de-lian-b-2/
+    public ListNode mergeTwoLists2(ListNode l1, ListNode l2) {
+        if(l1 == null) return l2;
+        if(l2 == null) return l1;
+        if(l1.val <= l2.val) {
+            l1.next = mergeTwoLists2(l1.next, l2);
+            return l1;
+        } else {
+            l2.next = mergeTwoLists2(l1, l2.next);
+            return l2;
+        }
+    }
+
     public static void main(String[] args) {
         ListNode l1 = new ListNode(1);
         l1.next = new ListNode(2);
@@ -35,7 +51,7 @@ public class MergeTwoLists {
         l2.next = new ListNode(3);
         l2.next.next = new ListNode(4);
 
-        ListNode res = new MergeTwoLists().mergeTwoLists(l1, l2);
+        ListNode res = new MergeTwoLists().mergeTwoLists2(l1, l2);
         System.out.println(res);
     }
 }
