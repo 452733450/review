@@ -22,9 +22,27 @@ public class ReverseWords {
     解释: 如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。*/
 
     public String reverseWords(String s) {
-        if(s == null) {
+        if (s == null) {
             return null;
         }
-        return null;
+        s = s.trim();
+        int j = s.length() - 1, i = j;
+        StringBuilder stringBuilder = new StringBuilder();
+        while (i >= 0) {
+            while (i >= 0 && s.charAt(i) != ' ') {
+                i--;
+            }
+            stringBuilder.append(s, i + 1, j + 1).append(" ");
+            while (i >= 0 && s.charAt(i) == ' ') {
+                i--;
+            }
+            j = i;
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new ReverseWords().reverseWords(" ab  abc!~ "));
     }
 }
