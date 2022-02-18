@@ -12,3 +12,12 @@ mysql 索引失效的情况
 本地缓存和 redis缓存有什么不同？
 redis分布式 扩容缩容是着呢吗做的？
 zookeeper 满足cap的哪两个?
+
+hashmap数据结构，
+线程池创建里面的核心线程什么时候创建，队列什么时候创建，
+聊聊分布式的CAP，
+mysql优化，
+redis热点key处理，
+redis如何淘汰过期key的，
+redis展示所有key的命令，
+spring ioc/di，spring循环依赖怎么处理
