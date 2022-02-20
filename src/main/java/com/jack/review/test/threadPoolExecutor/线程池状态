@@ -1,0 +1,5 @@
+running 运行中，可以处理任务及等待队列中的任务，调用shutdown()方法,就进入shutdown状态
+shutdown 可以处理等待队列中的任务，但是不能接受新的任务
+stop 运行中，调用showdownNow()方法，进入stop态，不处理任务，也不处理等待队列中的任务，中止当前任务，当线程池中的工作线程数变为0，进入tidying态
+tidying 当等待队列中的任务为空，工作中的线程数也变为0，进入tidying状态,之后调用()方法，进入中止态，线程池可以销毁了
+terminate
