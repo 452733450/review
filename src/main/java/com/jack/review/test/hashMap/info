@@ -29,7 +29,7 @@ HashMap中的hash函数
 https://www.cnblogs.com/zhengwang/p/8136164.html
 右位移16位，正好是32bit的一半，自己的高半区和低半区做异或，就是为了混合原始哈希码的高位和低位，以此来加大低位的随机性
 
-解读HashMap-对比JDK7和JDK8
+解读HashMap-对比JDK7和JDK8（resize()分析）
 https://juejin.cn/post/6844904066653356040#heading-4
 
 
