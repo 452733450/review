@@ -109,3 +109,52 @@ https://www.cnblogs.com/semi-sub/p/13548479.html
     后面再分析到spring为什么需要利用到三级缓存解决循环依赖问题，而不是二级缓存。
     网上可以试试AOP的情形，实践一下就能明白二级缓存为什么解决不了AOP代理的场景了
 
+#createBean()
+boolean earlySingletonExposure = mbd.isSingleton() && this.allowCircularReferences && this.isSingletonCurrentlyInCreation(beanName);
+        if (earlySingletonExposure) {
+            if (this.logger.isTraceEnabled()) {
+                this.logger.trace("Eagerly caching bean '" + beanName + "' to allow for resolving potential circular references");
+            }
+
+            this.addSingletonFactory(beanName, () -> {
+                return this.getEarlyBeanReference(beanName, mbd, bean);
+            });
+        }
+
+protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+    Object singletonObject = this.singletonObjects.get(beanName);
+    if (singletonObject == null && this.isSingletonCurrentlyInCreation(beanName)) {
+        singletonObject = this.earlySingletonObjects.get(beanName);
+        if (singletonObject == null && allowEarlyReference) {
+            synchronized(this.singletonObjects) {
+                singletonObject = this.singletonObjects.get(beanName);
+                if (singletonObject == null) {
+                    singletonObject = this.earlySingletonObjects.get(beanName);
+                    if (singletonObject == null) {
+                        ObjectFactory<?> singletonFactory = (ObjectFactory)this.singletonFactories.get(beanName);
+                        if (singletonFactory != null) {
+                            singletonObject = singletonFactory.getObject();
+                            this.earlySingletonObjects.put(beanName, singletonObject);
+                            this.singletonFactories.remove(beanName);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+//此方法的目的就是实例化我们指定的类
+this.createBeanInstance(beanName, mbd, args);
+
+//该方法负责进行属性设值，处理依赖。
+this.populateBean(beanName, mbd, instanceWrapper);
+
+//处理各种回调,BeanPostProcessor 的两个回调都发生在这边，只不过中间处理了 init-method
+//如果 bean 实现了 BeanNameAware、BeanClassLoaderAware 或 BeanFactoryAware 接口，回调
+// 处理 bean 中定义的 init-method，
+// 或者如果 bean 实现了 InitializingBean 接口，调用 afterPropertiesSet() 方法
+exposedObject = this.initializeBean(beanName, exposedObject, mbd);
+
+Object earlySingletonReference = this.getSingleton(beanName, false);
