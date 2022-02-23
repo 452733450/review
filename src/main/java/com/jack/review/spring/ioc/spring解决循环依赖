@@ -45,9 +45,13 @@ spring 使用了三级缓存来解决循环依赖
 1.singleObjects:保存经历了完整生命周期的bean
 2.earlySingleObjects:存放早期暴露出来的bean，bean的生命周期未结束（属性未装配），可以是原对象bean，也可以是代理对象
 3.singletonFactories:singletonBean对应的生产工厂
+AbstractBeanFactory#doGetBean(String name, @Nullable Class<T> requiredType, @Nullable Object[] args, boolean typeCheckOnly)
+    AbstractAutowireCapableBeanFactory#doCreateBean(String beanName, RootBeanDefinition mbd, @Nullable Object[] args)
+        createBeanInstancecreateBeanInstance(beanName, mbd, args)调用addSingletonFactory()方法放入三级缓存
 A依赖B，B依赖A
-    A在实例化之后，装备属性前，把实例化后的A放入三级缓存，
+    A在实例化之后，装备属性前，把实例化后的A放入三级缓存，（这一步提前产生最终的需要代理的对象）
         this.addSingletonFactory(beanName, () -> {
+                        // 这个方法主要逻辑大概是描述如果bean被AOP切面代理则返回的是beanProxe对象，如果未被代理则返回的是原bean实例
                         return this.getEarlyBeanReference(beanName, mbd, bean);
                                 // 第一步：根据 beanName 将它对应的实例化后且未初始化完的 Bean，存入 Map<Object, Object> earlyProxyReferences = new ConcurrentHashMap<>(16)
                                 this.earlyProxyReferences.put(cacheKey, bean);
@@ -57,6 +61,21 @@ A依赖B，B依赖A
                                         boolean retVal = Advice.class.isAssignableFrom(beanClass) || Pointcut.class.isAssignableFrom(beanClass) || Advisor.class.isAssignableFrom(beanClass) || AopInfrastructureBean.class.isAssignableFrom(beanClass);
                                             A.class.isAssignableFrom(B.class) 判断B是不是A的子类或者子接口
                     });
+
+
+            protected void addSingletonFactory(String beanName, ObjectFactory<?> singletonFactory) {
+                    Assert.notNull(singletonFactory, "Singleton factory must not be null");
+                    synchronized(this.singletonObjects) {
+                        if (!this.singletonObjects.containsKey(beanName)) {
+                            // 放入三级缓存
+                            this.singletonFactories.put(beanName, singletonFactory);
+                            // 从二级缓存移除
+                            this.earlySingletonObjects.remove(beanName);
+                            this.registeredSingletons.add(beanName);
+                        }
+
+                    }
+                }
         装配属性时，需要注入B,这时再去调用getBean(B),走第二个getSingleton()
         B在实例化之后，装配属性时，需要注入A，这时候再去调用getBean(A),这时候走第一个getSingleton()
 A先调用getBean(A)
@@ -158,3 +177,63 @@ this.populateBean(beanName, mbd, instanceWrapper);
 exposedObject = this.initializeBean(beanName, exposedObject, mbd);
 
 Object earlySingletonReference = this.getSingleton(beanName, false);
+
+#doGetBean中的第二个getSingleton
+public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
+        Assert.notNull(beanName, "Bean name must not be null");
+        synchronized(this.singletonObjects) {
+            // 从一级缓存拿
+            Object singletonObject = this.singletonObjects.get(beanName);
+            if (singletonObject == null) {
+                if (this.singletonsCurrentlyInDestruction) {
+                    throw new BeanCreationNotAllowedException(beanName, "Singleton bean creation not allowed while singletons of this factory are in destruction (Do not request a bean from a BeanFactory in a destroy method implementation!)");
+                }
+
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Creating shared instance of singleton bean '" + beanName + "'");
+                }
+
+                this.beforeSingletonCreation(beanName);
+                boolean newSingleton = false;
+                boolean recordSuppressedExceptions = this.suppressedExceptions == null;
+                if (recordSuppressedExceptions) {
+                    this.suppressedExceptions = new LinkedHashSet();
+                }
+
+                try {
+                    // 从三级缓存拿
+                    singletonObject = singletonFactory.getObject();
+                    newSingleton = true;
+                } catch (IllegalStateException var16) {
+                    singletonObject = this.singletonObjects.get(beanName);
+                    if (singletonObject == null) {
+                        throw var16;
+                    }
+                } catch (BeanCreationException var17) {
+                    BeanCreationException ex = var17;
+                    if (recordSuppressedExceptions) {
+                        Iterator var8 = this.suppressedExceptions.iterator();
+
+                        while(var8.hasNext()) {
+                            Exception suppressedException = (Exception)var8.next();
+                            ex.addRelatedCause(suppressedException);
+                        }
+                    }
+
+                    throw ex;
+                } finally {
+                    if (recordSuppressedExceptions) {
+                        this.suppressedExceptions = null;
+                    }
+
+                    this.afterSingletonCreation(beanName);
+                }
+
+                if (newSingleton) {
+                    this.addSingleton(beanName, singletonObject);
+                }
+            }
+
+            return singletonObject;
+        }
+    }
