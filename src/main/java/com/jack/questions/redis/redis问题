@@ -63,6 +63,7 @@ Memcache有过了解吗
         6.Memcached 是多线程，非阻塞 IO 复用的网络模型；Redis 使用单线程的多路 IO 复用模型。 （Redis 6.0 引入了多线程 IO ）
 数据有1百万条，保留热门数据，Redis只能保留20w条数据，你想怎么实现
 redis是nio还是aio
+    https://blog.csdn.net/mashaokang1314/article/details/88636371
 redis持久化方式
 缓存雪崩穿透
     缓存穿透
