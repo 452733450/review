@@ -1,0 +1,6 @@
+https://mp.weixin.qq.com/s?__biz=Mzg3NzU5NTIwNg==&mid=2247497427&idx=1&sn=2ed160c9917ad989eee1ac60d6122855&chksm=cf2229faf855a0ecf5eb34c7335acdf6420426490ee99fc2b602d54ff4ffcecfdab24eeab0a3&token=429828252&lang=zh_CN&scene=21#wechat_redirect
+
+客户端发起请求，申请获取token。
+服务端生成全局唯一的token，保存到redis中（一般会设置一个过期时间），然后返回给客户端。
+客户端带着token，发起请求。
+服务端去redis确认token是否存在，一般用 redis.del(token)的方式，如果存在会删除成功，即处理业务逻辑，如果删除失败不处理业务逻辑，直接返回结果。
