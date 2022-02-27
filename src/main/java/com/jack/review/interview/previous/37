@@ -1,0 +1,106 @@
+上海埃帕无线通信科技有限公司面试
+ 自我介绍
+overload overwrite有什么区别 什么时候使用 为什么要使用overload
+Java的三大特性
+多态具体说一下
+sleep和wait的区别
+ wait之后怎么唤醒线程
+项目里哪里用到了Redis
+项目里哪些数据放入缓存中了
+Redis的基本数据类型
+Redis作锁的流程说一下
+进入锁之后发生异常怎么办？
+Redis是怎么释放锁的，那个方法能说出来吗？
+项目里哪里用到了rebbit MQ你是怎么使用的
+aop说一下
+ngicx怎么用的 你在项目中哪里用到了 还了解其他的吗？
+数据库库的优化
+三大范式
+inndb与mysam大区别
+存储过程了解吗
+websock是怎么用的 原理了解吗
+
+三波甲方面试题
+一、
+1. 两种方式求斐波那契数列的第n项值，n=60时，值为多少，
+2.为什么递归算法运行时间这么久，什么是时间复杂度。
+
+二、
+全英文笔试题：
+1. 大意是controller接收三个参数，payload---为Json字符串、permitted_keys---该字符串中允许存在的键、mandatory_keys---必须含有的键
+根据permitted_keys删除字符串中其他键值对，若该字符串中没有mandatory_keys，抛出异常
+2. 大意是实现模板引擎的 { { name } } 替换功能，渲染页面
+
+三、
+1. 谈谈HashMap和ConcurrentHashMap
+2. hashTable了解吗，与hashMap有什么区别
+3. 谈谈synchronized和volatile
+4. 如果不使用volatile，我怎样才能实现他的可见性
+5. 谈谈事务的隔离级别和传播特性
+6. A方法传播特性是REQUIRED，B方法是REQUIRES_NEW，现在A方法中调用了B方法，发生了异常，事务没有回滚，如何操作能使事务回滚
+7. MySQL数据库默认的隔离级别，为什么要设置成这个隔离级别
+8. 简单讲讲Redis的线程模型
+9. Redis做分布式锁的命令是什么
+10. 谈谈BeanFactory
+11. 如果我自己搭建文件上传系统，不使用阿里的OSS，如何操作
+12. JVM的程序计数器作用，是线程私有的吗
+13. 谈谈JVM的内存模型
+14. 我看你简历中使用的都是springCloud，那你讲讲Eureka是什么吧
+15. 了解过Eureka的缓存机制吗，简单描述下
+16. 前端向后端传递Json字符串，该如何处理
+
+中科软的面试
+20期 几家中科软的面试汇总 应届 都是比较基础的
+1 自我介绍
+2 介绍项目 公司规模 项目人数  工资...
+3 说一下项目中自己主要负责的功能模块流程  为什么项目周期那么长？
+4 Servlet说一下
+5 Spring事务说一下？
+6 Redis了解多少？基本类型有哪些，项目中怎么用的？会产生那些问题，怎么解决？分布式锁怎么用的？什么原理？
+7 Shiro项目中怎么实现的？
+8 你的项目测试环境部署了吗？
+9 SQL语句，表中有两个一样的数据，怎么查出来？
+SELECT
+	*
+FROM
+	`user` AS a
+	INNER JOIN ( SELECT * FROM `user` GROUP BY account, `password` HAVING COUNT( * ) > 1 ) b ON a.account = b.account
+	AND a.`password` = b.`password`
+10 多线程说一下？
+11 mapper.xml 接口和标签
+12  SpringCloud 有实际项目经验吗？SpringCloud 了解多少？SpringCloud和SpringBoot有哪些区别？（组件，配置...）
+SpringBoot专注于快速方便的开发单个个体微服务。
+SpringCloud是关注全局的微服务协调整理治理框架，它将SpringBoot开发的一个个单体微服务整合并管理起来
+
+Spring，SpringMVC，SpringBoot，SpringCloud有什么区别和联系？
+Spring是核心，提供了基础功能；
+Spring是一个轻量级的控制反转(IoC)和面向切面(AOP)的容器框架。Spring使你能够编写更干净、更可管理、并且更易于测试的代码。
+Spring MVC 是基于Spring的一个 MVC 框架 ；
+Spring Boot 是为简化Spring配置的快速开发整合包；
+Spring Cloud是构建在Spring Boot之上的服务治理框架。
+13 笔试算法题，有 回文数，多线程按照顺序打印，两个数组找出数组中一样的值得出下标，二进制转换...
+14 数据库SQL语句优化有哪些（问了很多）？
+15 集合（问的比较底层），concurrenthashmap底层，hashmap底层，数组和链表底层(为什么数组查询快和链表增删快)
+16 设计模式了解多少？有自己写过的吗？
+17 SpringBoot常用注解说一下？讲一下具体含义？@ResponseBody怎么用的？
+18 是否用到了加密？加密有那些？怎么加密的？
+19 乐观锁和悲观锁 问到具体到代码逻辑
+20 自动装配
+21 SpeingCloud请求跨域知道吗？
+22 版本控制用的什么？说几个操作指令？提交冲突如何解决？
+23 消息队列知道吗？MQ说一下？那些模式？怎么用的？解决什么问题？
+24 还有以些的问了前端的知识   VUE （标签，方法...） Jquery ...使用过那些前端框架？
+25 怎么前后端进行数据交互？
+26 数据库索引  索引失效怎么办？ 怎么设置索引 ？需要注意什么问题？ 你是怎么设置索引的？
+27 对我们公司有什么想问的吗？能接受出差吗？能接受加班吗？
+
+逸舟信息科技
+笔试
+第一道题  sql语句查找表中相同人名
+第二道  sql 给不同班级的人分班排学号 加学号字段
+第三道提 session与cache区别
+第四道 表格控件 9*9表格 中间3*3表格由蓝色改成黄色 可以适当更改表哥控件参数
+第五道 1-x²+x^3-X^4……找规律  算法代码实现
+第六道是一道代码逻辑题 没看懂
+第七到是两段英语翻译 无语
+第八到 程序题 两段文字 用代码找到两段文字中三个不相同的地方

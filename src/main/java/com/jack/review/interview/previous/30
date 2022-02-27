@@ -1,0 +1,22 @@
+笔试
+    1.重写和重载的区别
+    2.String StringBuffer 和 StringBuilder 的区别是什么？ String为什么是不可变的？
+    3.接口和抽象类的区别是什么？
+    4.== 和equals
+    5.简述 final ， static ，this ,super 等关键字特性和使用场景
+    6.线程有哪些基本状态？
+    7.Java中IO流分别有哪些？
+    8.Spring 创建Bean的方式有哪些？
+    9.#{} 和 ${}的区别是什么？
+    10.SpringMVC常用的注解并说出它的作用
+    11.Spring管理事务的方式有几种？隔离级别有哪几个？
+    12.简述一种及以上实际应用的中间件包括但不限于(Redis、RabbitMQ、ElasticSearch、Nginx、Docker)
+    为什么要用？使用过程遇到了什么问题？怎么解决的？
+面试
+
+构造方法和静态方法有什么不同？
+为什么要使用Redis？
+Redis持久化机制
+图片上传做过吗？文件上传主要操作哪个类？
+多线程用过吗，怎么用的？
+mysql隔离级别一般用哪个？用这个级别会发生什么？

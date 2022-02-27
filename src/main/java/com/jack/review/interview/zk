@@ -10,7 +10,7 @@ kafka 没有接到消息应该怎么处理？
 如何进行的sql优化
 mysql 索引失效的情况
 本地缓存和 redis缓存有什么不同？
-redis分布式 扩容缩容是着呢吗做的？
+redis分布式 扩容缩容是怎么做的？
 zookeeper 满足cap的哪两个?
 
 hashmap数据结构，

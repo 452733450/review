@@ -1,0 +1,29 @@
+电话面试
+你们公司用的开发工具
+spring的特性
+springMVC流程
+spingboot的优点
+mysql隔离界别
+常用数据源
+常用linux命令
+微服务
+
+mybaits 怎么做 模糊查询
+mybaits 批量处理
+mybaits 查询结果 为map或者list 底层如何实现
+日志效果如何实现
+springboot 的执行流程
+dubbo springcloud 有什么区别
+单点登陆 cookie 被劫持了怎么办
+分布式事务介绍一下
+innob db 和 myisam 区别 （至少五点
+线程执行的过程
+select count from where group by order by having 执行顺序
+
+1.两张表，不设置主键，都只有id一个字段，表1为1,1,1三笔数据，表2为1,1两笔数据，问select * from 表1 left join  表2 on 表1.id=表2.id，查询结果有几笔数据？select * from  表1,表2 where 表1.id=表2.id 有几笔数据？  答案都是6笔。
+2.登录时密码如何加密，加密需要哪些因子？
+3.介绍项目中websocket的应用，注意websocket是一种协议
+4.介绍springcloud全家桶除了eureka还有哪些组件
+5.nginx有什么作用
+6.redis在项目中的应用
+7.redis有哪些数据类型

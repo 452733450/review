@@ -1,0 +1,49 @@
+上午面:
+1.英文自我介绍:
+2.基础类型和对象的区别？
+3.一个静态常量是存在哪里的？
+4.类是如何加载的?
+5.classloader的加载器有哪些?
+6.ArrayList和LinkedList的区别
+7.反射如何调用一个类的私有方法？（提醒了可访问)
+8.反射用过吗，说说使用场景?
+9.type类和class类有接触过吗?
+10.java中的代理?
+11.面向对象的缺陷?
+12.synchronized使用在方法上时锁的是什么?
+13.如何创造一个死锁？
+14.你用过的http方法（doget/dopost）
+15.rest风格知道吗?说说
+
+下午面:
+1.开发过程中常用的数据类型?
+int long double
+2.常用的集合类型?
+hashMap,ArrayList没有说多
+3.LinkedList跟ArrayList的区别?
+4.如果是大批量的修改用LinkedList还是ArrayList?(arratList)
+5.list的子类哪个子类是线程安全的?
+copyonwritearrayList还有vector
+6.线程的创建方式?
+继承thread,实现runnable，还有callable
+7.有没有用过线程池?
+8.springcloud用到的注解?
+9.扫描拦截器的注解?(这个没有说出来)
+10.数据库用的是Mysql,那你查一个表的总条数?
+说了select 字段 from table 然后他说还有呢？我说select *不推荐
+不利于sql优化。
+11.sql优化的查询,多表查询如何优化?
+说了inner join left join
+12.数据库两个字段AB是组合索引，已知条件A(只知道条件A),这个A能走索引吗？
+13.索引是干什么用的?索引的创建语法？
+14.有写前端吗,用过的技术?
+vue ,bootstrap
+15.vue页面的后缀名?
+说了.vue
+16.ajax请求到后端，如何避免中文乱码？(过滤器)
+17.get/和post的区别
+18.ajax请求的参数?
+url,type,datatype,success
+19.http和https的区别?
+说了Http有get,post,和请求头,
+https不知道。

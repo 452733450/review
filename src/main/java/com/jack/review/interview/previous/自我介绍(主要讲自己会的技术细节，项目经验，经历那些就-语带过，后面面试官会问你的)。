@@ -1,0 +1,18 @@
+1.自我介绍(主要讲自己会的技术细节，项目经验，经历那些就-语带过，后面面试官会问你的)。
+2.操作系统的内存管理机制
+3.进程和线程的区别
+4.说下你对线程安全的理解
+5. volatile 有什么作用，sychronized和lock有 什么区别
+6. ReentrantLock实现原理
+7.用过CountDown[ atch么?什么场景下用的?
+8. AQS底层原理。
+9.造成死锁的原因有哪些，如何预防?
+10.加锁会带来哪些性能问题。如何解决?
+11. HashMap、ConcurrentHashMap 源码。HashMap是线程安全的吗? Hashtable呢?
+ConcurrentHashMap有 了解吗?
+12.是否可以实习?
+13.你有什么问题要问吗?
+
+1.自我介绍(主要讲自己会的技术细节，项目经验，经历那些就-语带过，后面面试官会问你的)。 2.操作系统的内存管理机制 3.进程和线程的区别 4.说下你对线程安全的理解 5. volatile 有什么作用，sychronized和lock有 什么区别 6. ReentrantLock实现原理 7.用过CountDown[ atch么?什么场景下用的? 8. AQS底层原理。 9.造成死锁的原因有哪些，如何预防? 10.加锁会带来哪些性能问题。如何解决? 11. HashMap、ConcurrentHashMap 源码。HashMap是线程安全的吗? Hashtable呢? ConcurrentHashMap有 了解吗? 12.是否可以实习? 13.你有什么问题要问吗?
+
+21716

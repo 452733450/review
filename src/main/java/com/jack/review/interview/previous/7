@@ -1,0 +1,55 @@
+面试一:
+二十分钟，技术总监
+1.说上个项目（全部让你讲）
+2.springcloud，几个部分有什么用?（重点feign，还有配置有哪些）
+3.用了哪些技术?
+（redis，mq，讲了二十分钟订单撤回，zuul那边讲了权限＋shiro＋rbac五表）
+4.为什么用redis?
+5.还说了支付平台代扣，没细问
+6.sping聊聊，ioc/di
+
+
+笔试二:
+问题1：
+输入一个integer ，返回一个逆序的integer， 不要使用string的相关方法
+Example1: x = 123, return 321Example2: x = -123, return -321
+Example3: x = 456, return 654
+请问写出函数。 或者写出解题思路以及需要注意的坑。
+问题2：
+假设服务器是Gmt Time(格林尼治时间)，要求从上个月的天猫订单中，随机选出中奖名单，邮件发给运营。
+1等奖1名
+2等奖2名
+3等奖3名
+请说出需要考虑的业务问题。
+基础知识：
+如何实现equals和hashcode 方法,  java默认的equals是怎么实现的, String.equals是怎么实现的. 对于一个包含两个int字段,如a,b实现一个你认为合理的hashCode()方法,equal和hashCode的关系
+java的标准集合有哪些,,java集合一般都有一个Iterator的方法,那么你认为用它的好处是什么？
+java的高级并发工具有哪些(不要回答wait/notify,synchronized这些低级的),ThreadLocal 有啥用,应用场景是啥
+使用spring的好处是什么
+5. 在一个web工程中,我要对每个用户添加权限验证,那么怎么实现
+6. spring bean 的生命周期接口或注解有哪些
+7.列举开源Json处理类
+8.经常去哪些技术论坛？
+对什么技术感兴趣？
+
+面试三
+1.正负号要不要考虑?考不考虑都一样【见面试二的第一题】
+2.抽奖名单发给运营,开发需要考虑哪些问题?【见面试二的第二题】
+3.user对象name相同要算为同一个人,怎么处理?
+4.ArrayList和LinkedList区别?(底层,优缺点,非安全)
+5.用ArrayList线程安全怎么实现?(栈封闭,加锁,安全容器(单步原子))
+6.volatile一般适合用在哪些对象上?
+7.ThreadLocal什么时候放一个内部变量,什么时候释放?
+8.JWT授权模式?工作模式?
+9.JWT设计的时候考虑哪些问题?
+10.项目当中JWT生成的加密方式?RSA,加密解密?
+11.简单说一下spring理解?
+12.SpringMVC和Spring关系?SpringMVC作用?
+13.Spring与SpringBoot有什么区别?
+14.SpringBoot与SpringCloud?
+15.@PostConstruct在bean生命周期哪个阶段用到?和哪个接口等效?
+16.bean注解,怎么指定初始方法和destory方法?(不知道....)
+17.Springcloud过哪些组件?
+18.Feign超时怎么办?timeoutInMilliseconds
+19.Feign的http连接池用过吗?怎么配置?
+20.有一个请求通过feign调用10s,池子里面有很多请求,排队,还没轮到他就挂了,怎么处理?

@@ -1,0 +1,24 @@
+问的比较散，问题间没啥联系
+redis缓存
+redis的数据类型，用的地方
+双亲委派机制
+linux指令，你用过那些
+谈谈springboot
+谈谈mybatis
+sql语句的优化
+多线程
+谈谈syn和lock
+具体谈谈syn
+IOC AOP
+springcloud的组件
+mysql的引擎
+springboot的注解，和前端有联系的注解谈谈
+restful风格的接口
+乐观悲观锁
+谈谈JVM GC
+GC的垃圾回收器（问的比较深，没必要在意这个问题）
+集合 说说hashmap
+equals和hashcode方法谈谈，为什么重写了equals还要重写hashcode，举个需要重写这两个方法的地方
+obj的常用方法
+你见过的异常 那两个分别举例
+前端用过哪些js

@@ -1,0 +1,92 @@
+----------String/StringBuilder/StringBuffer----------
+1.String与后两者的区别
+-String内容不可变 每次+=拼接本质并不是内容的追加 而是丢弃旧对象 创建新对象
+-StringBuilder/StringBuffer 每次append()拼接本质是内容的追加 地址不变
+2.后两者之间的区别
+-StringBuilder线程不安全/StringBuffer线程不安全
+-StringBuilder常用 因为效率高 线程安全问题可用多种手段回避
+3.扩展GC与FullGc
+-普通GC活动时 回收堆上那些new出来的对象
+-FullGc活动时 回收字符串常量池对象
+-FullGc比Gc触发频率低,但是FullGc一旦触发,服务器瞬间变得很卡,FullGc结束才会恢复,所以我们尽量要降低FullGc的频率
+
+-----------==/equals()/hashcode()----------
+1.三者在默认情况下全部比对地址
+2.equals()/hashcode()可以重写,根据业务逻辑比对指定内容.而==不可重写
+3.对于String类型 ==比对地址 equals()/hashcode()比对内容是因为String重写了后两者
+4.并且JDK内部 尤其集合 很多地方使用了hashcode()/equals()联合判重
+5.因为上一条 所以我们自定义一个类型User/Product/Order...时 如需重写equals()必须同步重写hashcode() 以保持一致性契约
+6.equals()为ture 则hashcode()一定相等   反过来hashcode相等 equals()有极小概率不为true   最典型的如字符串"Aa""BB"
+
+----------什么时候容易发生内存溢出----------
+1.无限递归-栈溢出
+-递归没有跳出条件
+2.jvm参数设置极其不合理-堆溢出
+-初始堆容量
+-最大堆容量
+
+----------调用函数时 形参的改变能否影响实参---------
+1.形参的内容改变[堆里的部分]->影响实参
+2.形参的地址改变->不影响实参
+        public static void main(String[] args) {
+		Student s = new Student(10, "彭敏", "女");
+		setVal(s);
+		System.out.println(s);
+	}
+
+	private static void setVal(Student n) {
+		n.setSex("男");
+		// n = new Student(10, "彭敏", "男");
+	}
+
+---------final---------
+1.修饰在类上代表不能被继承/在方法上代表不能被重写
+2.修饰在变量上 代表地址不可变 内容可变
+public static void main(String[] args) {
+		final StringBuilder bdr = new StringBuilder("HELLO");
+		bdr.append("美女");
+		bdr = new StringBuilder("HELLO美女");
+		System.out.println(bdr.toString());
+	}
+
+---------hashcode()一致,则equals()是否一定为true?---------
+1.equals()为ture 则hashcode()一定相等
+2.反过来hashcode相等 equals()有极小概率不为true   最典型的如字符串"Aa""BB"
+
+---------为什么重写equals()后要同步重写hashcode()?---------
+1.JDK内部 尤其集合 很多地方使用了hashcode()/equals()联合判重
+
+----------关于泛型----------
+一.当父类为泛型类/子类的处理
+1.子类也定义为泛型类
+public class Son<T> extends Father<T> {
+        //
+}
+2.子类为普通类，但继承时限定父类泛型参数。
+public class Son extends Father<Student> {
+	//
+}
+二.泛型类/泛型方法/泛型限定
+1.类上携带泛型
+public class MyDao<T>{---}
+2.方法上携带泛型
+public <T> void m1(T t){---}
+3.与Object对比
+public Object m1(){---}                  返回后的对象为弱类型 不能obj.属性() 需要强转
+public T m1(Class<T> clazz){---}   返回后的对象为强类型 可以t.属性() 编译器智能决定类型
+三.BaseDao<T>案例贯穿
+public class BaseDao<T extends Serializable> {
+	private Class<T> c;
+
+	public BaseDao() {
+		try {
+			ParameterizedType type = (ParameterizedType) this.getClass().getGenericSuperclass();
+			this.c = (Class<T>) type.getActualTypeArguments()[0];
+		} catch (Exception e) {
+			this.c = (Class<T>) Object.class;
+		}
+	}
+
+	public void selectAll() {
+		System.out.println("select * from " + c.getSimpleName());
+	}

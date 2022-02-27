@@ -1,0 +1,508 @@
+1.Oracle分页方式
+先对数据进行排序,排序后rownum给字段排序号,然后在用beteween and 进行分页查询
+2.Springboot项目中同类方法相互相互调用如何处理回滚
+方法一:引入自身bean
+在类内部通过@Autowired将本身bean引入，然后通过调用自身bean，从而实现使用AOP代理操作。
+注入自身bean
+
+内部方式使用this调用方式时，使用的是实例调用，并没有通过代理类调用方法，所以会导致事务失效;需要将本类注入进来,并用本类.方法调用,这样方法才会被Spring管理,回滚才会生效
+@Autowired
+@Lazy
+private UserService service;
+
+修改invokeInsertUser方法
+/**
+* 解决方法一 在bean中将自己注入进来
+* @param user
+*/
+@Override
+public void invokeInsertUser(User user) {
+this.service.insertUser(user);
+}
+
+方式二: 通过ApplicationContext引入bean
+通过ApplicationContext获取bean，通过bean调用内部方法，就使用了bean的代理类。
+注入ApplicationContext
+@Autowired
+ApplicationContext applicationContext;
+修改invokeInsertUser方法
+
+/**
+* 解决方法二 通过applicationContext获取到bean
+* @param user
+*/
+@Override
+public void invokeInsertUser(User user) {
+((UserService)applicationContext.getBean("userService")).invokeInsertUser(user);
+}
+
+方法三:通过AopContext获取当前类的代理类
+通过AopContext获取当前类的代理类，直接通过代理类调用方法
+在引导类上添加
+==EnableAspectJAutoProxy(exposeProxy=true)==
+注解
+修改invokeInsertUser方法
+
+/**
+* 解决方法三 通过通过AopContext获取当前类的代理类
+*
+* @param user
+*/
+@Override
+public void invokeInsertUser(User user) {
+((UserService) AopContext.currentProxy()).invokeInsertUser(user);
+}
+
+3.nginx是如何负载均衡的
+通过配置upstream 监听多个ip+端口号
+并配置权重,失败连接次数,剔除轮询最大连接时间
+当服务请求失败时间大于最大剔除轮询时间,则将服务从轮询的队伍中剔除,
+并访问正常的节点,实现负载均衡
+
+upstream xx.com{
+ip_hash; #保证每个访客固定访问一个后端服务器
+server localhost:8080 weight=2;
+server localhost:8081;
+server localhost:8082;
+server localhost:8083 max_fails=3 fail_timeout=20s;
+}
+权重分配请看nginx笔记
+
+4.什么是nginx反向代理,什么是nginx正向代理
+正向代理:
+当我们明确知道一个网站,但是我们想访问他,没有办法直接访问到,需要通过正向代理的服务器,接受到访问请求,去访问到外网的网站(VPN翻墙访问国外网站)
+
+反向代理:
+我们只知道代理服务器的网址/ip+端口号,发送请求至代理服务器,由代理服务器分发请求至不同的服务器获取数据,再返回的方式称为反向代理(只知道代理服务器地址,不知道实际需要请求数据的服务器地址)
+
+5.tomcat如何优化
+1. 禁用AJP连接(server.xml中配置)
+<!-- <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" /> -->
+2.执行器（线程池）(server.xml中配置)
+<!--将注释打开-->
+<Executor name="tomcatThreadPool" namePrefix="catalina-exec-"
+maxThreads="500" minSpareThreads="50" prestartminSpareThreads="true" maxQueueSize="100"/>
+<!--
+参数说明：
+maxThreads：最大并发数，默认设置 200，一般建议在 500 ~ 1000，根据硬件设施和业务来判断
+minSpareThreads：Tomcat 初始化时创建的线程数，默认设置 25
+prestartminSpareThreads： 在 Tomcat 初始化的时候就初始化 minSpareThreads 的参数值，如果不等于 true，minSpareThreads 的值就没啥效果了
+maxQueueSize，最大的等待队列数，超过则拒绝请求
+-->
+
+<!--在Connector中设置executor属性指向上面的执行器-->
+<Connector executor="tomcatThreadPool" port="8080" protocol="HTTP/1.1"
+connectionTimeout="20000"
+redirectPort="8443" />
+
+3.修改tomcat默认运行方式(默认nio)(server.xml配置)
+Tomcat8默认使用nio运行模式。
+推荐使用nio，在tomcat8中有最新的nio2，速度更快，建议使用nio2
+设置nio2：
+<Connector executor="tomcatThreadPool" port="8080" protocol="org.apache.coyote.http11.Http11Nio2Protocol"
+connectionTimeout="20000"
+redirectPort="8443" />
+测试工具:Apache JMeter进行性能测试
+
+4.JVM内存优化 (catalina.bat中配置):
+6.Tomcat的运行模式
+Tomcat有三种运行模式
+bio:
+性能非常低下，没有经过任何优化处理和支持
+nio:
+nio(new I/O)，是Java SE 1.4及后续版本提供的一种新的I/O操作方式(即java.nio包及其子包)。Java nio是一个基于缓冲区、并能提供非阻塞I/O操作的Java API，因此nio也被看成是non-blocking I/O的缩写。它拥有比传统I/O操作(bio)更好的并发运行性能。Tomcat8默认使用nio运行模式。
+apr:
+安装起来最困难，但是从操作系统级别来解决异步的IO问题，大幅度的提高性能
+对于每种协议，Tomcat都提供了对应的I/O方式的实现，而且Tomcat官方还提供了在每种协议下每种I/O实现方案的差异
+
+7.docker如何映射宿主机路径
+-v /usr/local/dev/docker-tomcat:/usr/local/tomcat/webapps/
+
+8.docker如何映射端口号
+# -d 后台运行
+# -p 8080:80 宿主机的8080端口映射到docker内部的80端口
+# --name docker-nginx 启动后的容器名称为docker-nginx
+docker run -d -p 8080:80 --name docker-nginx nginx
+
+9.dockerfile使用方式
+
+10.redis的模式(三种):
+主从模式:
+当redis发生高并发请求时,一台redis服务器难以满足需求,因此可以通过读写分离分流redis的访问压力
+
+哨兵模式:
+主从配置下主库服务器宕机情况,则会导致参与redis的业务失败,为了避免此类情况发生,可通过哨兵模式选举主库
+
+集群模式:
+redis集群是使用多对Redis 一主一从进行负载均衡访问,如果其中一对主库宕机则会用从库当做主库
+
+11.redis的几种数据类型
+字符串 - String
+Map - hash
+用来存储java中的一个完整定义对象的对象集合
+列表 - list
+采用的链表结构进行数据存储(左进右出,右进左出)
+无序集合 - set
+存入Set集合中的数据是唯一的,不能有重复的数据
+有序集合 - zset
+如果存入重复数据,则后一个数据会覆盖原有数据
+
+12.jenkins如何自动部署集群项目
+
+13.nginx 怎么实现反向代理
+server{
+#配置监听端口号
+listen 80
+#配置服务ip地址
+server_name 192.168.12.101;
+location / {
+#定义服务器的默认网站根目录位置
+root /new-mes;
+#定义首页索引文件的名称
+index index.html index.htm;
+#配置被请求的服务ip+地址
+proxy_pass http://xx.com;
+
+#配置超时时间
+proxy_connect_timeout 2s;
+}
+
+}
+
+```
+14.Spring如何解决循环依赖问题
+```
+```
+15.String,StrinBuffer,StringBuilder的区别
+```
+String:
+String的值是不可变的，这就导致每次对String的操作都会生成新的String对象，不仅效率低下，而且浪费大量优先的内存空间
+
+StringBuffer:
+StringBuffer是可变类，和线程安全的字符串操作类，任何对它指向的字符串的操作都不会产生新的对象。每个StringBuffer对象都有一定的缓冲区容量，当字符串大小没有超过容量时，不会分配新的容量，当字符串大小超过容量时，会自动增加容量
+
+StringBuilder:
+可变类，速度更快,线程不安全
+
+16.ArrayList、LinkedList、Vector的区别和实现原理
+ArrayList、LinkedList、Vector是集合中经常拿来比较和面试的一个问题，我这里简要概括一下他们的区别和实现原理。
+
+存储结构
+ArrayList和Vector是按照顺序将元素存储（从下表为0开始），删除元素时，删除操作完成后，需要使部分元素移位，默认的初始容量都是10.
+
+ArrayList和Vector是基于数组实现的，LinkedList是基于双向链表实现的（含有头结点）。
+
+线程安全性
+ArrayList不具有有线程安全性，在单线程的环境中，LinkedList也是线程不安全的，如果在并发环境下使用它们，可以用Collections类中的静态方法synchronizedList(）对ArrayList和LinkedList进行调用即可。
+
+Vector实现线程安全的，即它大部分的方法都包含关键字synchronized,但是Vector的效率没有ArraykList和LinkedList高。
+
+扩容机制
+从内部实现机制来讲，ArrayList和Vector都是使用Object的数组形式来存储的，当向这两种类型中增加元素的时候，若容量不够，需要进行扩容。ArrayList扩容后的容量是之前的1.5倍，然后把之前的数据拷贝到新建的数组中去。而Vector默认情况下扩容后的容量是之前的2倍。
+
+Vector可以设置容量增量，而ArrayList不可以。在Vector中，有capacityIncrement：当大小大于其容量时，容量自动增加的量。如果在创建Vector时，指定了capacityIncrement的大小，则Vector中动态数组容量需要增加时，如果容量的增量大于0，则增加的是大小是capacityIncrement，如果增量小于0，则增大为之前的2倍。
+
+在这里需要说一下可变长度数组的原理：当元素个数超过数组的长度时，会产生一个新的数组，将原数组的数据复制到新数组，再将新的元素添加到新数组中。
+
+增删改查的效率
+ArrayList和Vector中，从指定的位置检索一个对象，或在集合的末尾插入、删除一个元素的时间是一样的，时间复杂度都是O（1）。但是如果在其他位置增加或者删除元素花费的时间是O（n）,LinkedList中，在插入、删除任何位置的元素所花费的时间都是一样的，时间复杂度都为O（1），但是他在检索一个元素的时间复杂度为O（n）.
+
+随机访问效率
+ArrayList比LinkedList在随机访问的时候效率更高,因为linkedList是线性的数据存储方式,所以需要移动指针从前往后依次查找
+
+所以如果只是查找特定位置的元素或只在集合的末端增加移动元素，那么使用ArrayList或Vector都是一样的。如果是在指定位置的插入、删除元素，最好选择LinkedList
+
+17.抽象类和接口的区别
+抽象类
+1.abstract修饰的类为抽象类，此类不能有对象，（无法对此类进行实例化，说白了就是不能new）；
+2.abstract修饰的方法为抽象方法，此方法不能有方法体（就是什么内容不能有）；
+
+关于抽象类的使用特点：
+1.抽象类不能有对象，（不能用new此关键字来创建抽象类的对象）；
+2.有抽象方法的类一定是抽象类，但是抽象类中不一定有抽象方法；
+3.抽象类中的抽象方法必须在子类中被重写。
+
+
+接口
+1.通过interface关键字修饰
+其中重要的几个知识点：
+1.接口中的所有属性默认为：public static final ****；
+2.接口中的所有方法默认为：public abstract ****；
+区别:
+
+1.抽象类只能被单继承；
+2.接口与接口之间可以多继承；
+3.实体类只能继承一个父类,实体类可以实现多个接口；
+4.抽象类可以实现接口，接口中的方法可以在抽象类中不实现，当子类继承抽象类并且子类不是抽象类的时候，需要将抽象类的方法和接口中的方法全部实现；
+5.抽象类不能被final修饰；
+6.abstract不能与private、static、final、native并列修饰同一个方法；
+7.抽象类中可以包含构造方法，但是构造方法不能被声明为抽象；
+8.抽象方法不可以被private修饰，因为子类继承父类必须重写父类的方法，被private修饰的方法，无法被外部不使用
+9.子类继承抽象类后实例化流程：先调用抽象类构造方法，再调用子类构造方法
+10.abstract和final不能同时存在，异常信息：非法的修饰符组合，而且被final修饰的类无法被继承，方法无法被重写
+11.abstract和private不能同时存在，异常信息：非法的修饰符组合，被private修饰的属性和方法无法被外部使用
+12.abstract和static不能直接使用,抽象类的方法不能被static修饰,抽象方法只能被子类重写,不可以直接使用
+13.外部抽象类不允许static修饰，内部抽象类可以被static修饰
+
+```
+18.在什么场景下需要对字段增加索引
+```
+
+哪些情况需要创建索引
+1.主键自动建立唯一索引
+2.频繁作为查询的条件的字段应该创建索引
+3.查询中与其他表关联的字段，外键关系建立索引
+4.频繁更新的字段不适合创建索引
+5.Where条件里用不到的字段不创建索引
+6.单间/组合索引的选择问题，who？（在高并发下倾向创建组合索引）
+7.查询中排序的字段，排序字段若通过索引去访问将大大提高排序的速度
+8.查询中统计或者分组字段
+哪些情况不要创建索引
+1.表记录太少
+2.经常增删改的表
+3.数据重复且分布平均的表字段，因此应该只为经常查询和经常排序的数据列建立索引。
+注意，如果某个数据列包含许多重复的内容，为它建立索引就没有太大的实际效果。
+```
+19.Spring和Springboot的区别
+```
+1.如果我们需要应用需要web的话需要引入spring-web spring-webmvc等几个依赖，还需部署tomcat容器，配置 web.xml文件（上下文，DispatcherServlet，mapping等）,
+如果是Spring boot的话只需要引入spring-boot-starter-web 其他的都会自动配置且注入好。
+
+2.Spring中的大量需要xml配置的文件,在springboot中只需要用@Configuration注解的方式配置处理,无需在维护大量的xml信息
+
+3.应用相关的配置默认用application-*.yml配置。约定优先，不再需要直接配置文件
+
+4.提供了@ConfigurationProperties注解将配置项自动转换为javaBean对象方便使用
+
+5.提供了 Spring-boot-starter 核心依赖,只要引入依赖,springboot
+就会自动去下载其他相关的依赖信息
+
+6. Spring Boot中@SpringBootApplication注解,内置了@ComponentScan注解它会自动扫描同一个包中的所有类
+
+```
+20.JVM如何调优
+tomcat jvm调优(修改catalina.bat):
+JAVA_OPTS="-Dfile.encoding=UTF-8-server -Xms1024m -Xmx2048m -XX:NewSize=512m -XX:MaxNewSize=1024m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:MaxTenuringThreshold=10-XX:NewRatio=2 -XX:+DisableExplicitGC"
+
+22.SpringColud的组件
+
+23.SpringAop怎么控制事务的
+
+24.Oracle如何自增主键
+
+25.如何解决接口幂等性问题
+
+幂等性, 通俗的说就是一个接口, 多次发起同一个请求, 必须保证操作只能执行一次
+乐观锁:在多次提交的时候,根据提交的版本号,在修改的时候where条件使用主键 and 版本号,当修改的版本号和传过来的一致,则修改成功,不一致则修改失败
+
+redis+token机制:发送请求之前,先获取token信息,并将token信息存入redis中,当请求发送后,将token放入header中,在后端获取head中的token,当请求结束后,删除token,并检验redis中的token是否成功删除,删除成功,则本次请求成功,后面再有请求过来,如果head中的token在redis中不存在,则删除失败,本次重复提交的数据无法操作,解决幂等性问题
+
+```
+26.什么是乐观锁,什么是悲观锁?在项目中如何体现?
+```
+乐观锁:
+不会对数据库进行加锁,而是在实际操作数据修改的时候,才会去校验信息,通常使用version,做控制,在修改的时候查询出要修改产品的版本号,并将版本号和主键作为修改时候的查询条件,修改的时候version+1,如果查询到版本号和数据库的version一致,则修改成功;
+如果数据已经被修改,那么查询到的version在数据库中是已经不存在了,则修改失败,返回信息给用户
+
+悲观锁:
+
+for update 锁住一行后，其他进程（包括读写）只能等待，知道现有事务提交后方可读写操作
+
+for update nowait 锁住一行后，其他进展若访问相同数据（包括读写）则直接抛出ORA-00054异常
+
+for update wait x 锁住一行后，其他进展若访问相同数据（包括读写）只能等待，当到达x秒后，如原事务未提交则抛出ORA-00054异常
+
+悲观锁缺点:
+锁定：应用的使用者选择一个记录进行更新，然后去吃午饭，但是没有结束或者丢弃该事务。这样其他所有需要更新该记录的用户就必须等待正在进行实务操作的用户回来并且完成该事务或者直到DBA杀掉该不愉快的事务并且释放锁。
+死锁：用户A和B同时更新数据库。用户A锁定了一条记录并且试图请求用户B持有的锁，同时用户B也在等待获取用户A持有的锁。两个事务同时进入了无限等待状态即进入死锁状态。
+
+27.Spring的特性
+1.原子性（Atomicity）：事务是一个原子操作，由一系列动作组成。事务的原子性确保动作要么全部完成，要么完全不起作用。
+2.一致性（Consistency）：一旦事务完成（不管成功还是失败），系统必须确保它所建模的业务处于一致的状态，而不会是部分完成部分失败。在现实中的数据不应该被破坏。
+3.隔离性（Isolation）：可能有许多事务会同时处理相同的数据，因此每个事务都应该与其他事务隔离开来，防止数据损坏。
+4.持久性（Durability）：一旦事务完成，无论发生什么系统错误，它的结果都不应该受到影响，这样就能从任何系统崩溃中恢复过来。通常情况下，事务的结果被写到持久化存储器中
+```
+28.spring事务的传播等级
+```
+1.PROPAGATION_REQUIRED (xml文件中required):
+表示当前方法必须运行在事务中。如果当前事务存在，方法将会在该事务中运行。否则，会启动一个新的事务
+
+2.PROPAGATION_SUPPORTS(xml文件中supports):
+表示当前方法不需要事务上下文，但是如果存在当前事务的话，那么该方法会在这个事务中运行
+
+3.PROPAGATION_MANDATORY(xml中mandatory):
+表示该方法必须在事务中运行，如果当前事务不存在，则会抛出一个异常
+
+4.PROPAGATION_REQUIRED_NEW(xml中required_new):
+表示当前方法必须运行在它自己的事务中。一个新的事务将被启动。如果存在当前事务，在该方法执行期间，当前事务会被挂起。如果使用JTATransactionManager的话，则需要访问TransactionManager
+
+5.PROPAGATION_NOT_SUPPORTED(xml中supported):
+表示该方法不应该运行在事务中。如果存在当前事务，在该方法运行期间，当前事务将被挂起。如果使用JTATransactionManager的话，则需要访问TransactionManager
+
+6.PROPAGATION_NEVER(xml中never):
+表示当前方法不应该运行在事务上下文中。如果当前正有一个事务在运行，则会抛出异常
+
+7.PROPAGATION_NESTED(xml中nested):
+表示如果当前已经存在一个事务，那么该方法将会在嵌套事务中运行。嵌套的事务可以独立于当前事务进行单独地提交或回滚。如果当前事务不存在，那么其行为与PROPAGATION_REQUIRED一样。注意各厂商对这种传播行为的支持是有所差异的。可以参考资源管理器的文档来确认它们是否支持嵌套事务
+
+```
+29.数据库隔离级别
+```
+未提交读（Read-Uncommitted):
+指的是一个事务读取到另外一个事务还没有提交的内容。这种情况是必须要避免的。因为其他事务未提交的数据，是随时有可能进行回滚的，所以，任何时候，都不应该允许程序读取到某个事务还未提交的数据。如果读取到了别的事务未提交的数据，这种情况称为脏读。要想解决脏读的问题，可以提高数据库的事务隔离级别，把事务隔离级别设置为读已提交。
+提交读（不可重复读)(Read-committed):
+这个隔离级别可以解决脏读的问题。
+在该隔离级别下，不允许2个未提交的事务之间并行执行，但它允许在一个事务执行的过程中，另外一个事务得到执行并提交。这样，会出现一种情况，第一个事务前后两次select出来的某行数据，值可能不一样。值改变的原因是，穿插执行的事务2对该行数据进行了update操作。在同一个事务中，两次select出来的值不相同的问题称为不可重复读问题。要想解决不可重复读问题，需要把数据的隔离级别设置为可重复读。
+
+可重复读(repeatable-read):
+在这个隔离级别下，可以解决不可重复读的问题。
+
+在该隔离级别下，在一个事务使用某行的数据的过程中，不允许别的事务再对该行数据进行操作。可重复读是给数据库的行加上了锁。这种隔离级别下，依旧允许别的事务在该表中插入和删除数据，于是就会出现，在事务1执行的过程中，如果先后两次select出符合某个条件的行，如果在这两次select之间另一个事务得到了执行，insert或delete了某些行，就会出现先后两次select出来的符合同一个条件的结果不一样，第一次select好像出现了幻觉一样，因此，这个问题也被成为幻读。要想解决幻读问题，需要将数据库的隔离级别设置为串行化。
+
+串行化(serializable);
+串行化可以解决幻读的问题。
+
+它要求事务的执行完全串行执行。所以失去了并发的效率。
+
+Mysql的默认隔离级别为可重复读。
+
+脏读：一事务对数据进行了增删改，但未提交，另一事务可以读取到未提交的数据。如果第一个事务这时候回滚了，那么第二个事务就读到了脏数据。
+不可重复读：一个事务中发生了两次读操作，第一次读操作和第二次操作之间，另外一个事务对数据进行了修改，这时候两次读取的数据是不一致的。
+幻读：第一个事务对一定范围的数据进行批量修改，第二个事务在这个范围增加一条数据，这时候第一个事务就会丢失对新增数据的修改。
+小结：不可重复读的和幻读很容易混淆，不可重复读侧重于修改，幻读侧重于新增或删除。解决不可重复读的问题只需锁住满足条件的行，解决幻读需要锁表
+
+Oracle数据库默认隔离级别:read-committed
+mysql数据库默认隔离级别:repeatable-read
+
+30.java是通过什么编译的，又是如何在jvm中运行的
+
+java代码通过编译器编译成class文件,在通过
+
+31.oracle数据库表的模式
+
+32.如果我自己写一个java.lang.String的包，并且写一个String类，是否可以执行
+
+jdk中有对应的类,当你重写这个类的时候,jvm中会通过双亲委派机制,优先使用jdk中的包,如果没有加载到,则会加载自己定义的包
+
+33.syn类可以使用在哪里
+
+34.有多少种锁机制
+
+35.什么是双亲委外机制
+
+36.left join ,right join ,inner join 区别
+
+left join 左表数据全部查询出来,右表和左表匹配的数据展示出来,不匹配的不展示;
+right join 右表数据全部查询出来,左表和右表匹配的数据展示出来,不匹配的不展示;
+inner join 两边数据都匹配的查询出来,不匹配两表数据都不展示
+
+笛卡尔积:
+示例:select * from A,B;
+A表数据每一行和B表数据每一行匹配,B表数据每一行和A表数据每一行匹配,导致数据量递增
+
+37.多线程中synchronized锁升级的原理
+```
+在锁对象的对象头里有一个threadid字段，第一次访问的时候threadid字段为空，jvm让其持有偏向锁，并将threadid设为其线程的id，再次进入的时候会先判断threadid是否与其线程id一致，如果一致则可以直接使用此对象，如果不一致则升级偏向锁为轻量锁，通过自旋循环一定次数来获取锁，执行一定次数之后，如果还没有正常获取到要使用的对象，此时就会把锁从轻量级升级到重量级锁，此过程就构成了synchronized锁的升级。
+锁升级的目的：锁升级是为了减低锁带来的性能消耗。在JAVA6之后优化了synchronized的实现方式，使用了偏向锁升级为轻量级锁再升级为重量级锁的方式，从而降低了锁带来的性能消耗。
+
+38.ArrayList扩容之后删除里面的元素,会减容嘛?
+```
+ArrayList每次扩容会扩容为原来的1.5倍,
+ArrayList扩容的时候会将原来数组中的数据拷贝到新的已经扩容的数组中去,
+所以新的数据的长度是确定好的,即使删除了元素,也不会影响到减容
+
+39.索引的底层结构(oracle mysql)
+40.Arraylist和hashmap的区别和各自的好处
+
+ArrayList底层是数组结构,可以插入重复数据
+HashMap是K,V键值对类型,插入重复数据会覆盖原有数据
+
+41.oracle数据库和其他数据库的区别和好处
+
+42.项目上为什么使用Mybatis,他的好处是什么?
+
+1.mybatis是一种持久层框架，也属于ORM映射。前身是ibatis。
+
+2.相比于hibernatehibernate为全自动化，配置文件书写之后不需要书写sql语句，但是欠缺灵活，很多时候需要优化；
+
+3.mybatis为半自动化，需要自己书写sql语句，需要自己定义映射。增加了程序员的一些操作，但是带来了设计上的灵活，并且也是支持hibernate的一些特性，如延迟加载，缓存和映射等；对数据库的兼容性比hibernate差。移植性不好，但是可编写灵活和高性能的sql语句。
+
+优缺点：
+1.sql语句与代码分离，存放于xml配置文件中：
+优点：便于维护管理，不用在java代码中找这些语句；
+缺点： JDBC方式可以用用打断点的方式调试，但是Mybatis不能，需要通过log4j日志输出日志信息帮助调试，然后在配置文件中修改。
+
+2.用逻辑标签控制动态SQL的拼接：
+优点：用标签代替编写逻辑代码；
+
+缺点：拼接复杂SQL语句时，没有代码灵活，拼写比较复杂。不要使用变通的手段来应对这种复杂的语句。
+
+3.查询的结果集与java对象自动映射：
+优点：保证名称相同，配置好映射关系即可自动映射或者，不配置映射关系，通过配置列名=字段名也可完成自动映射。
+
+缺点：对开发人员所写的SQL依赖很强。
+
+4.编写原声SQL：
+优点：接近JDBC，比较灵活。支持动态拼接sql,在xml中的sql可以根据条件进行判断
+
+缺点：对SQL语句依赖程度很高；并且属于半自动，数据库移植比较麻烦，比如mysql数据库编程Oracle数据库，部分的sql语句需要调整。
+```
+43.什么是IOC,什么是AOP?
+IoC（Inversion of Control）
+(1). IoC（Inversion of Control）是指容器控制程序对象之间的关系，而不是传统实现中，由程序代码直接操控。控制权由应用代码中转到了外部容器，控制权的转移是所谓反转。 对于Spring而言，就是由Spring来控制对象的生命周期和对象之间的关系；IoC还有另外一个名字——“依赖注入（Dependency Injection）”。从名字上理解，所谓依赖注入，即组件之间的依赖关系由容器在运行期决定，即由容器动态地将某种依赖关系注入到组件之中。
+(2). 在Spring的工作方式中，所有的类都会在spring容器中登记，告诉spring这是个什么东西，你需要什么东西，然后spring会在系统运行到适当的时候，把你要的东西主动给你，同时也把你交给其他需要你的东西。所有的类的创建、销毁都由 spring来控制，也就是说控制对象生存周期的不再是引用它的对象，而是spring。对于某个具体的对象而言，以前是它控制其他对象，现在是所有对象都被spring控制，所以这叫控制反转。
+(3). 在系统运行中，动态的向某个对象提供它所需要的其他对象。
+(4). 依赖注入的思想是通过反射机制实现的，在实例化一个类时，它通过反射调用类中set方法将事先保存在HashMap中的类属性注入到类中。 总而言之，在传统的对象创建方式中，通常由调用者来创建被调用者的实例，而在Spring中创建被调用者的工作由Spring来完成，然后注入调用者，即所谓的依赖注入or控制反转。 注入方式有两种：依赖注入和设置注入；
+IoC的优点：降低了组件之间的耦合，降低了业务对象之间替换的复杂性，使之能够灵活的管理对象。
+
+AOP（Aspect Oriented Programming）
+(1). AOP面向方面编程基于IoC，是对OOP的有益补充；
+(2). AOP利用一种称为“横切”的技术，剖解开封装的对象内部，并将那些影响了 多个类的公共行为封装到一个可重用模块，并将其名为“Aspect”，即方面。所谓“方面”，简单地说，就是将那些与业务无关，却为业务模块所共同调用的 逻辑或责任封装起来，比如日志记录，便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可操作性和可维护性。
+(3). AOP代表的是一个横向的关 系，将“对象”比作一个空心的圆柱体，其中封装的是对象的属性和行为；则面向方面编程的方法，就是将这个圆柱体以切面形式剖开，选择性的提供业务逻辑。而 剖开的切面，也就是所谓的“方面”了。然后它又以巧夺天功的妙手将这些剖开的切面复原，不留痕迹，但完成了效果。
+(4). 实现AOP的技术，主要分为两大类：
+一是采用动态代理技术，利用截取消息的方式，对该消息进行装饰，以取代原有对象行为的执行；
+二是采用静态织入的方式，引入特定的语法创建“方面”，从而使得编译器可以在编译期间织入有关“方面”的代码。
+(5). Spring实现AOP：JDK动态代理和CGLIB代理
+JDK动态代理：其代理对象必须是某个接口的实现，它是通过在运行期间创建一个接口的实现类来完成对目标对象的代理；
+其核心的两个类是InvocationHandler和Proxy。
+
+CGLIB代理：实现原理类似于JDK动态代理，只是它在运行期间生成的代理对象是针对目标类扩展的子类。CGLIB是高效的代码生成包，底层是依靠ASM（开源的java字节码编辑类库）操作字节码实现的，性能比JDK强；需要引入包asm.jar和cglib.jar。
+使用AspectJ注入式切面和@AspectJ注解驱动的切面实际上底层也是通过动态代理实现的。
+(6). AOP使用场景：
+Authentication 权限检查
+Caching 缓存
+Context passing 内容传递
+Error handling 错误处理
+Lazy loading　延迟加载
+Debugging　　调试
+logging, tracing, profiling and monitoring　日志记录，跟踪，优化，校准
+Performance optimization　性能优化，效率检查
+Persistence　　持久化
+Resource pooling　资源池
+Synchronization　同步
+Transactions 事务管理
+另外Filter的实现和struts2的拦截器的实现都是AOP思想的体现。
+
+44.group by分组后会排序嘛？
+
+group by按照默认的顺序进行分组，不会进行排序
+
+45.在Spring中哪里用到了Aop
+
+声明式事务管理,底层使用到了Aop原理
+
+46.分布式锁在分布式中可能会出现那些问题，如何解决
+
+47.定时任务的job在分布式中可能会出现的问题，以及解决方案
+
+48.Redis异步队列
+
+49.活锁和死锁的区别
+
+50.nginx和apache(阿帕奇)的区别
+
+51.nio的底层原理?
+
+52.聚簇索引和非聚簇索引的区别?
+
+53.Redis实现高性能的原理?

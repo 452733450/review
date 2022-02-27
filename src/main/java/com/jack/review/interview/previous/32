@@ -1,0 +1,37 @@
+1、spring could有什么组件？项目中用了什么组件？
+2、RabbitMq怎么防止消息丢失？
+3、项目中用了哪些前端技术？
+4、怎么做的权限和认证？
+5、项目中自己做的哪个模块，用了哪些技术？
+6、cookie 和session 的区别？
+7、springmvc的原理？
+8、项目用什么框架，框架用了什么注解？
+9、简单说说hadoop？
+10、项目中有什么模块？
+11、git怎么用？
+12、项目中用了什么技术？
+
+
+其中
+threadlocal实现了解么
+spring和springmvc 配置文件能放一起么
+常用线程实现方法
+线程安全谈一谈
+项目在说说
+spring ioc过程实现
+spring 如何保证单例安全
+mybatis的常用标签
+设计模式聊一聊
+动态代理咋样
+aop了解不
+巴拉巴拉老吴牛逼
+
+1.一级缓存和二级缓存
+2.悲观锁和乐观锁
+3.spring多例的应用
+4.springboot常用注解
+5.谈谈ioc和aop
+6.手动实现ack应答
+7.redis效率高的原因
+bio和nio
+8.hibernate的缺点
