@@ -1,0 +1,21 @@
+dubbo 集群容错策略
+failover cluster 模式
+失败自动切换，自动重试其他机器，默认就是这个，常见于读操作。（失败重试其它机器）
+
+failfast cluster模式
+一次调用失败就立即失败，常见于写操作。（调用失败就立即失败）
+
+failsafe cluster 模式
+出现异常时忽略掉，常用于不重要的接口调用，比如记录日志。
+
+failback cluster 模式
+失败了后台自动记录请求，然后定时重发，比较适合于写消息队列这种。
+
+forking cluster 模式
+并行调用多个 provider，只要一个成功就立即返回。
+
+broadcacst cluster
+逐个调用所有的 provider。
+
+dubbo动态代理策略
+默认使用 javassist 动态字节码生成，创建代理类。但是可以通过 spi 扩展机制配置自己的动态代理策略。
