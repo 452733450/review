@@ -1,0 +1,37 @@
+Protocol 接口，在系统运行的时候，，dubbo 会判断一下应该选用这个 Protocol 接口的哪个实现类来实例化对象来使用。
+它会去找一个你配置的 Protocol，将你配置的 Protocol 实现类，加载到 jvm 中来，然后实例化对象，就用你的那个 Protocol 实现类就可以了。
+
+Protocol protocol = ExtensionLoader.getExtensionLoader(Protocol.class).getAdaptiveExtension();
+上面那行代码就是 dubbo 里大量使用的，就是对很多组件，都是保留一个接口和多个实现，然后在系统运行的时候动态根据配置去找到对应的实现类。
+如果你没配置，那就走默认的实现好了，没问题。
+
+@SPI("dubbo")
+public interface Protocol {
+
+    int getDefaultPort();
+
+    @Adaptive
+    <T> Exporter<T> export(Invoker<T> invoker) throws RpcException;
+
+    @Adaptive
+    <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException;
+
+    void destroy();
+
+}
+
+在 dubbo 自己的 jar 里，在/META_INF/dubbo/internal/com.alibaba.dubbo.rpc.Protocol文件中：
+
+dubbo=com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol
+http=com.alibaba.dubbo.rpc.protocol.http.HttpProtocol
+hessian=com.alibaba.dubbo.rpc.protocol.hessian.HessianProtocol
+
+所以说，这就看到了 dubbo 的 spi 机制默认是怎么玩儿的了，其实就是 Protocol 接口，@SPI("dubbo") 说的是，通过 SPI 机制来提供实现类，实现类是通过 dubbo 作为默认 key 去配置文件里找到的，配置文件名称与接口全限定名一样的，通过 dubbo 作为 key 可以找到默认的实现类就是 com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol。
+
+如果想要动态替换掉默认的实现类，需要使用 @Adaptive 接口，Protocol 接口中，有两个方法加了 @Adaptive 注解，就是说那俩接口会被代理实现。
+
+啥意思呢？
+比如这个 Protocol 接口搞了俩 @Adaptive 注解标注了方法，在运行的时候会针对 Protocol 生成代理类，这个代理类的那俩方法里面会有代理代码，代理代码会在运行的时候动态根据 url 中的 protocol 来获取那个 key，默认是 dubbo，你也可以自己指定，你如果指定了别的 key，那么就会获取别的实现类的实例了。
+
+
+通俗点：通过配置文件，指定接口的实现类 @SPI
