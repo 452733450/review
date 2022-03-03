@@ -5,12 +5,12 @@ import java.util.Random;
 /**
  * @Description:
  * @Auther: Jack You
- * @Date: 2022/03/03/17:34
+ * @Date: 2022/03/03/17:30
  */
 
 public class Solution4 {
 
-    // 快速排序 1：基本快速排序
+    // 快速排序 2：双指针（指针对撞）快速排序
 
     /**
      * 列表大小等于或小于该大小，将优先于 quickSort 使用插入排序
@@ -18,7 +18,6 @@ public class Solution4 {
     private static final int INSERTION_SORT_THRESHOLD = 7;
 
     private static final Random RANDOM = new Random();
-
 
     public int[] sortArray(int[] nums) {
         int len = nums.length;
@@ -58,23 +57,36 @@ public class Solution4 {
     }
 
     private int partition(int[] nums, int left, int right) {
-        int randomIndex = RANDOM.nextInt(right - left + 1) + left;
-        swap(nums, left, randomIndex);
+        int randomIndex = left + RANDOM.nextInt(right - left + 1);
+        swap(nums, randomIndex, left);
 
-        // 基准值
         int pivot = nums[left];
-        int lt = left;
+        int lt = left + 1;
+        int gt = right;
+
         // 循环不变量：
-        // all in [left + 1, lt] < pivot
-        // all in [lt + 1, i) >= pivot
-        for (int i = left + 1; i <= right; i++) {
-            if (nums[i] < pivot) {
+        // all in [left + 1, lt) <= pivot
+        // all in (gt, right] >= pivot
+        while (true) {
+            while (lt <= right && nums[lt] < pivot) {
                 lt++;
-                swap(nums, i, lt);
             }
+
+            while (gt > left && nums[gt] > pivot) {
+                gt--;
+            }
+
+            if (lt >= gt) {
+                break;
+            }
+
+            // 细节：相等的元素通过交换，等概率分到数组的两边
+            swap(nums, lt, gt);
+            lt++;
+            gt--;
         }
-        swap(nums, left, lt);
-        return lt;
+        swap(nums, left, gt);
+        return gt;
     }
 
     private void swap(int[] nums, int index1, int index2) {
@@ -83,4 +95,3 @@ public class Solution4 {
         nums[index2] = temp;
     }
 }
-

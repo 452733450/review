@@ -2,15 +2,8 @@ package com.jack.review.leetcode.quickSort;
 
 import java.util.Random;
 
-/**
- * @Description:
- * @Auther: Jack You
- * @Date: 2022/03/03/17:34
- */
-
-public class Solution3 {
-
-    // 快速排序 1：基本快速排序
+public class Solution5 {
+    // 快速排序 3：三指针快速排序
 
     /**
      * 列表大小等于或小于该大小，将优先于 quickSort 使用插入排序
@@ -18,7 +11,6 @@ public class Solution3 {
     private static final int INSERTION_SORT_THRESHOLD = 7;
 
     private static final Random RANDOM = new Random();
-
 
     public int[] sortArray(int[] nums) {
         int len = nums.length;
@@ -33,9 +25,34 @@ public class Solution3 {
             return;
         }
 
-        int pIndex = partition(nums, left, right);
-        quickSort(nums, left, pIndex - 1);
-        quickSort(nums, pIndex + 1, right);
+        int randomIndex = left + RANDOM.nextInt(right - left + 1);
+        swap(nums, randomIndex, left);
+
+        // 循环不变量：
+        // all in [left + 1, lt] < pivot
+        // all in [lt + 1, i) = pivot
+        // all in [gt, right] > pivot
+        int pivot = nums[left];
+        int lt = left;
+        int gt = right + 1;
+
+        int i = left + 1;
+        while (i < gt) {
+            if (nums[i] < pivot) {
+                lt++;
+                swap(nums, i, lt);
+                i++;
+            } else if (nums[i] == pivot) {
+                i++;
+            } else {
+                gt--;
+                swap(nums, i, gt);
+            }
+        }
+        swap(nums, left, lt);
+        // 注意这里，大大减少了两侧分治的区间
+        quickSort(nums, left, lt - 1);
+        quickSort(nums, gt, right);
     }
 
     /**
@@ -57,30 +74,9 @@ public class Solution3 {
         }
     }
 
-    private int partition(int[] nums, int left, int right) {
-        int randomIndex = RANDOM.nextInt(right - left + 1) + left;
-        swap(nums, left, randomIndex);
-
-        // 基准值
-        int pivot = nums[left];
-        int lt = left;
-        // 循环不变量：
-        // all in [left + 1, lt] < pivot
-        // all in [lt + 1, i) >= pivot
-        for (int i = left + 1; i <= right; i++) {
-            if (nums[i] < pivot) {
-                lt++;
-                swap(nums, i, lt);
-            }
-        }
-        swap(nums, left, lt);
-        return lt;
-    }
-
     private void swap(int[] nums, int index1, int index2) {
         int temp = nums[index1];
         nums[index1] = nums[index2];
         nums[index2] = temp;
     }
 }
-
