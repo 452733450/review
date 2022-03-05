@@ -1,10 +1,11 @@
 package com.jack.review.leetcode.linkedList;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Stack;
 
 /**
- * @Description:
+ * @Description: 反转链表
  * @Auther: Jack You
  * @Date: 2022/01/24/10:22
  */
@@ -60,12 +61,52 @@ public class Solution {
         return res;
     }
 
+
+    /*好理解的双指针
+    定义两个指针： prepre 和 curcur ；prepre 在前 curcur 在后。
+    每次让 prepre 的 nextnext 指向 curcur ，实现一次局部反转
+    局部反转完成之后，prepre 和 curcur 同时往前移动一个位置
+    循环上述过程，直至 prepre 到达链表尾部*/
+    public static int[] reverse(ListNode head) {
+        ListNode pre = null, cur = head;
+        int len = 0;
+        while (cur != null){
+            len ++;
+            ListNode temp = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = temp;
+        }
+        int []nums = new int[len];
+        for (int i = 0; i <len ; i++) {
+            assert pre != null;
+            nums[i] = pre.val;
+            pre = pre.next;
+        }
+        return nums;
+    }
+
+    private static int[] reverse2(ListNode head){
+        Stack<ListNode> stack = new Stack<>();
+        while (head != null) {
+            stack.push(head);
+            head = head.next;
+        }
+        int length = stack.size();
+        int[] nums = new int[length];
+        for (int i = 0; i <length ; i++) {
+            nums[i] = stack.pop().val;
+        }
+        return nums;
+    }
+
     public static void main(String[] args) {
         ListNode listNode = new ListNode(1);
         listNode.next = new ListNode(3);
         listNode.next.next = new ListNode(2);
-        int arr[] = reversePrint(listNode);
-        System.out.println(arr);
+        /*int arr[] = reversePrint(listNode);*/
+        int [] arr= reverse2(listNode);
+        System.out.println(Arrays.toString(arr));
     }
 
     /*复杂性分析
