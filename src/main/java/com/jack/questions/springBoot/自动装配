@@ -1,0 +1,31 @@
+this.prepareContext()在自动装配过程中做了什么事？
+    加载当前的启动类
+
+1.在springboot的启动过程中，有一个步骤是创建上下文
+2.在prepareContext()方法中查找load方法，一层一层向内点击，找到最终的load方法
+3.实际执行load的是BeanDefinitionLoader中的load方法
+4.下面方法是用来判断是否资源的类型，是使用groovy加载还是使用注解的方式
+5.下面方法判断启动类中是否存在@Component注解，但是会神奇的发现我们的启动类中并梅又该注解
+继续跟进MergedAnnotations类传入了一个参数
+SearchStrategy.TYPE_HIERARCHY会查找继承关系中是否包含这个注解
+@SpringBootApplication->@SpringBootConfiguration->@Configuration->@Component
+当找到@Component注解之后，把该对象注册到AnnotationBeanDefinitionReader对象中
+6.自动装配入口，从刷新容器开始
+7.在invokeBeanFactoryPostProcessor()方法中完成bean的实例化和执行
+8.查看在invokeBeanFactoryPostProcessor的具体执行方法
+9.开始执行自动配置逻辑（启动类指定的配置，非默认配置），可以通过debug的方式一层层向里进行查找，
+会发现最终会在ConfigurationClassParser类中，此类是所有配置类的解析类，所有的解析逻辑在parser.parse(candidates)中
+11.查看获取配置类的逻辑
+
+自动装配在BeanFactoryPostProcessor()进行处理的
+处理的时候判断一些列的注解标签
+最终识别Import标签，在import标签中取到@AutoConfigurationImportSelector注解
+AutoConfigurationImportSelector #selectImports()方法 (重点)
+    getCandidateConfigurations()
+,在这个方法里指定一个类(SpringFactoriesLoader)，通过这个类从spring里的spring.factories里读取到对应(EnableAutoConfiguration)的一些配置（SpringFactoriesLoader.loadFactoryNames）
+List<String> configurations = SpringFactoriesLoader.loadFactoryNames(this.getSpringFactoriesLoaderFactoryClass(), this.getBeanClassLoader());
+protected Class<?> getSpringFactoriesLoaderFactoryClass() {
+        return EnableAutoConfiguration.class;
+    }
+ 把spring.factories里EnableAutoConfiguration下面的所有的都加载进来
+后面再进行实例化

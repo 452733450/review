@@ -1,0 +1,60 @@
+SpringApplication.run()方法进去之后
+调用this.refreshContext(context)，即调用spring的refresh()方法之前要做准备工作
+准备工作：自动装配，内嵌tomcat
+
+
+run方法后，new SpringApplication()->构造方法->初始化操作->加载所有的初始化器，监听器(为什么要监听？程序在不同的阶段要处理不同的事情)
+通过类加载器加载spring.factories中的属性->获取文件中的类的路径->通过反射获取到具体的实例化对象
+执行run()方法,getRunListeners() 初始化监听器->listeners.starting()启动准备好监听器
+prepareEnvironment()准备环境对象->创建环境对象，加载系统参数，设置环境监听器集合
+this.createApplicationContext() 创建应用程序上下文
+prepareContext() 准备上下文环境，监听配置，设置环境对象，进行初始化操作，load对应的资源
+refreshContext(context) 调用过程跟spring的 refresh()一样，很多spring的核心功能都是在此方法中完成的，如自动装配，tomcat配置
+this.refreshContext(context);留给用户自行扩展的
+listeners.started(context); 发布上下文启动事件
+调用runner执行器
+发布上下文启动就绪事件
+SpringBoot启动完成
+
+
+
+public ConfigurableApplicationContext run(String... args) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        DefaultBootstrapContext bootstrapContext = this.createBootstrapContext();
+        ConfigurableApplicationContext context = null;
+        this.configureHeadlessProperty();
+        // 通过监听器对应的事件，来触发初始化的一些基本操作
+        SpringApplicationRunListeners listeners = this.getRunListeners(args);
+        listeners.starting(bootstrapContext, this.mainApplicationClass);
+
+        try {
+            ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
+            ConfigurableEnvironment environment = this.prepareEnvironment(listeners, bootstrapContext, applicationArguments);
+            this.configureIgnoreBeanInfo(environment);
+            Banner printedBanner = this.printBanner(environment);
+            context = this.createApplicationContext();
+            context.setApplicationStartup(this.applicationStartup);
+            this.prepareContext(bootstrapContext, context, environment, listeners, applicationArguments, printedBanner);
+            this.refreshContext(context);
+            this.afterRefresh(context, applicationArguments);
+            stopWatch.stop();
+            if (this.logStartupInfo) {
+                (new StartupInfoLogger(this.mainApplicationClass)).logStarted(this.getApplicationLog(), stopWatch);
+            }
+
+            listeners.started(context);
+            this.callRunners(context, applicationArguments);
+        } catch (Throwable var10) {
+            this.handleRunFailure(context, var10, listeners);
+            throw new IllegalStateException(var10);
+        }
+
+        try {
+            listeners.running(context);
+            return context;
+        } catch (Throwable var9) {
+            this.handleRunFailure(context, var9, (SpringApplicationRunListeners)null);
+            throw new IllegalStateException(var9);
+        }
+    }
