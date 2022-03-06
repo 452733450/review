@@ -28,4 +28,5 @@ protected Class<?> getSpringFactoriesLoaderFactoryClass() {
         return EnableAutoConfiguration.class;
     }
  把spring.factories里EnableAutoConfiguration下面的所有的都加载进来
+ 去除掉重复的，exclude的，放入beanDefinitionMap中
 后面再进行实例化

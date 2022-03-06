@@ -10,7 +10,7 @@ prepareEnvironment()准备环境对象->创建环境对象，加载系统参数�
 this.createApplicationContext() 创建应用程序上下文
 prepareContext() 准备上下文环境，监听配置，设置环境对象，进行初始化操作，load对应的资源
 refreshContext(context) 调用过程跟spring的 refresh()一样，很多spring的核心功能都是在此方法中完成的，如自动装配，tomcat配置
-this.refreshContext(context);留给用户自行扩展的
+this.afterRefresh(context, applicationArguments);;留给用户自行扩展的
 listeners.started(context); 发布上下文启动事件
 调用runner执行器
 发布上下文启动就绪事件
