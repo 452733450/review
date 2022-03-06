@@ -1,0 +1,75 @@
+非对称加密
+不直接传递密钥
+一对密钥：公钥和私钥
+原理：对一极大整数做因式分解的困难性来保证安全性
+个人保存私钥，公钥是公开的（可多人持有）
+
+加密：
+A生成公钥和私钥
+A传递公钥给B
+B用A的公钥对消息进行加密，并且把加密的消息传给A
+A用私钥对消息进行解密，如果
+
+签名：
+A生成公钥和私钥
+A用自己的私钥对消息加签，形成签名，并将加签的消息和消息本身一起传递给B
+B收到消息后，再获取A的公钥对消息进行验签，如果验签出来的内容与消息本身一致，证明消息是A回复的
+当用户登录的时候，系统把用户输入的密码计算成MD5值，然后再去和保存在文件系统中的MD5值进行比较，进而确定输入的密码是否正确。
+
+RDA密码加密登录
+思路：
+每次登录前，向后端发送请求。
+由RSA生成一对公钥和私钥，用redis或者数据库保存用户名对应得私钥。
+获取公钥中得modulus和publicExponent，分别调用String#toString(init)					方法，然后传到前端。
+前端使用security.js加密密码,然后进行登录。
+在后端使用私钥进行解密，再验证密码的正确性。
+注意：
+每次登录都需要获取公钥和私钥
+保证每次登录时，生成的公钥和私钥与用户名是对应的。
+
+            <if test="privateKey != null">
+                privateKey = #{privateKey,jdbcType=VARCHAR}
+            </if>
+
+updateByUserName
+
+RSA Private CRT Key
+            modulus: b062fdc57ce545f738ddf0ddc5a391575eb7a8ad497962754c174f19fb2a4a0b198f78278314877d3c216f617df791bd7ba6399b94a4536467573b407ed3ae72542a32dfab1ef764438c1396147b22f12283438395cbbadcc9c751082579b73d38fbb40111c2c9f0713caa7bd02379dd0c98329a238735883932419bab2a4025
+    public exponent: 10001
+   private exponent: 32b4c26f3b704da4bc5c5119efef0da1284173e41cf32032c8250b4054cbdb6d4573d0fecad7e3fb4485f816f6b76cd623edad31e49138c7ec4d4f634312675b4c0c6d068f7044575b4f886752aef9b8eeb312854a397ee2f45396726c4ad1f3fc7744975651ffd70fa1a9c3d8c0b2f09be1c83f903ab165c181f736da40a101
+             primeP: e3faa51f1cd4e547a9cc39ec94e5d69373d1ed18daa9809a615e8717243c56d9d924e5168a442857917d3b4331a51e577dc04091c71d8aba7d29aa5becc21be9
+             primeQ: c610fe389d32a5d8c601e4707ebc96f051cde90e0cc99e351a29604eabd5cdfa9ab682307ee388cc4c715d893e72060fd8baf94c2fb4534a4554e44f44c5e8dd
+     primeExponentP: 500786bb7b45890f351e0a1f70cd961bc106aa72951ff7933a2712c91ee147a3c5c45bdf23be7562f821bc12047570474a4f98db13c8dd10462bc02ff0d6db31
+     primeExponentQ: 22172aaa73e413c78bcd2794753be07edc95a45756bc1d0ee6c1d861b211cab2278ee239969d731e36ca0c5f62f01d3afd02b185fb6ffe25fa68f222f2a35dc1
+     crtCoefficient: 2d6bd175903861f330112f991b44e59597974ced998dcc36e2f8dcc5365f72df90eb14eccf01ba18a597453999a83ea5f5bc246478b7491cb189e8ef016b4816
+
+
+APP注册：app/user/userRegistration
+APP忘记密码：app/user/forgetPassword
+APP重置密码：app/user/resetPassword
+
+/app/rsa/user/rsaKey
+/app/rsa/user/userRegistration
+
+重置密码：/app/rsa/user/resetPassword
+修改密码：/app/rsa/user/changePassword
+
+原来接口中的resetPassword是修改密码的接口，forgetPassword是重置密码的接口
+
+admin
+获取公钥：/admin/rsaKey	(请求参数：{"username":" "})
+登录解密：/admin/login
+app
+获取公钥：/app/user/rsaKey	(无需参数)
+注册：/app/user/userRegistration
+当前修改密码：/app/user/appChangePassword
+当前重置密码（忘记密码）:/app/user/resetPassword
+
+/admin/rsaKey
+/admin/login
+/app/user/rsaKey
+/app/user/userRegistration
+/app/user/appChangePassword
+:/app/user/resetPassword
+
+

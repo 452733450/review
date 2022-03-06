@@ -1,5 +1,7 @@
-srping boot  的 启动过程
-synchronized  偏向锁   还有其他锁的 实现
-分布式  事务  tcc  xa
-类的加载过程
-红黑树
+兴文
+    三次握手，四次挥手
+    srping boot  的 启动过程
+    synchronized  偏向锁   还有其他锁的 实现
+    分布式  事务  tcc  xa
+    类的加载过程
+    红黑树
