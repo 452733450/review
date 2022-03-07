@@ -1,1 +1,8 @@
 Survivor区满了不会出发minor gc，minor gc会引发stw
+
+吞吐量 = 运行用户代码时间 /(运行用户代码时间 + 垃圾回收时间)
+如果虚拟机完成某个任务， 用户代码加上垃圾收集总共耗费了100分钟， 其中垃圾收集花掉1分
+钟， 那吞吐量就是99%
+parallel 是吞吐量优先的收集器
+parallel Scavenge 复制算法
+parallel old  标记整理算法
