@@ -1,0 +1,1 @@
+Survivor区满了不会出发minor gc，minor gc会引发stw
