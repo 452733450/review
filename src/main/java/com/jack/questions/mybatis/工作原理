@@ -1,0 +1,40 @@
+1.解析配置文件（MyBatis-config.xml、Mapper.xml），MyBatis基于XML配置文件生成Configuration，
+和一个个MappedStatement（包括了参数映射配置、动态SQL语句、结果映射配置），其对应着<select | update | delete | insert>标签项。；
+2.SqlSessionFactoryBuilder创建会话工厂SqlSessionFactory。
+3.SqlSessionFactory创建会话SqlSession；
+4.执行器将MappedStatement对象进行解析，sql参数转化、动态sql拼接，生成jdbc Statement对象，使用Paramterhandler填充参数，使用statementHandler绑定参数。
+5.JDBC执行sql，借助MappedStatement中的结果映射关系，使用ResultSetHandler将返回结果转化成HashMap、JavaBean等存储结构并返回。
+6.关闭sqlsession会话。
+
+
+总结以上步骤就是：
+1.根据具体传入的参数，动态地生成需要执行的SQL语句，用BoundSql对象表示
+2.为当前的查询创建一个缓存Key
+3.缓存中没有值，直接从数据库中读取数据
+4.执行查询，返回List 结果，然后 将查询的结果放入缓存之中
+5.根据既有的参数，创建StatementHandler对象来执行查询操作
+6.将创建Statement传递给StatementHandler对象,调用parameterize()方法赋值
+7.调用StatementHandler.query()方法，返回List结果集
+
+
+https://blog.csdn.net/yxh13521338301/article/details/109101873?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_aa&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_aa&utm_relevant_index=2
+
+1、加载mybatis全局配置文件（数据源、mapper映射文件等），解析配置文件，MyBatis基于XML配置文件生成Configuration，和一个个MappedStatement（包括了参数映射配置、动态SQL语句、结果映射配置），其对应着<select | update | delete | insert>标签项。
+2、SqlSessionFactoryBuilder通过Configuration对象生成SqlSessionFactory，用来开启SqlSession。
+3、SqlSession对象完成和数据库的交互：
+a、用户程序调用mybatis接口层api（即Mapper接口中的方法）
+b、SqlSession通过调用api的Statement ID找到对应的MappedStatement对象
+c、通过Executor（负责动态SQL的生成和查询缓存的维护）将MappedStatement对象进行解析，sql参数转化、动态sql拼接，生成jdbc Statement对象
+d、JDBC执行sql。
+e、借助MappedStatement中的结果映射关系，将返回结果转化成HashMap、JavaBean等存储结构并返回
+
+多级缓存概念就是前一级缓存有数据，则直接返回。
+Mybatis维护了二级缓存。当开启二级缓存时，Mybatis启动后维护一个TranscationCacheManger去向二级物理介质缓存中拿到所有缓存数据。
+TranscationCacheManger内部维护一个Map<Cache,TransactionCache>，key为二级缓存物理介质类型，value为该缓存介质对应的缓存数据。
+TransactionCache也维护了一个Map<String,Object>，key为上文提到的缓存key，value为当前缓存的结果集。
+当Mybatis查询时，拿到MapperedStatment的sql标签上cache的类型，去TranscationCacheManger查找，进而根据key匹配是否有缓存。
+如果二级缓存查不到，则进入下游查询（一级缓存/DB），如果下游返回数据，则将本次查询记录至map中，并且维护一个set存放未命中的key，sqlSession关闭后，会将未命中的数据刷新至二级物理介质中。
+一级缓存本质上就是一个HashMap，key就是缓存key，value就是缓存结果。
+如果一级也没有，就会查询DB，之后就是JDBC的封装了。
+所以可以看出Mybatis的一级缓存存在的问题很多都是来源于hashMap。
+
