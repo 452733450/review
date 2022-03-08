@@ -1,0 +1,5 @@
+spring transaction 事务是怎么实现的?
+mybatis的对象是怎么生成的?
+bean的生命周期
+redis sds数据结构
+kill一个进程，怎么提前释放资源
