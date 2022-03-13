@@ -1,0 +1,27 @@
+dubbo熔断机制
+父线程跟子线程通信怎么做？wait() notify() 想传参呢？
+线程池的工厂平时开发过程中有用到过吗？知道它能做哪些操作吗？
+synchronized底层有了解吗？
+同步代码块跟同步方法哪个更好一点
+servelet是线程安全的吗？
+java里面的队列有用过吗？用过什么队列？除了blockingQueue还用过其他的吗？
+HttpServeletRequest这个对象是单例的还是多例的？
+ThreadLocal开发工作中有用过吗？
+ThreadLocal内存泄漏问题
+你们使用的而是默认gc还是什么gc？
+了解过paralell 跟cms有什么区别吗
+java的spi机制
+spring bean的生命周期
+dubbo协议有哪些？
+soap适用什么场景？
+用的消息中间件是什么？死信队列有用过吗？
+分布式事务是怎么解决的？为什么不用rocketMQ?
+zookeeper对节点的监听是永久的吗？
+innodb下面有几种日志？独有的
+事务的四个特性是如何保证的
+讲一下回表
+mvcc在什么场景下有不同的
+mysql的主从有做过吗？主从延迟是怎么做的
+redis主从
+缓存穿透
+如何保证redis里的热点数据
