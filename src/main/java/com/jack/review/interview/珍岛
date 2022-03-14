@@ -1,9 +1,15 @@
 dubbo熔断机制
+    https://blog.csdn.net/qq_40369435/article/details/92109786
 父线程跟子线程通信怎么做？wait() notify() 想传参呢？
 线程池的工厂平时开发过程中有用到过吗？知道它能做哪些操作吗？
 synchronized底层有了解吗？
 同步代码块跟同步方法哪个更好一点
+    同步方法默认用this或者当前类class对象作为锁；
+    　　同步代码块可以选择以什么来加锁，比同步方法要更细颗粒度，我们可以选择只同步会发生同步问题的部分代码而不是整个方法；
+    　　同步方法使用关键字 synchronized修饰方法，而同步代码块主要是修饰需要进行同步的代码，用   synchronized（object）{代码内容}进行修饰；
 servelet是线程安全的吗？
+    Servlet不是线程安全的,因为它采用多线程方式运行其service方法.也就是说,当多个用户并发访问的时候,可能存在线程交互的问题。
+    （2）servlet的实例变量是线程不安全的,而其JSP也默认是以多线程方式执行,所以其线程也是不安全的!
 java里面的队列有用过吗？用过什么队列？除了blockingQueue还用过其他的吗？
 HttpServeletRequest这个对象是单例的还是多例的？
 ThreadLocal开发工作中有用过吗？
