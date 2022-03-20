@@ -12,4 +12,11 @@ public class ListNode {
     public ListNode(int x) {
         val = x;
     }
+
+    public static ListNode getListNode(){
+        ListNode listNode = new ListNode(1);
+        listNode.next = new ListNode(2);
+        listNode.next.next = new ListNode(3);
+        return listNode;
+    }
 }

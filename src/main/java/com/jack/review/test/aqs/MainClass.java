@@ -8,5 +8,7 @@ public class MainClass {
         ReentrantLock reentrantLock = new ReentrantLock();
         reentrantLock.lock();
         reentrantLock.unlock();
+        reentrantLock.newCondition();
+
     }
 }
