@@ -1,0 +1,17 @@
+https://www.jianshu.com/p/098dd5876381
+@RestController
+public class UserController {
+
+    @Reference(version = "${user.service.version}")
+    private UserService userService;
+
+    @HystrixCommand(fallbackMethod = "hiError")
+    @RequestMapping(value = "hi")
+    public String sayHi() {
+        return userService.sayHi();
+    }
+
+    public String hiError() {
+        return "Hystrix fallback";
+    }
+}

@@ -40,3 +40,18 @@ BASE理论
 分布式一致性算法
 
 什么是paxos算法
+
+反射是怎么破坏单例的
+    setAccessible(true)
+    https://blog.csdn.net/qq_37960603/article/details/104076323
+
+对象的属性拷贝要怎么做？beanUtils是深拷贝还是浅拷贝？
+    https://blog.csdn.net/enthan809882/article/details/104956537/
+simpleDateFormat是不是线程安全的？多线程情况下会出现什么问题？
+
+
+20220515
+new 一个对象的过程
+synchronized怎么保证原子性
+synchronized 遵循as-if-serial语义，不禁止指令重排，不管怎么重排序（编译器和处理器为了提高并行度），（单线程）程序的执行结果不能被改变
+

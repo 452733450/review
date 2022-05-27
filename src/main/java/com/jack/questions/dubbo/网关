@@ -1,0 +1,6 @@
+https://blog.csdn.net/zlt2000/article/details/106992879
+创建Spring Cloud Gateway工程
+    分别定义两个路由策略：
+
+    路径 /api-web/ 为请求 web-dubbo 工程
+    路径 /api-rest/ 为请求 rest-dubbo 工程

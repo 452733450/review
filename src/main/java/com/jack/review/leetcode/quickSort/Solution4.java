@@ -1,5 +1,8 @@
 package com.jack.review.leetcode.quickSort;
 
+import com.jack.practice.middle.no215.Solution20220504;
+
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -93,5 +96,11 @@ public class Solution4 {
         int temp = nums[index1];
         nums[index1] = nums[index2];
         nums[index2] = temp;
+    }
+
+    public static void main(String[] args) {
+        int[] arr = new int[]{3, 4, 2, 5, 1};
+        new Solution4().sortArray(arr);
+        System.out.println(Arrays.toString(arr));
     }
 }

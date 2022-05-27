@@ -1,0 +1,22 @@
+String a = "abc";
+        String b = "a" + "b" + "c";
+        String c = new String("abc");
+        System.out.println(a==b);
+        System.out.println(a==c);
+        System.out.println(a.equals(c));
+
+A a1 = new A();
+A a2 = new A();
+A a2 = new A();
+在内存模型中是怎么分配的
+
+a1 = a2;
+a2 = null;
+a3 = a1;
+哪个被回收
+
+java8接口有什么变化
+    default
+
+设计一个接口
+

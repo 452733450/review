@@ -1,0 +1,5 @@
+1、即使每个topic只有1个partition，当topic数量到达成千上万时，会导致总分区数很多，磁盘读写退化为随机，影响性能。
+
+2、Kafka中Topic的元数据是在zookeeper中的，大量topic确实会造成性能瓶颈，不仅在磁盘读写上。虽然目前还没有发布的Kafka 3.0计划去掉ZK的依赖自组Raft集群，未来或许能缓解这个问题。但当前，是不是可以尝试解决单个Kafka集群topic过多这个根本问题呢？
+
+3、topic太多造成partition过多。partition是kafka的最小并行单元，每个partition都会在对应的broker上有日志文件。当topic过多，partition增加，日志文件数也随之增加，就需要允许打开更多的文件数。partition过多在controller选举和controller重新选举partition leader的耗时会大大增加，造成kafka不可用的时间延长

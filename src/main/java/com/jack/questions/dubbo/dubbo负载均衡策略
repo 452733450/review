@@ -9,3 +9,7 @@ leastactive loadbalance
 
 consistanthash loadbalance
 一致性 Hash 算法，相同参数的请求一定分发到一个 provider 上去，provider 挂掉的时候，会基于虚拟节点均匀分配剩余的流量，抖动不会太大。如果你需要的不是随机负载均衡，是要一类请求都到一个节点，那就走这个一致性 Hash 策略。
+
+https://www.cnblogs.com/caoleiCoding/p/15150125.html
+@DubboReference(version = "1.0", interfaceName = "demoService", interfaceClass = DemoService.class, loadbalance = "roundrobin")
+    private DemoService demoService;

@@ -1,0 +1,17 @@
+http://www.javashuo.com/article/p-gmconpul-ed.html
+
+快速失败（fail—fast）java
+
+          在用迭代器遍历一个集合对象时，若是遍历过程当中对集合对象的内容进行了修改（增长、删除、修改），则会抛出Concurrent Modification Exception。编程
+
+          原理：迭代器在遍历时直接访问集合中的内容，而且在遍历过程当中使用一个 modCount 变量。集合在被遍历期间若是内容发生变化，就会改变modCount的值。每当迭代器使用hashNext()/next()遍历下一个元素以前，都会检测modCount变量是否为expectedmodCount值，是的话就返回遍历；不然抛出异常，终止遍历。安全
+
+      注意：这里异常的抛出条件是检测到 modCount！=expectedmodCount 这个条件。若是集合发生变化时修改modCount值恰好又设置为了expectedmodCount值，则异常不会抛出。所以，不能依赖于这个异常是否抛出而进行并发操做的编程，这个异常只建议用于检测并发修改的bug。数据结构
+
+      场景：java.util包下的集合类都是快速失败的，不能在多线程下发生并发修改（迭代过程当中被修改）。多线程
+
+二：安全失败（fail—safe）并发
+
+      采用安全失败机制的集合容器，在遍历时不是直接在集合内容上访问的，而是先复制原有集合内容，在拷贝的集合上进行遍历。this
+
+      原理：因为迭代时是对原集合的拷贝进行遍历，因此在遍历过程当中对原集合所做的修改并不能被迭代器检测到，因此不会触发Concurrent Modification Exception

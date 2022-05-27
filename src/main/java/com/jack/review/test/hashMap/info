@@ -61,7 +61,9 @@ put()
     // 首先，判断该位置的第一个数据和我们要插入的数据，key 是不是"相等"，如果是，取出这个节点
     // 如果该节点是代表红黑树的节点，调用红黑树的插值方法，本文不展开说红黑树
     // 到这里，说明数组该位置上是一个链表
-    // 插入到链表的最后面(Java7 是插入到链表的最前面)
+    // 插入到链表的最后面(Java7 是插入到链表的最前面)，先找到队尾
+        for (int binCount = 0; ; ++binCount) {
+                            if ((e = p.next) == null) {
         // TREEIFY_THRESHOLD 为 8，所以，如果新插入的值是链表中的第 8 个
         // 会触发下面的 treeifyBin，也就是将链表转换为红黑树
 和 Java7 稍微有点不一样的地方就是，Java7 是先扩容后插入新值的，Java8 先插值再扩容，
@@ -74,4 +76,8 @@ get 过程分析
 判断该元素类型是否是 TreeNode，如果是，用红黑树的方法取数据，如果不是，走第四步
 遍历链表，直到找到相等(==或equals)的 key
 
+
+concurrentHashMap
+1.7 segment + ReentrantLock
+1.8 Node + cas + synchronized
 

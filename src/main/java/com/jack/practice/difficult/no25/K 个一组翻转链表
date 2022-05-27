@@ -1,0 +1,11 @@
+1.定义一个辅助节点作为头节点dummy
+2.定义一个pre，end节点，pre表示已反转的部分，end表示待翻转的部分尾节点,都以dummy为起点
+3.先确定待反转的部分end的位置，由上一个end的位置向后移动k位，如果end == null,则退出循环
+4.pre.next作为待翻转的部分的头结点 start
+5.先保存next = end.next,方便之后进行翻转, 然后断开链表,end.next = null;
+6.翻转,pre.next = 翻转后的部分
+7.翻转之后，start在尾部，连接待翻转的部分，start.next = next
+8.重新确定pre和end的位置,pre = start; end = start
+
+
+

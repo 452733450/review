@@ -1,0 +1,15 @@
+redis持久化方式
+redis和memcache区别
+线程池执行过程
+@OnConditionMissingBean干嘛用的
+    https://www.cnblogs.com/sharpest/p/13712764.html
+    @ConditionalOnMissingBean就实现了这个功能，它作用在@bean定义上，就是在容器加载它作用的bean时，检查容器中是否存在目标类型（@ConditionalOnMissingBean注解的value值）的bean了，如果存在这跳过原始bean的默认加载动作。
+springBoot项目刚启动，就要进行初始化，实现哪两个接口
+    https://www.cnblogs.com/Andya/p/13673754.html
+applicationRunner,CommandLineRunner
+mybatis里的orm是什么意思
+    ORM: 即Object Relation Mapping，即对象关联映射。所以ORM就是将Java中的对象和数据库中的表关联对应起来
+MybatisPlus级联
+实体类里面有一个list，要怎么样实现一个什么样才能去识别它
+jvm内存模型？堆内存？
+jvm调优参数
