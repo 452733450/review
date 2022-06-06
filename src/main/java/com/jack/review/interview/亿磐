@@ -1,0 +1,45 @@
+java8 接口的变化
+    java8之前的接口中都有哪些方法？
+        常量（public static final）
+        抽象方法（public abstract）
+    在java8中新加入的有：默认方法，静态方法
+https://www.cnblogs.com/hetaoyuan/p/11609624.html
+https://blog.csdn.net/weixin_34377919/article/details/86005793
+
+
+select * from user where a = ? and b = ?;
+select * from user where b = ?;
+select * from user where b = ? order by createTime Desc;
+如何建索引
+(b,a), (b, createTime)
+b 在前, a在后
+    https://www.cnblogs.com/zhaoyl/archive/2012/05/04/2483513.html
+
+
+String  a = "abc"; String b = "a" + "b" + "c"; String c = new String("abc");
+a == b;  a== c; a.equal(c); true; false; true;
+    https://blog.csdn.net/pb951028/article/details/93667906
+
+
+A a1 = new A();
+A a2 = new A();
+A a3 = new A();
+在内存模型中怎么分配
+要画栈引用堆中的对象
+
+
+a1 = a2;
+a2 = null;
+a3 = a1;
+哪些对象被回收? a1, a3
+    https://zhidao.baidu.com/question/306175685.html
+
+
+如何设计一个微服务接口？
+幂等、限流
+
+List<Person> persons = Arrays.stream(arr).map(s -> {
+            Person person = new Person();
+            person.setName(s);
+            return person;
+        }).collect(Collectors.toList());
