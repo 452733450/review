@@ -1,1 +1,12 @@
 https://www.cnblogs.com/youzhibing/p/10451680.html
+
+1、我们用mytabis操作数据库，有一个固定流程：先创建SqlSessionFactory，然后创建SqlSession，然后再创建获取mapper代理对象，最后利用mapper代理对象完成数据库的操作；一次数据库操作完成后需要关闭SqlSession；
+
+2、创建SqlSessionFactory实例的过程中，解析mybatis配置文件和映射文件，将内容都存放到Configuration实例的对应属性中；创建SqlSession的过程中，有创建事务Transaction、执行器Executor，
+以及DefaultSqlSession；Mapper代理对象的创建，利用的是JDK的动态代理，InvocationHandler是MapperProxy，后续Mapper代理对象方法的执行都会先经过MapperProxy的invoke方法；
+
+springboot集成下，mybatis的mapper代理对象究竟是如何生成的
+1、自动配置的过程中，spring会扫描所有的mapper，并将所有mapper bean定义中的beanClass指向MapperFactoryBean；
+
+2、创建mapper实例的时候，根据bean定义创建的实例实际上是MapperFactoryBean实例，
+然后再利用MapperFactoryBean获取mapper实例（调用MapperFactoryBean的getObject方法，mybatis会利用jdk的动态代理创建mapper代理对象）；
