@@ -47,4 +47,7 @@ TERMINATED：当线程池处于SHUTDOWN或STOP状态，并且所有工作线程�
 
 
 private static int workerCountOf(int c)  { return c & CAPACITY; }
-计算逻辑很简单，传入的c代表的是ctl的值，即高3位为线程池运行状态runState，低29位为线程池中当前活动的线程数量workerCount，将其与CAPACITY进行与操作&，也就是与000 11111 11111111 11111111 11111111进行与操作，c的前三位通过与000进行与操作，无论c前三位为何值，最终都会变成000，也就是舍弃前三位的值，而c的低29位与29个1进行与操作，c的低29位还是会保持原值，这样就从AtomicInteger ctl中解析出了workerCount的值。
+计算逻辑很简单，传入的c代表的是ctl的值，即高3位为线程池运行状态runState，低29位为线程池中当前活动的线程数量workerCount，
+将其与CAPACITY进行与操作&，也就是与000 11111 11111111 11111111 11111111进行与操作，c的前三位通过与000进行与操作，
+无论c前三位为何值，最终都会变成000，也就是舍弃前三位的值，而c的低29位与29个1进行与操作，c的低29位还是会保持原值，
+这样就从AtomicInteger ctl中解析出了workerCount的值。

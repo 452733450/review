@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  */
 public class MainClass {
     public static void main(String[] args) {
-        String[] arr = new String[]{"jack", "tom"};
+        /*String[] arr = new String[]{"jack", "tom"};
         List<Person> personList = new ArrayList<>(arr.length);
         Arrays.stream(arr).forEach(s -> {
             Person person = new Person();
@@ -25,6 +25,9 @@ public class MainClass {
             person.setName(s);
             return person;
         }).collect(Collectors.toList());
-        System.out.println(personList.size());
+        System.out.println(personList.size());*/
+        AImpl impl = new AImpl();
+        impl.test03();
+        A.test04();
     }
 }

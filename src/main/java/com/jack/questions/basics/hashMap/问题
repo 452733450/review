@@ -4,3 +4,9 @@ HashMap夺命连环21问
     https://mp.weixin.qq.com/s/2AUj3IkeUbEzHS1dKMuBbQ
 
 HashMap 为什么链表到8之后转为红黑树，为什么6之后退回链表
+
+你知道 hash 的实现吗？为什么要这样实现
+是通过 hashCode() 的高 16 位异或低 16 位实现的
+
+为什么要用异或运算符
+保证了对象的 hashCode 的 32 位值只要有一位发生改变，整个 hash() 返回值就会改变。尽可能的减少碰撞。

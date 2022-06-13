@@ -21,7 +21,9 @@ public class MainClass {
         System.out.println(age);*/
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8:00"));
+        calendar.set(2022, 12, 9);
         int day = calendar.get(Calendar.DAY_OF_WEEK);
+        int month = calendar.get(Calendar.MONTH);
         System.out.println(day);
 
 
@@ -32,7 +34,7 @@ public class MainClass {
                 .sorted()
                 .collect(Collectors.toList());
         System.out.println(localDates.size());*/
-        int sendDay = 7;
+        /*int sendDay = 7;
         int weekday;
         if (day == 1) {
             weekday = 7;
@@ -48,7 +50,7 @@ public class MainClass {
         System.out.println(adder);
 
         LocalDate localDate = new MainClass().getSendDay(calendar, 3);
-        System.out.println(localDate);
+        System.out.println(localDate);*/
     }
 
 
