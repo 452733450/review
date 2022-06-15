@@ -1,0 +1,6 @@
+持久性：
+innodb中的redo log可以保证持久性
+隔离性：
+Mysql利用锁和MVCC多版本并发控制(Multi Version Concurrency Control)来保证隔离性。
+原子性：
+Innodb中的undo log可以是实现原子性的关键，当事务回滚时会撤销所有已经执行完毕的sql语句，但是需要记录回滚的日志信息。

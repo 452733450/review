@@ -1,0 +1,8 @@
+临键锁，是记录锁与间隙锁的组合，它的封锁范围，既包含索引记录，又包含索引区间。
+注：临键锁的主要目的，也是为了避免幻读(Phantom Read)。如果把事务的隔离级别降级为RC，临键锁则也会失效。
+
+https://blog.csdn.net/weixin_39035120/article/details/105937400?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-105937400-blog-122863209.pc_relevant_antiscanv2&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-105937400-blog-122863209.pc_relevant_antiscanv2&utm_relevant_index=1
+当我们使用索引进行范围查询，命中了记录的情况下，就是使用了临键锁，他相当于记录锁+间隙锁。
+两种退化的情况：
+    唯一性索引，等值查询匹配到一条记录的时候，退化成记录锁。
+    没有匹配到任何记录的时候，退化成间隙锁。
