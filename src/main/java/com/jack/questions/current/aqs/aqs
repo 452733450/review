@@ -16,3 +16,12 @@ private volatile int state;
 // reentrantLock.lock()可以嵌套调用多次，所以每次用这个来判断当前线程是否已经拥有了锁
 // if (currentThread == getExclusiveOwnerThread()) {state++}
 private transient Thread exclusiveOwnerThread; //继承自AbstractOwnableSynchronizer
+
+aqs为什么要用双向链表
+    在队列同步器中，头节点是成功获取到同步状态的节点，而头节点的线程释放了同步状态后，将会唤醒其他后续节点，
+    后继节点的线程被唤醒后需要检查自己的前驱节点是否是头节点，如果是则尝试获取同步状态。
+    所以为了能让后继节点获取到其前驱节点，同步队列便设置为双向链表，而等待队列没有这样的需求，就为单链表。
+gc的垃圾回收信息存在哪里？为什么是15次。
+    因为Object Header采用4个bit位来保存年龄，4个bit位能表示的最大数就是15！
+    存在对象头里面啊。而且最大只能是15次，因为对象头那边存储大小为4个字节吧好像，
+    然后大于15次后，对象还存在，就会转入老年代中去，，如果最后还存在，就会判断栈里面的栈帧是否移出。而去移出对象

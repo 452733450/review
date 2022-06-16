@@ -1,0 +1,6 @@
+里面的size()方法，获取去元素个数,是线程安全的吗
+怎么保证线程安全的？
+
+1.7和1.8区别
+JDK1.7版本：ReentrantLock+Segment+HashEntry
+JDK1.8版本：synchronized+CAS+HashEntry+红黑树
