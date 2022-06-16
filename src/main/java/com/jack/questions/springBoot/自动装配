@@ -30,3 +30,14 @@ protected Class<?> getSpringFactoriesLoaderFactoryClass() {
  把spring.factories里EnableAutoConfiguration下面的所有的都加载进来
  去除掉重复的，exclude的，放入beanDefinitionMap中
 后面再进行实例化
+
+配了什么东西？
+如果直接用spring，项目里要用消息队列，要用spring事务，要用mybatis，缓存啊等等，除了要引入对应技术的jar包之外，还要去配置很多很多的bean
+mybatis
+    配置各种mapper factory bean
+事务
+    配置事务管理器之类的bean
+队列也要配置很多的bean
+自动配置就是帮助我们配置了这些bean
+这些bean并不是一定会生效，springBoot会利用很多的条件注解，但是那些代码早就在那里了，在某种条件下bean才会生效
+
