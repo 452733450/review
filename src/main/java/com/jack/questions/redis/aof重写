@@ -12,6 +12,14 @@ AOF 重写是一个有歧义的名字，该功能是通过读取数据库中的�
 
 为什么要AOF重写？
     https://blog.csdn.net/qq_18343913/article/details/119343547
+    为什么要重写
+        过期的数据不再写入文件
+        无效的命令不再写入文件：如有些数据被重复设值(set mykey v1, set mykey v2)、有些数据被删除了(sadd myset v1, del myset) 等。
+        多条命令可以合并为一个：如sadd myset v1, sadd myset v2， sadd myset v3可以合并为sadd myset v1 v2 v3。
+
     AOF 持久化是通过保存被执行的写命令来记录数据库状态和相关数据，所以AOF文件的大小随着时间推进会越来越大；
     那么通过AOF文件进行还原出数据库的时间也会相应增加。
     为了解决AOF文件体积膨胀的问题，Redis提供了AOF重写功能
+
+    AOF 文件重写的实现
+        AOF重写并不需要对原有AOF文件进行任何的读取，写入，分析等操作，这个功能是通过读取服务器当前的数据库状态来实现的。

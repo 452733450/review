@@ -1,0 +1,9 @@
+我理解的大致流程：
+    定义一个切面类DynamicDataSourceAspect指定了切点位置
+    @Pointcut(“execution(* config.TestController.*(…))”)
+    即只要调用TestController中的方法，就会调用切面类的方法
+    我们在TestController方法添加了切换数据源注解@DataSource(“local”)，如果调用TestController方法时，触发切面类的before方法，该方法实现了切换到local数据源，即通过获取注解上面的值local，知道该方法执行前要切换到local数据源。
+    所以就实现了，哪个方法需要切换数据源，就添加注解@DateSource(“数据源”)
+    Spring boot提供了AbstractRoutingDataSource 根据用户定义的规则选择当前的数据源，这样我们可以在执行查询之前，设置使用的数据源。实现可动态路由的数据源，在每次数据库查询操作前执行。它的抽象方法 determineCurrentLookupKey() 决定使用哪个数据源。
+
+https://zhuanlan.zhihu.com/p/516276645
