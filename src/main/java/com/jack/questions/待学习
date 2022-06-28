@@ -1,0 +1,14 @@
+aqs
+可重入锁
+    可重入锁，指的是以线程为单位，当一个线程获取对象锁之后，这个线程可以再次获取本对象上的锁，而其他的线程是不可以的。
+    synchronized 和 ReentrantLock 都是可重入锁。
+    他内部维护了一个Sync类 这个Sync又有一个state的变量 这就是可重入的关键
+公平锁和非公平锁
+sync和reentrant lock区别
+    1.Synchronized是java的关键字
+    2.ReentrantLock是jdk1.5以后引进来的方法,是Lock类的实现类默认的是非公平锁
+    3.Synchronized不需要手动的获取锁和释放锁ReentrantLock是需要手动的获取锁（lock()）和释放锁(unlock())
+    4.reentrantlock支持公平锁和非公平锁 而synchronized 仅支持非公平锁。
+    5. Lock只适用于代码块锁，而synchronized可用于修饰方法、代码块等。
+    6.锁的细粒度和灵活度：很明显ReenTrantLock优于Synchronized
+redis限流
