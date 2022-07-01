@@ -4,6 +4,17 @@ hashmap数据结构，
 mysql优化，
 redis热点key处理，
 redis如何淘汰过期key的，
+    可以使用KEYS 命令
+    KEYS pattern
+
+    例如， 列出所有的key
+    redis> keys *
+
+    列出匹配的key
+    redis>keys apple*
+        1) apple1
+        2) apple2
 redis展示所有key的命令，
+
 spring ioc/di，
 spring循环依赖怎么处理
