@@ -51,6 +51,10 @@ public class MainClass {
 
         LocalDate localDate = new MainClass().getSendDay(calendar, 3);
         System.out.println(localDate);*/
+
+        String str = "1";
+        String str1 = "2";
+        str.equals(str1);
     }
 
 
