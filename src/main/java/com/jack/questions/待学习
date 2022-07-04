@@ -228,3 +228,14 @@ spring bean生命周期
 ZAB 协议，ZK 选举过程，ZXID 的结构是怎么样的？ZXID 有什么用？
 Paxos 算法了解吗？介绍 RAFT 和 ZAB，以及它们之间的区别？会有脑裂问题吗？为什么？
 groovy脚本
+
+select count(1) count(*)区别
+HashMap 1.7 1.8 resize()扩容区别
+尾插法为什么会形成链表
+    https://blog.csdn.net/no_away/article/details/122474508
+AutoInteger怎么保证原子性
+lock前缀指令
+zgc
+三色标记
+逃逸分析
+对象(再)分配(什么情况下)
