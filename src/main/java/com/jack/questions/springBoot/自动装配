@@ -5,7 +5,7 @@ this.prepareContext()在自动装配过程中做了什么事？
 2.在prepareContext()方法中查找load方法，一层一层向内点击，找到最终的load方法
 3.实际执行load的是BeanDefinitionLoader中的load方法
 4.下面方法是用来判断是否资源的类型，是使用groovy加载还是使用注解的方式
-5.下面方法判断启动类中是否存在@Component注解，但是会神奇的发现我们的启动类中并梅又该注解
+5.下面方法判断启动类中是否存在@Component注解，但是会神奇的发现我们的启动类中并没有该注解
 继续跟进MergedAnnotations类传入了一个参数
 SearchStrategy.TYPE_HIERARCHY会查找继承关系中是否包含这个注解
 @SpringBootApplication->@SpringBootConfiguration->@Configuration->@Component

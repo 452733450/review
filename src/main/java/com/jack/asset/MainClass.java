@@ -2,6 +2,7 @@ package com.jack.asset;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -51,11 +52,23 @@ public class MainClass {
 
         LocalDate localDate = new MainClass().getSendDay(calendar, 3);
         System.out.println(localDate);*/
+        Object object;
+        for (int i = 0; i <1000 ; i++) {
+            object = new Object();
+            System.out.println("object name is" + object);
+        }
 
         String str = "1";
         String str1 = "2";
         str.equals(str1);
     }
+
+    public static void test(){
+
+    }
+
+    private void hello(){}
+
 
 
     public LocalDate getSendDay(Calendar calendar, int sendDay) {

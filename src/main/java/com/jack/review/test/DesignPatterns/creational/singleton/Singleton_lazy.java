@@ -28,4 +28,12 @@ public class Singleton_lazy {
 
         return instance;
     }
+
+    private static class Holder {
+        private static final Singleton_lazy instance = new Singleton_lazy();
+    }
+
+    public static Singleton_lazy getInstance2() {
+        return Holder.instance;
+    }
 }
