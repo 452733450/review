@@ -1,0 +1,20 @@
+mysql导出数据量太大会有什么问题
+查看内存使用情况，不用dump文件吗，这么看
+怎么去查看运行中的程序，内存大小，堆栈信息,不用dump，怎么快速看到系统的线程数量还有运行的情况，jmap看不了
+java8的并行流用过吗，并行得比较多的话，会有什么问题
+    https://www.nowcoder.com/discuss/611892?channel=-1&source_id=discuss_terminal_discuss_sim_nctrack
+stream用并行的流去计算长时间的复杂的计算会有一个影响，用的是jdk自带的公共的线程池
+    并行流的设计是为了应对计算密集型的场景的，如果有较多的IO场景，比如常见的RPC调用，在高并发的场景下会导致外部线程阻塞，引起外部线程数增多，
+    且这类问题在测试的时候不容易发现，极易引起生产故障。
+spring boot自动装配
+自己写一个starter
+    https://www.cnblogs.com/monkey-xuan/p/15693746.html
+jvm常用命令
+多数据源@DataSource，线程池
+ioc生命周期，主要是mvc的这一套，基于这个去讲
+看过dispatchServlet底层，web.xml，启动的核心配置文件，它的起始点从这里开始
+
+
+
+easyExcel导入导出
+配置中心阿波罗
