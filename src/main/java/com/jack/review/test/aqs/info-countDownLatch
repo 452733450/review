@@ -1,0 +1,121 @@
+所以说 CountDownLatch 非常实用，我们常常会将一个比较大的任务进行拆分，然后开启多个线程来执行，等所有线程都执行完了以后，再往下执行其他操作。
+
+AQS 里面的 state 是一个整数值，这边用一个 int count 参数其实初始化就是设置了这个值，所有调用了 await 方法的等待线程会挂起，
+然后有其他一些线程会做 state = state - 1 操作，当 state 减到 0 的同时，那个将 state 减为 0 的线程会负责唤醒 所有调用了 await 方法的线程。
+
+对于 CountDownLatch，我们仅仅需要关心两个方法，一个是 countDown() 方法，另一个是 await() 方法。
+
+countDown() 方法每次调用都会将 state 减 1，直到 state 的值为 0；
+而 await 是一个阻塞方法，当 state 减为 0 的时候，await 方法才会返回。
+await 可以被多个线程调用，读者这个时候脑子里要有个图：
+    所有调用了 await 方法的线程阻塞在 AQS 的阻塞队列中，等待条件满足（state == 0），将线程从队列中一个个唤醒过来。(都唤醒)
+
+
+CyclicBarrier 使用场景
+CyclicBarrier 可以用于多线程计算数据，最后合并计算结果的场景
+
+1.parties = 4,代表有4个线程参与；
+2.count初始值是4，随着每个线程await一次，count减1，穿过栅栏后，重置为4
+3.构造方法的第二个参数是Runnable的实例，代表在大家都到达栅栏，在通过之前需要执行的动作，
+    由最后一个到达栅栏的线程执行。如果没有需要执行的，传null
+
+CyclicBarrier
+字面意思是“可重复使用的栅栏”或“周期性的栅栏”，总之不是用了一次就没用了的，
+CyclicBarrier 相比 CountDownLatch 来说，要简单很多，其源码没有什么高深的地方，它是 ReentrantLock 和 Condition 的组合使用。
+
+首先，CyclicBarrier 的源码实现和 CountDownLatch 大相径庭，CountDownLatch 基于 AQS 的共享模式的使用，而 CyclicBarrier 基于 Condition 来实现。
+
+public static void main(String[] args) {
+//CyclicBarrier barrier = new CyclicBarrier(20);
+    CyclicBarrier barrier = new CyclicBarrier(20, () -> System.out.println("满人了")); //每满20会执行
+
+    /*CyclicBarrier barrier = new CyclicBarrier(20, new Runnable() {
+        @Override
+        public void run() {
+            System.out.println("满人，发车");
+        }
+    });*/
+
+    for(int i=0; i<100; i++) {
+
+            new Thread(()->{
+                try {
+                    barrier.await(); //这边阻塞，每到满20会继续执行下去
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (BrokenBarrierException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+
+    }
+}
+
+CountDownLatch与CyclicBarrier的区别:
+    CountDownLatch的计数器只能使用一次。而CyclicBarrier的计数器可以使用reset() 方法重置
+    CyclicBarrier能处理更为复杂的业务场景，比如计算发生错误，可以结束阻塞，重置计数器，重新执行程序
+    CyclicBarrier还提供getNumberWaiting(可以获得CyclicBarrier阻塞的线程数量)、isBroken(用来知道阻塞的线程是否被中断)等方法
+    CountDownLatch会阻塞主线程，CyclicBarrier不会阻塞主线程，只会阻塞子线程
+前面我们在说 await 的时候也几乎说清楚了，什么时候栅栏会被打破，总结如下：
+    中断，我们说了，如果某个等待的线程发生了中断，那么会打破栅栏，同时抛出 InterruptedException 异常；
+    超时，打破栅栏，同时抛出 TimeoutException 异常；
+    指定执行的操作抛出了异常，这个我们前面也说过。
+
+
+
+3. Semaphore 使用场景
+可用于流量控制，限制最大的并发访问数。
+主要⽤于那些资源有明确访问数量限制的场景，常⽤于限流 。⽐如：数据库连接池，同时进⾏连接的线程有数量限制，连接不能超过⼀定的数量，
+当连接达到了限制数量后，后⾯的线程只能排队等前⾯的线程释放了数据库连接才能获得数据库连接。
+Semaphore
+有了 CountDownLatch 的基础后，分析 Semaphore 会简单很多。
+Semaphore 是什么呢？它类似一个资源池（读者可以类比线程池），每个线程需要调用 acquire() 方法获取资源，然后才能执行，执行完后，需要 release 资源，让给其他的线程用
+有了 CountDownLatch 的基础后，分析 Semaphore 会简单很多。
+Semaphore 是什么呢？它类似一个资源池（读者可以类比线程池），每个线程需要调用 acquire() 方法获取资源，然后才能执行，执行完后，需要 release 资源，让给其他的线程用。
+创建 Semaphore 实例的时候，需要一个参数 permits，这个基本上可以确定是设置给 AQS 的 state 的，
+然后每个线程调用 acquire 的时候，执行 state = state - 1，release 的时候执行 state = state + 1，当然，acquire  的时候，如果 state = 0，说明没有资源了，需要等待其他线程 release。
+
+构造方法：
+
+public Semaphore(int permits) {
+    sync = new NonfairSync(permits);
+}
+
+public Semaphore(int permits, boolean fair) {
+    sync = fair ? new FairSync(permits) : new NonfairSync(permits);
+}
+这里和 ReentrantLock 类似，用了公平策略和非公平策略。
+
+public final void acquireShared(int arg) {
+    if (tryAcquireShared(arg) < 0)
+        doAcquireShared(arg);
+}
+由于 tryAcquireShared(arg) 返回小于 0 的时候，说明 state 已经小于 0 了（没资源了），此时 acquire 不能立马拿到资源，需要进入到阻塞队列等待
+
+public class SemaphoreDemo {
+
+    public void controlConnectionNum() {
+        int maxConnectionNum = 10;
+        int threadNum = 30;
+        Semaphore semaphore = new Semaphore(maxConnectionNum);
+
+        for(int i=0;i<threadNum;i++) {
+            new Thread(() -> {
+                try {
+                    semaphore.acquire();
+                    System.out.println("--------connection to mysql");
+                    Thread.sleep(1000);
+                    semaphore.release();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+    }
+
+    public static void main(String[] args) {
+        SemaphoreDemo demo = new SemaphoreDemo();
+        demo.controlConnectionNum();
+    }
+}
