@@ -395,4 +395,11 @@ https://blog.csdn.net/TonyStarkF/article/details/122882539
 
 redis底层数据结构
 
+eureka
+服务注册
+思考？你怎么实现
+学到设计理念
+    Eureka多级缓存设计(解决读写冲突)
+    自我保护机制(防止网络抖动)
+
 静态数据 CDN
