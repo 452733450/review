@@ -1,0 +1,6 @@
+https://www.jianshu.com/p/67f4d12c0400
+CAS通过调用JNI的代码实现的。JNI:Java Native Interface为JAVA本地调用，允许java调用其他语言。
+而compareAndSwapInt就是借助C来调用CPU底层指令实现的。程序会根据当前处理器的类型来决定是否为cmpxchg指令添加lock前缀。
+如果程序是在多处理器上运行，就为cmpxchg指令加上lock前缀（lock cmpxchg）。
+反之，如果程序是在单处理器上运行，就省略lock前缀（单处理器自身会维护单处理器内的顺序一致性，不需要lock前缀提供的内存屏障效果）。
+

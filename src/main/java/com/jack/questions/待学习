@@ -402,4 +402,60 @@ eureka
     Eureka多级缓存设计(解决读写冲突)
     自我保护机制(防止网络抖动)
 
+submit()
+execute()
+    execute()只能执行实现Runnable接口类型的任务;而submit()不仅可以执实现Runnable类型接口的任务，也可以执行实现Callable接口类型的任务
+    execute()没有返回值，而submit()有在添加Callable类型任务的时候有返回值，我们一般通过返回值查看线程执行情况。
+    如果线程执行发生异常，submit可以通过Future.get()方法抛出异常，方便我们自定义异常处理；而execute()会终止异常，没有返回值
+    总结：两者主要区别，其实还是在于有无返回值，实际生产中为了更好的处理异常，使用submit更多一点。
+
+怎么理解spring Boot的约定优于配置
+    什么是约定优于配置？
+    为什么springBoot是约定优于配置的实现（体现在哪些方面）
+    Spring-boot-Starter-Web
+        Tomcat
+        添加Spring MVC
+    application.properties
+    默认的Maven项目结构
+    自动装配
+
+
+
+为什么不用zk，二用nacos
+    两个层次，初级层面，从应用层面去回答两个组件的差异
+    高级层次，技术选型
+
+    功能差异
+        Nacos提供配置中心和注册中心的功能
+        zk 分布式协调（分布式锁） 可以实现配置中心和注册中心
+    特性
+        数据的同步？nacos作为配置中心，长轮询，nacos注册中心，pull+push
+        集群？nacos配置中心，广播，nacos注册中心，ap(distro) cp(raft)
+        zk zab协议
+    数据存储
+        nacos作为配置中心，使用derby,Mysql持久化
+        zk 基于磁盘的持久化
+    开源程度
+        nacos是阿里维护的
+        zk是Apache基金会的项目
+
+cpu飙高，系统反应慢怎么排查？
+    考察解决实际问题的能力
+    多线程领域的知识
+    系统资源使用的分析能力
+
+    cpu高可能的原因有哪些？
+    什么情况下cpu资源被大量应用
+        full gc
+        挖矿
+        context(上下文)切换
+        死循环
+        线程使用过多
+
+    top找到进程，再定位到线程
+    jStack获取线程dump日志
+
+
+@Autowired和@Resource有什么区别
+
 静态数据 CDN
