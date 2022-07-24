@@ -1,0 +1,14 @@
+请确认本地已安装Docker环境
+
+进入在源码根目录下的environment目录，支持多模式一键启动
+
+在源码根目录environment目录下执行
+docker-compose -f docker-compose-light.yml up --force-recreate
+
+在Docker Desktop检查中间件容器是否启动成功
+
+在浏览器中访问Redis和Kibana检查是否正常
+
+检查数据库是否可以正常访问，分库分表是否创建成功
+
+启动应用，注意，启动时请指定默认的配置文件，比如local
