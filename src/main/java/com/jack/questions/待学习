@@ -288,6 +288,9 @@ eureka, nacos, zookeeper区别
         3. 当网络稳定时，当前实例新的注册信息会被同步到其它节点中
         因此， Eureka可以很好的应对因网络故障导致部分节点失去联系的情况，而不会像zookeeper那样使整个注册服务瘫痪。
 
+    Consul：
+    Consul 遵循CAP原理中的CP原则，保证了强一致性和分区容错性，且使用的是Raft算法，比zookeeper使用的Paxos算法更加简单。虽然保证了强一致性，但是可用性就相应下降了，例如服务注册的时间会稍长一些，因为 Consul 的 raft 协议要求必须过半数的节点都写入成功才认为注册成功 ；在leader挂掉了之后，重新选举出leader之前会导致Consul 服务不可用。
+
     Eureka和Nacos的区别：
     答： Eureka只能遵从AP原则，Nacos同时支持CP和AP原则，支持切换，AP模式下服务以临时实例注册，CP模式下服务以永久实例注册，Nacos集成了配置中心的功能。
 

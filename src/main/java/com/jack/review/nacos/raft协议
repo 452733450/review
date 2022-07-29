@@ -1,0 +1,27 @@
+https://www.cnblogs.com/aganippe/p/16009137.html
+
+2. raft一致性算法
+在raft体系中，有一个强leader，由它全权负责接收客户端的请求命令，并将命令作为日志条目复制给其他服务器，在确认安全的时候，将日志命令提交执行。
+当leader故障时，会选举产生一个新的leader。在强leader的帮助下，raft将一致性问题分解为了三个子问题：
+leader选举：当已有的leader故障时必须选出一个新的leader
+日志同步：leader接受来自客户端的命令，记录为日志，并复制给集群中的其他服务器，并强制其他节点的日志与leader保持一致
+安全措施：通过一些措施确保系统的安全性，如确保所有状态机按照相同顺序执行相同命令的措施
+
+有一个可视化raft协议的网站，更直观的理解raft协议：http://thesecretlivesofdata.com/raft/
+2.1 一些概念
+leader：负责和客户端进行交互，并且负责向其他节点同步日志的，一个集群只有一个leader
+candidate：当leader宕机后，部分follower将转为candidate，并为自己拉票，获得半数以上票数的candidate成为新的leader
+follower：一般情况下，除了leader，其他节点都是follower
+term：term使用连续递增的编号的进行识别，每一个term都从新的选举开始。同时term也有指示逻辑时钟的作用，最新日志的term越大证明越有资格成为leader
+RequestVote RPC：它由选举过程中的candidate发起，用于拉取选票
+AppendEntries RPC：它由leader发起，用于复制日志或者发送心跳信号
+
+
+2.2 leader选举
+raft通过心跳机制发起leader选举。节点都是从follower状态开始的，如果收到了来自leader或candidate的RPC，那它就保持follower状态，避免争抢成为candidate
+leader会发送空的AppendEntries RPC作为心跳信号来确立自己的地位，如果follower一段时间(election timeout)没有收到心跳，它就会认为leader已经挂了，发起新的一轮选举
+选举发起后，一个follower会增加自己的当前term编号并转变为candidate
+它会首先投自己一票，然后向其他所有节点并行发起RequestVote RPC，之后candidate状态将可能发生如下三种变化：
+    赢得选举，成为leader：如果它在一个term内收到了大多数的选票，将会在接下的剩余term时间内称为leader，然后就可以通过发送心跳确立自己的地位。每一个server在一个term内只能投一张选票，并且按照先到先得的原则投出
+    其他server成为leader：在等待投票时，可能会收到其他server发出AppendEntries RPC心跳信号，说明其他leader已经产生了。这时通过比较自己的term编号和RPC过来的term编号，如果比对方大，说明leader的term过期了，就会拒绝该RPC，并继续保持候选人身份; 如果对方编号不比自己小，则承认对方的地位,转为follower
+    选票被瓜分，选举失败：如果没有candidate获取大多数选票，则没有leader产生, candidate们等待超时后发起另一轮选举。为了防止下一次选票还被瓜分，必须采取一些额外的措施，raft采用随机election timeout的机制防止选票被持续瓜分。通过将timeout随机设为一段区间上的某个值，因此很大概率会有某个candidate率先超时然后赢得大部分选票
