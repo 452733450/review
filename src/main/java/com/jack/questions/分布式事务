@@ -58,3 +58,8 @@ TCC 方案
     比如 B 系统本地回滚后，想办法通知系统 A 也回滚；或者是发送报警由人工来手工回滚和补偿。
 
     这个还是比较合适的，目前国内互联网公司大都是这么玩儿的，要不你举用 RocketMQ 支持的，要不你就自己基于类似 ActiveMQ？RabbitMQ？自己封装一套类似的逻辑出来，总之思路就是这样子的。
+
+
+seata
+https://mp.weixin.qq.com/s?__biz=MzA4MjM0MTQ1Mg==&mid=2458785773&idx=1&sn=fdcef7b1731e1da5314772fee794f78c&chksm=88fd8ccebf8a05d8eea5eac3deb6ef47f134db6481987a18b7ae91ef7d4ec26bd34c90e136d9&token=1191407907&lang=zh_CN#rd
+https://www.cnblogs.com/mingyueyy/p/16439751.html
