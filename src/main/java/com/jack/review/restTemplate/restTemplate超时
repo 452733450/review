@@ -1,0 +1,4 @@
+SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(3000);
+        requestFactory.setReadTimeout(3000);
+        restTemplate.setRequestFactory(requestFactory);
