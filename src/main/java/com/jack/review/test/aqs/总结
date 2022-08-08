@@ -1,0 +1,42 @@
+aqs总结
+加锁：
+    先检查state=0，=0说明当前锁是空着的，可以去抢
+    ！=0判断当前线程是不是持有锁的线程，如果是，则是重入，state+1
+    抢锁失败的，自旋入队
+        // 初始化head节点
+        // 细心的读者会知道原来 head 和 tail 初始化的时候都是 null 的
+        把自己的pre指向原来的tail
+        cas把自己设置成tail
+        把原来tail的next指向当前node
+    acquireQueued
+    // 这个方法非常重要，应该说真正的线程挂起，然后被唤醒后去获取锁，都在这个方法里了
+    里面是一个for循环
+    如果当前节点的前一个节点是head，那么它就去尝试获取锁，加锁成功之后，把自己设为head
+    获取失败就挂起该线程
+        挂起之前，往前遍历，给自己找个爹，把爹的waitStatus设置成-1
+
+解锁
+    c-release
+    判断当前线程是不是持有锁的线程，不是则报错
+    判断c减完之后是不是0，不是0说明是重入锁，如果是0.则可以把当前持有锁的线程设置为null
+
+    因为持有锁的就是head，所以是唤醒head的后继节点，也就是第一个waitStatus的节点
+    唤醒后继节点
+        线程被唤醒，说明持有锁的head已经被解锁了，那么这时候，head的下一个节点就可以去抢锁，抢到之后，把自己设置成head
+        从后往前找，扎到第一个waitStatus=-1的
+
+ protected final boolean tryAcquire(int acquires) {
+        final Thread current = Thread.currentThread();
+        int c = getState();
+        if (c == 0) {
+            // 1. 和非公平锁相比，这里多了一个判断：是否有线程在等待
+            if (!hasQueuedPredecessors() &&
+                compareAndSetState(0, acquires)) {
+                setExclusiveOwnerThread(current);
+                return true;
+            }
+        }
+
+ // 2. 和公平锁相比，这里会直接先进行一次CAS，成功就返回了
+        if (compareAndSetState(0, 1))
+            setExclusiveOwnerThread(Thread.currentThread());
