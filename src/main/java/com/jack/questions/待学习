@@ -470,6 +470,8 @@ cpu飙高，系统反应慢怎么排查？
 Left join又用到了几个索引
 XA缺点
 二阶段三阶段区别
+rocket mq 与kafka区别
+zk选举机制
 fegin的调用原理和http有什么区别？有什么好处？
 熔断器有没有用过
 eureka原理
