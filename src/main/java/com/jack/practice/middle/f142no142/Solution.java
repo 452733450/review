@@ -9,6 +9,7 @@ import com.jack.practice.ListNode;
  */
 public class Solution {
     public ListNode detectCycle(ListNode head) {
-
+        ListNode res = new ListNode();
+        return res;
     }
 }

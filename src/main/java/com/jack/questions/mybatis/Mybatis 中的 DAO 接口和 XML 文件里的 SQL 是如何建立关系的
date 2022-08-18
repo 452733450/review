@@ -1,0 +1,7 @@
+https://mp.weixin.qq.com/s/hUXU1dVQoCCadTQVI2Jq3g
+
+针对Mybatis中的Dao接口和XML文件里的SQL是如何建立关系的问题，主要可以归纳为下面几点小点：
+    SqlSource以及动态标签SqlNode
+    MappedStatement对象
+    Spring 工厂Bean 以及动态代理
+    SqlSession以及执行器

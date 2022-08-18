@@ -71,10 +71,25 @@ ThreadLocal是通过每个线程单独一份存储空间，牺牲空间来解决
 
 内存泄漏的根本原因
 所有Entry对象都被ThreadLocalMap类的实例化对象threadLocals持有，当ThreadLocal对象不再使用时，ThreadLocal对象在栈中的引用就会被回收，一旦没有任何引用指向ThreadLocal对象，Entry只持有弱引用的key就会自动在下一次YGC时被回收，而此时持有强引用的Entry对象并不会被回收。
-简而言之： threadLocals对象中的entry对象不在使用后，没有及时remove该entry对象 ，然而程序自身也无法通过垃圾回收机制自动清除，从而导致内存泄漏。
+简而言之：
+    threadLocals对象中的entry对象不在使用后，没有及时remove该entry对象 ，然而程序自身也无法通过垃圾回收机制自动清除，从而导致内存泄漏。
 
 如果线程执行完之后销毁，value也会被回收,这样也没问题。
 但如果是在线程池中，线程执行完后不被回收，而是返回线程池中，
 Thread有个强引用指向ThreadLocalMap,ThreadLocalMap有强引用指向Entry,
 导致value无法被回收，一直存在内存中。
 在执行了ThreadLocal.set()方法之后一定要记得使用ThreadLocal.remove(),将不要的数据移除掉，避免内存泄漏。
+
+
+所以我们总结了使用ThreadLocal时会发生内存泄漏的前提条件：
+
+①ThreadLocal引用被设置为null，且后面没有set，get,remove操作。
+②线程一直运行，不停止。（线程池）
+③触发了垃圾回收。（Minor GC或Full GC）
+我们看到ThreadLocal出现内存泄漏条件还是很苛刻的，所以我们只要破坏其中一个条件就可以避免内存泄漏，单但为了更好的避免这种情况的发生我们使用ThreadLocal时遵守以下两个小原则:
+
+①ThreadLocal申明为private static final。
+Private与final 尽可能不让他人修改变更引用，
+Static 表示为类属性，只有在程序结束才会被回收。
+②ThreadLocal使用后务必调用remove方法。
+最简单有效的方法是使用后将其移除。
