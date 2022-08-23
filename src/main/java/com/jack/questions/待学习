@@ -473,6 +473,10 @@ XA缺点
 rocket mq 与kafka区别
 zk选举机制
 fegin的调用原理和http有什么区别？有什么好处？
+    1. 显示调用
+    2. 负载均衡的区别
+    Feign = RestTemplate+Ribbon+Hystrix
+    就是 http + 负载均衡 + 熔断
 熔断器有没有用过
 eureka原理
 多线程sub和execute的区别
