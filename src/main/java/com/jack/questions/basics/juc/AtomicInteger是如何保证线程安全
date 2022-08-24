@@ -1,0 +1,8 @@
+AtomicInteger是如何保证线程安全
+https://blog.csdn.net/sufu1065/article/details/124012562?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~aggregatepage~first_rank_ecpm_v1~rank_v31_ecpm-4-124012562-null-null.pc_agg_new_rank&utm_term=atomiclong%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8&spm=1000.2123.3001.4430
+三、总结
+（1）用volatile关键字修饰 value 字段，保证了 value 字段对各个线程的可见性，各线程读取value字段时，会先从主从把数据同步到工作内存中，这样保证可见性
+
+（2）Unsafe 实现操作原子性，用户在使用时无需增加额外的同步操作，compareAndSetInt方法是一个CAS操作，用native关键字修饰
+
+原理：先比较内存中的值与expected是否一致，一致的前提下才赋予新的值x，此时返回true，否则返回false
