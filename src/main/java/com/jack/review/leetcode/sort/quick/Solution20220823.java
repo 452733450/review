@@ -19,10 +19,10 @@ public class Solution20220823 {
         int pivot = arr[left];
         int i = left, j = right;
         while (i < j) {
-            while (i < j && arr[pivot] <= arr[j]) {
+            while (i < j && pivot <= arr[j]) {
                 j--;
             }
-            while (i < j && arr[pivot] > arr[i]) {
+            while (i < j && pivot > arr[i]) {
                 i++;
             }
             if(i < j) {
