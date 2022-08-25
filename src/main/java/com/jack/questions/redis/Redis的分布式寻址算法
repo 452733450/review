@@ -1,0 +1,5 @@
+https://blog.csdn.net/qq_43060759/article/details/107768058
+Redis的分布式寻址算法有三种：
+    hash算法
+    一致性hash算法
+    redis-cluster的hash slot算法

@@ -1,0 +1,11 @@
+https://www.cnblogs.com/hunternet/p/12624691.html
+Redis数据结构——链表和Redis数据结构——压缩列表这两种数据结构，他们是Redis List(列表)对象的底层实现方式。
+但是考虑到链表的附加空间相对太高，prev 和 next 指针就要占去 16 个字节 (64bit 系统的指针是 8 个字节)，
+另外每个节点的内存都是单独分配，会加剧内存的碎片化，影响内存管理效率。
+因此Redis3.2版本开始对列表数据结构进行了改造，使用 quicklist 代替了 ziplist 和 linkedlist.
+
+一、基本结构#
+    quicklist 实际上是 zipList 和 linkedList 的混合体，它将 linkedList 按段切分，每一段使用 zipList 来紧凑存储，多个 zipList 之间使用双向指针串接起来。
+
+小结#
+    Redis quicklist是Redis 3.2版本以后针对链表和压缩列表进行改造的一种数据结构，是 zipList 和 linkedList 的混合体，相对于链表它压缩了内存。进一步的提高了效率。

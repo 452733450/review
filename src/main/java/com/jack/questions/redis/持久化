@@ -1,3 +1,5 @@
+ RDB(Redis DataBase) 和 AOF(Append Only File)
+
 RDB 持久化方式
 在指定时间间隔内将内存中的数据集快照写入到磁盘中，这就是快照 snapshot ，恢复快照的时候，是把快照文件读入到内存中。
 redis 通过 fork 的方式创建一个子进程来专门做持久化的动作
