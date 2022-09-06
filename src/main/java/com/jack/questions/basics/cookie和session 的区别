@@ -23,3 +23,14 @@ cookie 和session 的区别：
 
 
 https://blog.csdn.net/weixin_50640351/article/details/115415443
+一、COOKIE：
+1）、COOKIE是什么？
+cookie可以理解是服务器暂存在客户端的文本信息(.txt文件)。
+
+2）、COOKIE从哪来？
+cookie从服务端来，它是由服务端生成的。
+客户端可以清除cookie。
+
+3）、COOKIE往哪去？
+A、cookie的归宿是客户端，由服务端生成后，发送给客户端；
+B、它是存放在客户端的硬盘上的。

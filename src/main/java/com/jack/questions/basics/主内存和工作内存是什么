@@ -1,0 +1,22 @@
+https://blog.csdn.net/Shockang/article/details/117676457
+主内存和工作内存是什么
+Java内存模型规定了所有的变量都存储在主内存(Main Memory)中。
+    主内存可以类比成物理硬件的主内存，但此处仅是虚拟机内存的部分
+每条线程还有自己的工作内存(Working Memory)。
+    工作内存可以类比成处理器高速缓存
+
+线程的工作内存中保存了被该线程使用到的变量的主内存副本拷贝，
+线程对变量的所有操作(读取、赋值等)都必须在工作内存中进行，而不能直接读写主内存中的变量。
+不同的线程之间也无法直接访问对方工作内存中的变量，线程间变量值的传递均需要通过主内存来完成。
+
+https://blog.csdn.net/chioaR/article/details/101222878?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-101222878-blog-117676457.t5_layer_eslanding_C_4&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-101222878-blog-117676457.t5_layer_eslanding_C_4&utm_relevant_index=1
+Java内存模型
+Java的内存模型分为主内存和工作内存，所有的线程共享主内存，每个线程都有自己的工作内存，不是共享的，属于线程私有。
+一个线程不能访问另一个线程的工作内存，线程之间需要通过主内存来实现线程间的通信；
+线程的工作内存中保存了该线程使用到的变量的主内存副本拷贝，线程对变量的所有的操作（读取、赋值等）都必须在工作内存中进行，而不能直接读写主内存的变量；
+
+简单易懂计算机内存模型之什么是高速缓存？
+https://baijiahao.baidu.com/s?id=1731132247564630053&wfr=spider&for=pc
+大家都知道计算机在执行程序时，是处理器CPU在执行，具体到每条指令。而这些指令数据，涉及了读取和写入，也就是内存。
+CPU的速度不用多说，是极快的，但是读取和写入内存这个操作却远远跟不上CPU的处理速度，
+如果每条指令都得等从内存中存取，那就太影响效率了。所以这时候，CPU中就加了一层高速缓存，作为内存与CPU之间的缓冲。

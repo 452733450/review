@@ -1,5 +1,7 @@
 https://www.cnblogs.com/aganippe/p/16009137.html
 
+https://mp.weixin.qq.com/s/fRmQZfpgs8xhpiieaO0cwg
+
 2. raft一致性算法
 在raft体系中，有一个强leader，由它全权负责接收客户端的请求命令，并将命令作为日志条目复制给其他服务器，在确认安全的时候，将日志命令提交执行。
 当leader故障时，会选举产生一个新的leader。在强leader的帮助下，raft将一致性问题分解为了三个子问题：

@@ -1,0 +1,13 @@
+https://blog.csdn.net/m0_57713282/article/details/120573047?spm=1001.2101.3001.6650.4&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-4-120573047-blog-108028919.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-4-120573047-blog-108028919.pc_relevant_default&utm_relevant_index=5
+多线程引起线程安全原因（实质是造成了读写不一致）
+        1.当多个线程操作共享空间中的变量时，就有可能造成线程安全问题（如一个线程更新变量之前，另一个线程读到了旧值并已经更新了，导致该线程再去更新时，更新的值相对来说就不正确了）
+        2.结合内存空间的共享性，也就是说，当多个线程同时操作堆区中对象的成员变量，或者方法区中的静态变量时，就会造成线程安全问题
+
+五：深入理解为什么线程之间会造成读写不一致
+        首先线程并发导致安全问题的根本原因主要有3个
+
+        1.原子性：线程切换会带来原子性问题，使用锁即可解决。java中只有简单的赋值操作，如i = 100是原子性操作，但是i = j则不是
+
+        2.可见性：由于cpu高速缓存的存在，可能会导致线程对一个变量修改没有及时被其他线程所看见，使用volatile关键字即可解决
+
+        3.有序性：jvm会对代码进行优化，从而会把代码进行重排序，使用volatile关键字可以禁止重排序

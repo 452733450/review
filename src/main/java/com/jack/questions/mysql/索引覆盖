@@ -1,0 +1,12 @@
+1.覆盖索引是一种数据查询方式，不是索引类型
+2.在索引数据结构中，通过索引值可以直接找到要查询字段的值，而不需要通过主键值回表查询，那么就叫覆盖索引
+3.查询的字段被使用到的索引树全部覆盖到
+
+假设你定义一个联合索引
+
+CREATE INDEX idx_name_age ON user(name,age);
+查询名称为 liudehua 的年龄：
+
+mysql> select name, age from user where name = 'liudehua';
+
+上述语句中，查找的字段 name 和 age 都包含在联合索引 idx_name_age 的索引树中，这样的查询就是覆盖索引查询。

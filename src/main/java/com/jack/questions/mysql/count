@@ -1,0 +1,9 @@
+count(*)为什么会慢？
+https://mp.weixin.qq.com/s/5037NgbeJd69CAo_3snmrA
+
+count(*)
+    server层拿到innodb返回的行数据，不对里面的行数据做任何解析和判断，默认取出的值肯定都不是null，直接行数+1。
+count(1)
+    server层拿到innodb返回的行数据，每行放个1进去，默认不可能为null，直接行数+1.
+count(某个列字段)
+    由于指明了要count某个字段，innodb在取数据的时候，会把这个字段解析出来返回给server层，所以会比count(1)和count(*)多了个解析字段出来的流程。

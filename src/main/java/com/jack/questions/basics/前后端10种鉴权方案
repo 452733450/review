@@ -1,0 +1,21 @@
+前后端 10 种鉴权方案
+https://mp.weixin.qq.com/s/S82MoC0OQZZh7q3mnQYaJg
+什么是认证？
+    认证(Identification) 是指根据声明者所特有的识别信息，确认声明者的身份。
+    白话文的意思就是：你需要用身份证证明你自己是你自己。
+什么是授权？
+    授权(Authorization)： 在信息安全领域是指资源所有者委派执行者，赋予执行者指定范围的资源操作权限，以便对资源的相关操作。
+什么是鉴权？
+    鉴权(Authentication) 在信息安全领域是指对于一个声明者所声明的身份权利，对其所声明的真实性进行鉴别确认的过程。
+什么是权限控制？
+    权限控制(Access/Permission Control) 将可执行的操作定义为权限列表，然后判断操作是否允许/禁止
+
+     eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+
+什么是 OAuth 2.0？
+    OAuth 是一个开放标准，允许用户授权第三方网站 (CSDN、思否等) 访问他们存储在另外的服务提供者上的信息，而不需要将用户名和密码提供给第三方网站；
+    简单说，OAuth 就是一种授权机制。数据的所有者告诉系统，同意授权第三方应用进入系统，获取这些数据。系统从而产生一个短期的进入令牌（Token），用来代替密码，供第三方应用使用。
+
+    一个网站把地址作为重定向参数，请求qq，然后询问客户是否同意，同意就返回一个授权码给这个网站
+    然后网站拿着授权码再向qq申请令牌，qq就会给这个网站发送令牌，即一段json数据，包含access_token

@@ -1,1 +1,6 @@
 https://mp.weixin.qq.com/s/ZgsxG9UJfdXYPZd6wFYg-g
+一、使用 volatile 关键字
+二、使用 Object 类的 wait()/notify()
+三、使用JUC工具类 CountDownLatch
+四、使用 ReentrantLock 结合 Condition
+五、基本 LockSupport 实现线程间的阻塞和唤醒

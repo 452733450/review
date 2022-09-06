@@ -1,0 +1,81 @@
+JWT
+https://zhuanlan.zhihu.com/p/361420808
+ JWT是个啥？
+⼀般⽽⾔，⽤户注册登陆后会⽣成⼀个jwt token返回给浏览器，浏览器向服务端请求数据时携带 token ，
+服务器端使⽤ signature 中定义的⽅式进⾏解码，进⽽对token进⾏解析和验证。
+
+header: ⽤来指定使⽤的算法(HMAC SHA256 RSA)和token类型(如JWT)
+官网上可以找到各种语言的jwt库，例如我们下面使用这个库进行编码，因为这个库使用的人是最多的，值得信赖
+1go get http://github.com/dgrijalva/jwt-go
+
+payload: 包含声明(要求)，声明通常是⽤户信息或其他数据的声明，⽐如⽤户id，名称，邮箱等. 声明。可分为三种: registered,public,private
+signature: ⽤来保证JWT的真实性，可以使⽤不同的算法
+header
+token的第一部分，如
+
+1{
+2  "alg": "HS256",
+3  "typ": "JWT"
+4}
+对上⾯的json进⾏base64编码即可得到JWT的第⼀个部分
+
+payload
+
+token第二部分如
+
+registered claims: 预定义的声明，通常会放置⼀些预定义字段，⽐如过期时间，主题等(iss:issuer,exp:expiration time,sub:subject,aud:audience)
+public claims: 可以设置公开定义的字段
+private claims: ⽤于统⼀使⽤他们的各⽅之间的共享信息
+不要在header和payload中放置敏感信息，除⾮信息本身已经做过脱敏处理，因为payload部分的具体数据是可以通过token来获取到的
+
+1{
+2  "sub": "1234567890",
+3  "name": "John Doe",
+4  "admin": true
+5}
+Signature
+token的第三部分
+
+为了得到签名部分，必须有编码过的header和payload，以及⼀个秘钥，签名算法使⽤header中指定的那 个，然后对其进⾏签名即可
+
+HMACSHA256(base64UrlEncode(header)+"."+base64UrlEncode(payload),secret)
+
+签名是 ⽤于验证消息在传递过程中有没有被更改 ，并且，对于使⽤私钥签名的token，它还可以验证JWT
+
+的发送⽅是否为它所称的发送⽅。
+
+
+签名的⽬的
+最后⼀步签名的过程，实际上是对头部以及载荷内容进⾏签名。
+⼀般⽽⾔，加密算法对于不同的输⼊ 产⽣的输出总是不⼀样的。
+对于两个不同的输⼊，产⽣同样的输出的概率极其地⼩。
+所以，我们就把“不⼀样的输⼊产⽣不⼀样的输出”当做必然事件来看待。
+
+所以，如果有⼈对头部以及载荷的内容解码之后进⾏修改，再进⾏编码的话，那么新的头部和载荷的 签名和之前的签名就将是不⼀样的。
+⽽且，如果不知道服务器加密的时候⽤的密钥的话，得出来的签名也 ⼀定会是不⼀样的。
+
+
+服务器应⽤在接受到JWT后，会⾸先对头部和载荷的内容⽤同⼀算法再次签名。那么服务器应⽤是怎 么知道我们⽤的是哪⼀种算法呢？
+在JWT的头部中已经⽤alg字段指明了我们的加密算法了。
+如果服务器应⽤对头部和载荷再次以同样⽅法签名之后发现，⾃⼰计算出来的签名和接受到的签名不 ⼀样，那么就说明这个Token的内容被别⼈动过的，我们应该拒绝这个Token，
+注意：在JWT中，不应该在载荷⾥⾯加⼊任何敏感的数据，⽐如⽤户的密码。具体原因上文已经给过答案了
+
+
+3 基于Token的身份认证和基于服务器的身份认证
+    1、给予服务器的身份认证，通常是基于服务器上的session来做用户认证，使用session会有如下几个问题
+        Sessions：认证通过后需要将⽤户的session数据保存在内存中，随着认证⽤户的增加，内存开销会⼤
+        扩展性问题： 由于session存储在内存中，扩展性会受限，虽然后期可以使⽤redis,memcached来缓存数据
+        CORS: 当多个终端访问同⼀份数据时，可能会遇到禁⽌请求的问题
+        CSRF: ⽤户容易受到CSRF攻击（Cross Site Request Forgery, 跨站域请求伪造）
+    2、基于Token的身份认证证是⽆状态的，服务器或者session中不会存储任何⽤户信息.(很好的解决了共享 session的问题)
+        ⽤户携带⽤户名和密码请求获取token(接⼝数据中可使⽤appId,appKey，或是自己协商好的某类数据)
+        服务端校验⽤户凭证，并返回⽤户或客户端⼀个Token
+        客户端存储token,并在请求头中携带Token
+        服务端校验token并返回相应数据
+    需要注意几点：
+        客户端请求服务器的时候，必须将token放到header中
+        客户端请求服务器每一次都需要带上token
+        服务器需要设置 为接收所有域的请求: Access-Control-Allow-Origin: *
+    3、Session和JWT Token的有啥不一样的？
+        他俩都可以存储用户相关的信息
+        session 存储在服务器， JWT存储在客户端
