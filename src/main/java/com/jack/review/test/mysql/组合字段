@@ -1,0 +1,1 @@
+CONCAT_WS('-',customerName,RIGHT(cardNumber,6)) customerBrief
