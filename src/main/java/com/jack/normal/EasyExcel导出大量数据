@@ -1,0 +1,3 @@
+https://mp.weixin.qq.com/s/xIMmTL_qg434U-oZ-or2LQ
+java for循环如果有几十万数据，千万不要在for循环里面new一个对象
+否则速度慢四五倍！！！正确的做法是：在for循环外面new一个对象，每次循环调用一次clear！！！
