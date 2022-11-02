@@ -6,3 +6,6 @@ https://blog.csdn.net/sufu1065/article/details/124012562?utm_medium=distribute.p
 （2）Unsafe 实现操作原子性，用户在使用时无需增加额外的同步操作，compareAndSetInt方法是一个CAS操作，用native关键字修饰
 
 原理：先比较内存中的值与expected是否一致，一致的前提下才赋予新的值x，此时返回true，否则返回false
+
+
+volatile + 自旋cas

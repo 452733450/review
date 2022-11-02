@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Base64;
 
 import sun.misc.BASE64Encoder;
 
@@ -19,7 +20,7 @@ public class ImgToBase64 {
 
     public static void main(String[] args) throws Exception {
         String url = "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1422027133,3544289992&fm=26&gp=0.jpg";
-        String a = ImgToBase64.getBase64ByUrl(url);
+        String a = getBase64ByUrl(url);
         System.out.println(a);
     }
 
@@ -45,6 +46,9 @@ public class ImgToBase64 {
         byte[] data = readInputStream(inStream);
         BASE64Encoder encode = new BASE64Encoder();
         return encode.encode(data);
+
+        /*Base64.Encoder encode = Base64.getUrlEncoder();
+        return encode.encodeToString(data);*/
     }
 
     private static byte[] readInputStream(InputStream inStream) throws Exception {
@@ -65,4 +69,3 @@ public class ImgToBase64 {
     }
 
 }
- 
