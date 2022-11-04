@@ -9,3 +9,7 @@ https://blog.csdn.net/sufu1065/article/details/124012562?utm_medium=distribute.p
 
 
 volatile + 自旋cas
+
+就有了 乐观锁 的概念：它不加锁去完成某项操作，如果因为冲突失败就重试，直到成功为止。
+
+AtomicInteger 保证线程安全就是使用了乐观锁，所以相对于悲观锁，效率更高。

@@ -12,7 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
 
-import sun.misc.BASE64Encoder;
+/*import sun.misc.BASE64Encoder;*/
 
 
 public class ImgToBase64 {
@@ -44,11 +44,11 @@ public class ImgToBase64 {
         InputStream inStream = conn.getInputStream();
         // 得到图片的二进制数据，以二进制封装得到数据，具有通用性
         byte[] data = readInputStream(inStream);
-        BASE64Encoder encode = new BASE64Encoder();
-        return encode.encode(data);
+        /*BASE64Encoder encode = new BASE64Encoder();
+        return encode.encode(data);*/
 
-        /*Base64.Encoder encode = Base64.getUrlEncoder();
-        return encode.encodeToString(data);*/
+        Base64.Encoder encode = Base64.getUrlEncoder();
+        return encode.encodeToString(data);
     }
 
     private static byte[] readInputStream(InputStream inStream) throws Exception {
