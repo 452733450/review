@@ -1,0 +1,13 @@
+Comparator和Comparable的区别
+https://www.cnblogs.com/igoodful/p/9517784.html
+https://blog.csdn.net/m0_71087031/article/details/124850080
+
+区别
+了解了他们的简单使用之后，我们可以来简单分析一下他们的区别了。
+相同点：
+    两者都是用来用作对象之间的比较，都可以自定义比较规则；
+    两者都是返回一个描述对象之间关系的int；
+不同点：
+    实现了Comparable的意思是我可以把自己和另一个对象进行比较；而实现了Comparator的意思是我可以比较其他两个对象；也就是说Comparable是一个可比较的对象可以将自己与另一个对象进行比较；而Comparator是比较两个不同的对象。
+    使用Comparable需要修改原先的实体类，是属于一种自然排序。而Comparator则不用修改原先类。
+    即使修改了Comparable实体类，Comparable也仅有一种比较规则。而Comparator可以实现多个，来提供多个比较规则。

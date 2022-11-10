@@ -1,0 +1,12 @@
+https://blog.csdn.net/laosun12/article/details/108770416
+echo %JAVA_HOME%
+# 临时更改环境变量的jdk版本
+set JAVA_HOME=jdk路径
+# 执行打包命令
+mvn clean package -Dmaven.test.skip=true
+
+
+
+set JAVA_HOME=jdk路径
+mvn clean package -Dmaven.test.skip=true
+snoar 命令
