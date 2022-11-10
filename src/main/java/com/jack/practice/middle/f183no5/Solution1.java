@@ -25,6 +25,7 @@ public class Solution1 {
 
         boolean[][] dp = new boolean[strLen][strLen];
 
+        // 外层遍历的是回文串的末尾位置，相当于回文串的长度从2开始遍历
         for (int r = 1; r < strLen; r++) {
             for (int l = 0; l < r; l++) {
                 if (s.charAt(l) == s.charAt(r) && (r - l <= 2 || dp[l + 1][r - 1])) {
