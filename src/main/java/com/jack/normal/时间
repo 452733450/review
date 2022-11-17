@@ -1,0 +1,12 @@
+var d = new Date();
+console.log(d); // 输出：Mon Nov 04 2021 21:50:33 GMT+0800 (中国标准时间)
+console.log(d.toDateString()); // 日期字符串，输出：'Fri Nov 26 2021'
+console.log(d.toGMTString()); // 格林威治时间，输出：'Fri, 26 Nov 2021 07:03:27 GMT'
+console.log(d.toISOString()); // 国际标准组织（ISO）格式，输出：2021-11-26T06:07:15.870Z
+console.log(d.toJSON()); // 输出：22021-11-26T06:07:15.870Z
+console.log(d.toLocaleDateString()); // 转换为本地日期格式，视环境而定，输出：'2021/11/26'
+console.log(d.toLocaleString()); // 转换为本地日期和时间格式，视环境而定，输出：'2021/11/26 下午3:02:30'
+console.log(d.toLocaleTimeString()); // 转换为本地时间格式，视环境而定，输出：'下午3:03:48'
+console.log(d.toString()); // 转换为字符串，输出：'Fri Nov 26 2021 15:01:26 GMT+0800 (中国标准时间)'
+console.log(d.toTimeString()); // 转换为时间字符串，输出：'15:01:40 GMT+0800 (中国标准时间)'
+console.log(d.toUTCString()); // 转换为世界时间，输出：'Fri, 26 Nov 2021 07:01:56 GMT'

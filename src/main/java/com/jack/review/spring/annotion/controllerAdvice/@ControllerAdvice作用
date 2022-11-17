@@ -1,0 +1,5 @@
+@ControllerAdvice作用
+https://www.cnblogs.com/javazl/p/12641083.html
+处理全局异常
+预设全局数据
+请求参数预处理

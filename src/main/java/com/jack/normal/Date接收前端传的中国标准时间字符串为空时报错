@@ -1,0 +1,48 @@
+Date接收前端传的中国标准时间字符串为空时报错，
+因为出空时，全局校验会让''空字符串转为Date
+
+解决办法
+
+请求参数预处理
+https://blog.csdn.net/qq_36829919/article/details/101210250
+@ControllerAdvice
+public class MyGlobalHandler {
+
+    @InitBinder
+    public void processParam(WebDataBinder dataBinder){
+
+        /*
+         * 创建一个字符串微调编辑器
+         * 参数{boolean emptyAsNull}: 是否把空字符串("")视为 null
+         */
+        StringTrimmerEditor trimmerEditor = new StringTrimmerEditor(true);
+
+        /*
+         * 注册自定义编辑器
+         * 接受两个参数{Class<?> requiredType, PropertyEditor propertyEditor}
+         * requiredType：所需处理的类型
+         * propertyEditor：属性编辑器，StringTrimmerEditor就是 propertyEditor的一个子类
+         */
+         // 这把String为空的全部当成null
+        dataBinder.registerCustomEditor(String.class, trimmerEditor);
+
+        //同上，这里就不再一步一步讲解了
+        binder.registerCustomEditor(Date.class,
+                new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), false));
+    }
+}
+
+
+
+@ControllerAdvice
+public class GlobalHandler {
+
+    @InitBinder
+    public void processParam(WebDataBinder dataBinder) {
+
+
+        StringTrimmerEditor trimmerEditor = new StringTrimmerEditor(true);
+        // 这把Date为空字符串的全部当成null
+        dataBinder.registerCustomEditor(Date.class, trimmerEditor);
+    }
+}
