@@ -1,0 +1,15 @@
+ String result = HttpClientUtils.doPost(url, param);
+        log.info("获取G版产品列表结果集：{}", result);
+        Assert.notNull(result, "获取token失败!");
+        JSONObject jsonObject = JSON.parseObject(result);
+        if (ExceptionEnum.SUCCESS.getCode().equals(jsonObject.getInteger("code"))) {
+            List<ProductOfGRsp> list = JSON.parseArray(JSON.toJSONString(jsonObject.get("data")), ProductOfGRsp.class);
+
+    String result = HttpClientUtils.doPost(url, param);
+            log.info("获取老平台基金合同和风险揭示书创建流程进度结果集：{}", result);
+            Assert.notNull(result, "获取老平台基金合同和风险揭示书创建流程进度失败!");
+            JSONObject jsonObject = JSON.parseObject(result);
+            if (ExceptionEnum.SUCCESS.getCode().equals(jsonObject.getInteger("code"))) {
+                ProtocolTemplateFlowVo vo = JSON.parseObject(JSON.toJSONString(jsonObject.get("data")), ProtocolTemplateFlowVo.class);
+
+Object先转成JsonString ,然后parseObject

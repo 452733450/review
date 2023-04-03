@@ -1,0 +1,6 @@
+https://www.cnblogs.com/hunternet/p/11675540.html
+常用场景
+1. 作为缓存层
+2. 计数器\限速器\分布式系统ID
+3. 分布式系统共享session
+4. 二进制存储

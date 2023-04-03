@@ -9,6 +9,12 @@ https://www.cnblogs.com/msjhw/p/15783361.html
 我们看到过滤器 实现的是 javax.servlet.Filter 接口，
 而这个接口是在Servlet规范中定义的，也就是说过滤器Filter 的使用要依赖于Tomcat等容器，导致它只能在web程序中使用。
 
+函数回调
+    A callback is a function that is passed as an argument to another function and is executed after its parent function has completed。
+    翻译：回调是作为参数传递给另一个函数的函数，在父函数完成后执行。
+    其实简单点说就是有2个类，A和B，A持有B的引用，当A中调用B的方法时就是回调 即：A（B）
+
+
 2 使用范围不同
 我们看到过滤器 实现的是 javax.servlet.Filter 接口，而这个接口是在Servlet规范中定义的，也就是说过滤器Filter 的使用要依赖于Tomcat等容器，导致它只能在web程序中使用。
 而拦截器(Interceptor) 它是一个Spring组件，并由Spring容器管理，并不依赖Tomcat等容器，是可以单独使用的。不仅能应用在web程序中，也可以用于Application、Swing等程序中。

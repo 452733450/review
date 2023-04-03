@@ -1,0 +1,25 @@
+Mybatis-Plus自动生成代码
+
+other
+    config database
+    jdbc:mysql://39.96.14.212:33310/simuvipdev?useSSL=true&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&autoReconnect=true&serverTimezone=Asia/Shanghai
+    vipdml
+
+    jdbc:mysql://localhost:3306/test?useSSL=true&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&autoReconnect=true&serverTimezone=Asia/Shanghai
+    root
+
+    platform-manager
+    com.manager
+    entity
+    dao
+    controller
+    handler.service
+    handler.service.impl
+
+@TableId(value = "trusteeAgencyInfoSettingId", type = IdType.INPUT)
+
+@TableField(value = "supportForInterconnection") 括号里对应数据库的字段名
+
+.eq(!all, AuthorizedRecord::getIsAuthorized, isAuthorized)
+
+`Func_GetDefaultInnerCode`()

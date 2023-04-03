@@ -17,6 +17,9 @@ public class MainClass {
         /*代码其实很简单，就是先定义好一个链表，然后在通过任意一节点后，如果此节点有后继节点，那么传递下去。
 
         至于它和我们前面说的用一个 List 存放需要执行的规则的做法有什么异同，留给读者自己琢磨吧。*/
+
+
+
         RuleHandler newUserHandler = new NewUserRuleHandler();
         RuleHandler locationHandler = new LocationRuleHandler();
         RuleHandler limitHandler = new LimitRuleHandler();

@@ -1,0 +1,10 @@
+https://www.cnblogs.com/javaxubo/p/16862807.html
+
+https://blog.csdn.net/weixin_42675423/article/details/126362449
+String json = null;
+        try {
+            json = new ObjectMapper().writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        LinkedHashMap<String, Object> orderInfoMap = JSON.parseObject(json, LinkedHashMap.class, Feature.OrderedField);

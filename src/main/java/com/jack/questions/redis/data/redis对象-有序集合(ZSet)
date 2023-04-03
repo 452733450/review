@@ -42,4 +42,6 @@ zrevrangebyrank user:ranking  0 9
 使用有序集合的ZRANGEBYLEX(点击可查看该命令详细说明)或ZREVRANGEBYLEX可以帮助我们实现电话号码或姓名的排序,我们以ZRANGEBYLEX为例
 注意：不要在分数不一致的SortSet集合中去使用 ZRANGEBYLEX和 ZREVRANGEBYLEX 指令,因为获取的结果会不准确。
 
+使用场景
+3.1 排行榜系统
 电话号码排序

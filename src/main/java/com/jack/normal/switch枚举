@@ -1,0 +1,8 @@
+IdentifyFlowEnum identifyFlowEnum = IdentifyFlowEnum.getInstance(codeValue);
+        switch (identifyFlowEnum) {
+            /**
+             * @see IdentifyFlowEnum
+             */
+            case BASE_INFO_COMPLETE:
+                identifyFlowRsp = getBaseInfo(identifyFlowId);
+                break;

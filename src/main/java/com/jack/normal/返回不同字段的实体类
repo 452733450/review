@@ -1,0 +1,14 @@
+        OrderRsp orderInfo = new OrderRsp();
+        orderInfo.setTitle(title);
+        List<FieldInfo> orderInfoFieldInfos = new ArrayList<>();
+        String json = null;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+            filterProvider.addFilter(MY_FILTER,new CustomizeFilter(businessType));
+            objectMapper.setFilterProvider(filterProvider);
+            json = objectMapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        LinkedHashMap<String, Object> orderInfoMap = JSON.parseObject(json, LinkedHashMap.class, Feature.OrderedField);

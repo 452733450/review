@@ -1,0 +1,2 @@
+git log --since =2023-03-12 --until==2023-03-14 --author="YPP" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END {
+printf "added lines: %s, removed lines: %s, total li--sincenes: %s\n", add, subs, loc }'

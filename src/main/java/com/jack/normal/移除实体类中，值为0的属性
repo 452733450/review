@@ -1,0 +1,13 @@
+@JsonInclude(value = JsonInclude.Include.CUSTOM, valueFilter = TrusteeFieldsSettingRsp.IntegerOneFilter.class)
+public class TrusteeFieldsSettingRsp implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @NoArgsConstructor
+    public static class IntegerOneFilter {
+        @Override
+        public boolean equals(Object obj) {
+            return Objects.equals(NumberUtils.INTEGER_ZERO, obj);
+        }
+    }
+}

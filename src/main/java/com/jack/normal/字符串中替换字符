@@ -1,0 +1,2 @@
+MessageFormat.format(ReminderTypeEnum.RISK_CONTROL_INFO.getFormat(), r.getProductFullName(), date,r.getWarnType(), r.getNetValue(),r.getWarnType(),r.getWarnLine()),
+    RISK_CONTROL_INFO(1081, "产品预警提醒", "{0}，于{1}触发{2}，产品当前净值为{3}，产品当前{4}为{5}"),

@@ -2,6 +2,9 @@ package com.jack.review.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -12,6 +15,8 @@ import java.util.regex.Pattern;
  * @Date: 2021/07/07/15:43
  */
 public class DateUtils {
+
+    public static final String FORMAT_SHORT = "yyyy-MM-dd";
 
     private static Date strToDate() {
         String timeStr = "2018&&11##13//16%%02**02";
@@ -44,6 +49,36 @@ public class DateUtils {
             return new SimpleDateFormat(FORMAT_STRING).format(date);
         } catch (Exception e) {
             throw new RuntimeException("时间转化格式错误" + "[dateString=" + dateString + "]" + "[FORMAT_STRING=" + FORMAT_STRING + "]");
+        }
+    }
+
+    public static String getNow(String format) {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(format));
+    }
+
+    /**
+     * 使用预设格式提取字符串日期
+     *
+     * @param strDate 日期字符串
+     * @return
+     */
+    public static Date parse(String strDate) {
+        return Date.from(LocalDateTime.parse(strDate).atZone(ZoneOffset.systemDefault()).toInstant());
+    }
+
+    /**
+     * 使用用户格式提取字符串日期
+     *
+     * @param strDate 日期字符串
+     * @param pattern 日期格式
+     * @return
+     */
+    public static Date parse(String strDate, String pattern) {
+        SimpleDateFormat df = new SimpleDateFormat(pattern);
+        try {
+            return df.parse(strDate);
+        } catch (ParseException e) {
+            return null;
         }
     }
 

@@ -27,3 +27,8 @@ leaf-snowflake方案
 或者做一层重试，然后上报报警系统，更或者是发现有时钟回拨之后自动摘除本身节点并报警
  NTP是网络时间协议(Network Time Protocol)
 https://tech.meituan.com/2017/04/21/mt-leaf.html
+
+https://mp.weixin.qq.com/s/i9zRoDeuo2poPizlmpjPBA
+美团的开源项目 Leaf 的方案：采用依赖 ZooKeeper 的数据存储。
+如果时钟回拨的时间超过最大容忍的毫秒数阈值，则程序报错；
+如果在可容忍的范围内，Leaf 会等待时钟同步到最后一次主键生成的时间后再继续工作。

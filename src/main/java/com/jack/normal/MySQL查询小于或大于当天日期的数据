@@ -1,0 +1,13 @@
+DATE_FORMAT(applyDate , '%Y-%m-%d' ) <![CDATA[ >= ]]> CURDATE()
+
+MySQL的有三个关于日期时间的函数，分别是NOW()、CURDATE()、CURTIME()
+
+NOW()函数返回当前的日期和时间。 例如：2021-6-10 11:30:04
+
+CURDATE() 函数返回当前的日期。例如：2021-6-10
+
+CURTIME() 函数返回当前的时间。例如：11:30:04
+
+查询小于当前日期（时间）的数据：
+
+select * from 表名 where 字段名 < NOW()
