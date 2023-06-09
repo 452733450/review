@@ -1,4 +1,5 @@
 https://blog.csdn.net/SnailMann/article/details/94724197
+https://juejin.cn/post/6855129007336521741
 当前读
 像 select lock in share mode (共享锁), select for update; update; insert; delete (排他锁)这些操作都是一种当前读，为什么叫当前读？
 就是它读取的是记录的最新版本，读取时还要保证其他并发事务不能修改当前记录，会对读取的记录进行加锁
@@ -20,6 +21,16 @@ https://blog.csdn.net/SnailMann/article/details/94724197
 如果符合可见性，那么这条数据的最新纪录就对当前事务可见
 如果不符合，找到这条数据的最新记录的上一条数据，根据DB_ROLL_PTR(回滚指针)找
 
+如果数据库隔离级别是未提交读（READ UNCOMMITTED），那么读取版本链中最新版本的记录即可。
+如果是是串行化（SERIALIZABLE），事务之间是加锁执行的，不存在读不一致的问题。
+但是如果是已提交读（READ COMMITTED）或者可重复读（REPEATABLE READ），就需要遍历版本链中的每一条记录，判断该条记录是否对当前事务可见，直到找到为止(遍历完还没找到就说明记录不存在)。
+InnoDB通过ReadView实现了这个功能
+
+所以我们知道 Read View 主要是用来做可见性判断的, 即当我们某个事务执行快照读的时候，对该记录创建一个 Read View 读视图，
+把它比作条件用来判断当前事务能够看到哪个版本的数据，
+既可能是当前最新的数据，
+也有可能是该行记录的undo log里面的某个版本的数据。
+
 可见性判断
 事务ID最小值 = 正活跃的事务 ID 列表最小值
 事务ID最大值 = 正活跃的事务 ID 列表最大值 + 1
@@ -30,3 +41,8 @@ DB_TRX_ID >= 最大值 则代表 DB_TRX_ID 所在的记录在 Read View 生成�
 DB_TRX_ID < 最大值 判断 DB_TRX_ID 是否在活跃事务之中
     trx_list.contains (DB_TRX_ID)，如果在，则代表我 Read View 生成时刻，你这个事务还在活跃，还没有 Commit，你修改的数据，我当前事务也是看不见的
     如果不在，则说明，你这个事务在 Read View 生成之前就已经 Commit 了,你修改的结果，我当前事务是能看见的
+
+读已提交和可重复读就需要遍历版本链中的每一条记录，判断该条记录是否对当前事务可见，直到找到为止
+
+
+

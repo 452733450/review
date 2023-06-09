@@ -1,0 +1,7 @@
+https://blog.csdn.net/weixin_39270240/article/details/108571268?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-2-108571268-blog-123461296.235%5Ev38%5Epc_relevant_anti_t3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-2-108571268-blog-123461296.235%5Ev38%5Epc_relevant_anti_t3&utm_relevant_index=5
+主要区别：聚集索引决定了表中数据行的物理顺序，而非聚集索引则是独立于表数据顺序的索引结构。
+聚集索引的叶节点包含完整的数据行，而非聚集索引的叶节点则包含索引键和指向数据行的指针。
+聚集索引的叶节点包含完整的数据行，因此可以直接通过聚集索引进行数据的快速访问。
+
+非聚集索引的叶节点不包含数据行的全部数据，而是包含数据行的主键，
+因此需要通过非聚集索引的叶节点获取主键，再通过主键获取完整的数据行，因此非聚集索引的访问需要两次IO操作。
