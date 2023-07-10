@@ -1,4 +1,4 @@
-git log --since=2023-05-25 --until=2023-06-02 --author="youpanpan" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END {
+git log --since=2023-06-18 --until=2023-07-06 --author="youpanpan" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END {
 printf "added lines: %s, removed lines: %s, total li--sincenes: %s\n", add, subs, loc }'
 
 git log --author="youpanpan" --since=2023-05-25 --until=2023-06-02 | wc -l

@@ -5,7 +5,7 @@ https://www.cnblogs.com/hunternet/p/12651530.html
     所有值都小于hash-max-ziplist-value配置（默认64字节）
     ziplist使用更加紧凑的结构实现多个元素的连续存储，所以在节省内存方面比hashtable更加优秀。
     当哈希类型无法满足ziplist的条件时，Redis会使用hashtable作为哈希的内部实现，
-    * 因为此时ziplist的读写效率会下降，而hashtable的读写时间复杂度为O（1）。
+    ** 因为此时ziplist的读写效率会下降，而hashtable的读写时间复杂度为O（1）。
 
 
 它有点儿类似数组，通过一片连续的内存空间，来存储数据。

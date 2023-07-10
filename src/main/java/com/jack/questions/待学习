@@ -518,3 +518,9 @@ TreeMap
 	    case when ISNULL(a.riskState) or a.riskState = 0 then null
 	    when a.isRiskLongTime = 1 then "长期有效"
 	    else DATE_FORMAT(a.riskLimitDate,'%Y年%m月%d日') end as riskLimitDateString,
+
+zookeeper的数据结构是什么样的
+zookeeper怎么做分布式锁
+es为什么查询快，底层的逻辑是什么
+es倒排索引有没有了解过
+分布式事务如何实现的
