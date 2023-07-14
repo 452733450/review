@@ -378,7 +378,10 @@ https://juejin.cn/post/6894099621694406669#heading-11
     使用场景：
         如果一个对象虽然有多线程访问，但多线程访问的时间是错开的（也就是没有竞争），那么可以使用轻量级锁来优化
     创建锁记录（Lock Record）对象，每个线程的栈帧都会包含一 个锁记录的结构，内部可以储存锁定对象的Mark Word
-        1.复制 mark word 到 displace mark word（Lock Record）（复制过来是做一个记录，因为后面要把锁对象头的标记字段的值替换为刚才复制这个标记字段的空间地址）
+        1.复制 mark word 到 displace mark word（Lock Record）
+            （复制过来是做一个记录，因为后面要把锁对象头的标记字段的值替换为刚才复制这个标记字段的空间地址）
+            后面解锁的时候要通过CAS把当前线程栈帧Lock Record中的Displaced Mark Word替换到对象头的Mark Word中去，如果替换成功，则轻量级解锁成功；
+            如果替换失败，则说明发生了锁膨胀，对象现在是重量级锁定状态
         2.CAS 替换 mark word 中的信息为指针 (指向Lock Record)
         3.修改 锁 标志为 00
         4.将栈帧中的 owner 指向锁定的对象 （Owner：当前已经获取到所资源的线程被称为Owner）
@@ -524,3 +527,6 @@ zookeeper怎么做分布式锁
 es为什么查询快，底层的逻辑是什么
 es倒排索引有没有了解过
 分布式事务如何实现的
+
+
+lock   保证多cpu环境下指令所在缓存行的独占同步
