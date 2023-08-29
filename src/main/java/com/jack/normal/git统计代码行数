@@ -1,4 +1,10 @@
-git log --since=2023-06-18 --until=2023-07-11 --author="youpanpan" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END {
+git log --since=2023-08-27 --until=2023-08-28 --author="youpanpan" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END {
 printf "added lines: %s, removed lines: %s, total li--sincenes: %s\n", add, subs, loc }'
 
 git log --author="youpanpan" --since=2023-05-25 --until=2023-06-02 | wc -l
+
+        Date date = new Date();
+        String timestamp = String.valueOf(date.getTime());
+        System.out.println(timestamp);
+        String m5s = SignEncryptionUtil.signMd5(timestamp, "a3d353549e8e11eca59cf80dacccd86b", "f69c67e89e8e11eca59cf80dacccd86b");
+        System.out.println(m5s);

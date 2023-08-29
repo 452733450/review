@@ -10,6 +10,9 @@ countDown() 方法每次调用都会将 state 减 1，直到 state 的值为 0�
 await 可以被多个线程调用，读者这个时候脑子里要有个图：
     所有调用了 await 方法的线程阻塞在 AQS 的阻塞队列中，等待条件满足（state == 0），将线程从队列中一个个唤醒过来。(都唤醒)
 
+如果始终只有一个线程调用 await 方法等待任务完成，那么 CountDownLatch 就会简单很多，
+所以之后的源码分析读者一定要在脑海中构建出这么一个场景：有 m 个线程是做任务的，有 n 个线程在某个栅栏上等待这 m 个线程做完任务，直到所有 m 个任务完成后，n 个线程同时通过栅栏。
+
 
 CyclicBarrier 使用场景
 CyclicBarrier 可以用于多线程计算数据，最后合并计算结果的场景
@@ -71,8 +74,7 @@ CountDownLatch与CyclicBarrier的区别:
 Semaphore
 有了 CountDownLatch 的基础后，分析 Semaphore 会简单很多。
 Semaphore 是什么呢？它类似一个资源池（读者可以类比线程池），每个线程需要调用 acquire() 方法获取资源，然后才能执行，执行完后，需要 release 资源，让给其他的线程用
-有了 CountDownLatch 的基础后，分析 Semaphore 会简单很多。
-Semaphore 是什么呢？它类似一个资源池（读者可以类比线程池），每个线程需要调用 acquire() 方法获取资源，然后才能执行，执行完后，需要 release 资源，让给其他的线程用。
+
 创建 Semaphore 实例的时候，需要一个参数 permits，这个基本上可以确定是设置给 AQS 的 state 的，
 然后每个线程调用 acquire 的时候，执行 state = state - 1，release 的时候执行 state = state + 1，当然，acquire  的时候，如果 state = 0，说明没有资源了，需要等待其他线程 release。
 
