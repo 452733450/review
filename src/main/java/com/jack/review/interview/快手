@@ -1,0 +1,36 @@
+快手--Java开发一面面经
+1： String的特性，不可变的好处，怎么实现不可变的
+
+2：为什有了string还要stringbuffer，buffer和string的区别，性能比较
+
+3： Thread Local的原理，为什么Thread Local会有内存泄露问题，如何解决的？
+
+4：hashmap插入过程，concurrenthashmap的优化，1.7和1.8的区别
+
+5： 为什么tomcat要打破双亲委派机制？
+
+6： 四种引用类型，以及各自的应用场景
+
+7：G1的原理及流程
+
+8： mysql索引种类，聚簇索引和非聚簇索引的区别
+
+9：mysql的四种隔离级别，解决哪些问题，mvcc的实现原理
+
+10： mysql死锁及应用场景
+
+11： Redis的基本数据结构，哨兵如何实现通信，结点宕机如何处理
+
+12： Spring Boot的自动装配流程
+
+13：Spring Bean的安全问题
+
+14： Spring如何解决循环依赖问题
+
+15：MyBatis的分页是内存分页还是物理分页，分页插件的实现原理
+
+16： MyBatis的sql执行原理(核心是代理)
+
+17：MyBatis Plus有哪些增强
+
+18： 编程题：任意两个结点的最近公共祖先
