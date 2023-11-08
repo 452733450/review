@@ -1,0 +1,21 @@
+2023-11-06
+数据预热、库存扣减
+分布式事务
+动态代理
+aqs
+synchronize
+spi
+java的spi跟dubbo的spi有什么区别
+
+
+Spring的@Transactional如何实现的
+    总之，@Transactional注解是Spring框架中强大的事务管理工具，它通过AOP和底层事务管理器来提供声明式事务管理，
+    允许您在业务方法中轻松配置事务属性，而不需要编写显式的事务控制代码。这样可以提高代码的可维护性和降低出错的可能性。
+paxos算法
+
+
+2023-11-07
+springboot自动装配
+bean生命周期
+循环依赖
+mvc

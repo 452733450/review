@@ -1,4 +1,4 @@
-https://blog.csdn.net/javazejian/article/details/72828483
+ https://blog.csdn.net/javazejian/article/details/72828483
 造成线程安全问题的主要诱因有两点
 一是存在共享数据(也称临界资源)，二是存在多条线程共同操作共享数据
 

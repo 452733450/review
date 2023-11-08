@@ -12,7 +12,8 @@ https://mp.weixin.qq.com/s/BnMobn2DRaZabBfApipOdg
 既然从自己的变量中取值，那肯定就不存在线程安全问题，总体来讲，ThreadLocal这个变量的状态根本没有发生变化，他仅仅是充当一个key的角色，
 另外提供给每一个线程一个初始值。
 
-看到这里，我们就知道了原来Threadlocal有一个内部类ThreadlocalMap，对于任何一个线程都会有唯一的一个ThreadlocalMap来对应，而这个map实际并不存储在Threadlocal中，而是存在Thread当中，只不过由Threadlocal暴露了一套api来维护Thread的ThreadLocalMap。
+看到这里，我们就知道了原来Threadlocal有一个内部类ThreadlocalMap，对于任何一个线程都会有唯一的一个ThreadlocalMap来对应，而这个map实际并不存储在Threadlocal中，
+而是存在Thread当中，只不过由Threadlocal暴露了一套api来维护Thread的ThreadLocalMap。
 这样设计的好处就是，当线程死掉之后，ThreadLocalMap没有强引用，方便收集器回收。
 
 ThreadLocal和Synchronized都是为了解决多线程中相同变量的访问冲突问题，不同的点是
@@ -42,7 +43,7 @@ ThreadLocal是通过每个线程单独一份存储空间，牺牲空间来解决
     跟HashMap 一样，也是数组实现的。
 8.ThreadlocalMap 发生hash冲突怎么办？跟HashMap 有什么区别？
     有区别的，对待哈希冲突，HashMap采用的链表 + 红黑树的形式
-    ThreadlocalMap既没有链表，也没有红黑树，采用的是开放定址法 ，是这样，是如果发生冲突，ThreadlocalMap直接往后找相邻的下一个节点，如果相邻节点为空，直接存进去，
+    ThreadlocalMap既没有链表，也没有红黑树，采用的是开放定址法 ，是这样，是如果发生冲突，ThreadlocalMap直接往后找相邻的 下一个节点，如果相邻节点为空，直接存进去，
     如果不为空，继续往后找，直到找到空的，把元素放进去，或者元素个数超过数组长度阈值，进行扩容。
 9.我看你最前面图中画的ThreadlocalMap 中key是 WeakReference类型，能讲讲Java中有几种类似的引用，什么区别吗？
     强引用是使用最普遍的引用。如果一个对象具有强引用，那垃圾回收器绝不会回收它，当内存空间不足时，Java虚拟机宁愿抛出OutOfMemoryError错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解决内存不足的问题。

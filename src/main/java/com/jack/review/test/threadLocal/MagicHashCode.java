@@ -1,10 +1,13 @@
 package com.jack.review.test.threadLocal;
 
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * @Description:
  * @Auther: Jack You
  * @Date: 2021/06/24/15:54
  */
+@Transactional
 public class MagicHashCode {
     private static final int HASH_INCREMENT = 0x61c88647;
 

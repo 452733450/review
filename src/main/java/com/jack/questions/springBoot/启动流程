@@ -1,4 +1,4 @@
-SpringApplication.run()方法进去之后
+DSpringApplication.run()方法进去之后
 调用this.refreshContext(context)，即调用spring的refresh()方法之前要做准备工作
 准备工作：自动装配，内嵌tomcat
 

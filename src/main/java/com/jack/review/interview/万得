@@ -1,6 +1,6 @@
 Paxos算法
 treeMap原理
-    实现Collector接口，红黑是
+    实现Collector接口，红黑树
 jvm结构
     类加载子系统
         类加载器
@@ -23,3 +23,7 @@ jvm调优参数
     -XX:PermSize：永久代大小
     -XX:MaxPermSize：永久代最大大小
     -Xss：每个线程的栈内存大小
+
+
+final、finally、finilize
+try catch finally return

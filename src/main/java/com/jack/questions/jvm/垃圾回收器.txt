@@ -203,3 +203,10 @@ G1的参数设置
 常用参数：
 1.设置内存的时候：堆，方法区
 2.垃圾回收环节设置一些参数
+
+
+jdk1.8 默认垃圾收集器为：Parallel Scavenge（新生代）+ Parallel Old（老年代）
+默认垃圾收集器：
+JDK1.7 默认垃圾收集器Parallel Scavenge（新生代）+Parallel Old（老年代）
+JDK1.8 默认垃圾收集器Parallel Scavenge（新生代）+Parallel Old（老年代）
+JDK1.9 默认垃圾收集

@@ -1,4 +1,4 @@
-xml,注解，其他方式bean信息的定义
+ xml,注解，其他方式bean信息的定义
 interface读取bean的基本信息 BeanDefinitionReader
 https://mp.weixin.qq.com/s/VjmPwptHmbM0TMhMa32OUw
 
