@@ -16,5 +16,9 @@ public class Test20221125 {
         list1.retainAll(list2);
         int size = list1.size();
         System.out.println(size);
+
+        // 计算1+2
+        int sum = 1 + 2;
+        System.out.println(sum);
     }
 }

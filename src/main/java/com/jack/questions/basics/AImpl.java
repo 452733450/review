@@ -13,6 +13,10 @@ public class AImpl implements A {
 
     @Override
     public void test02() {
+        // 1+1=2
+        System.out.println(1 + 1);
+
+        // 线程交替打印ABC
 
     }
 
