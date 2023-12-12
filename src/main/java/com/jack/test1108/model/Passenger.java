@@ -21,7 +21,7 @@ public class Passenger implements Serializable {
 	/**
 	 * 骑行速度每秒一格子
 	 */
-	private int speed = 1;
+	private int speed;
 
 	/**
 	 * 乘客每次能骑的车的数量

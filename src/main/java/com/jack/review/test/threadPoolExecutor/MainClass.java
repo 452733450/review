@@ -34,17 +34,10 @@ public class MainClass {
                 new NamedThreadFactory("my-task-pool", false),
                 new ThreadPoolExecutor.DiscardOldestPolicy());
 
-        for (int i = 0; i < 12; i++) {
+
             threadPoolExecutor.execute(() -> {
                 System.out.println(Thread.currentThread().getName()+" run task...");
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             });
-        }
-        System.out.println("main thread running");
         threadPoolExecutor.shutdown();
 
 

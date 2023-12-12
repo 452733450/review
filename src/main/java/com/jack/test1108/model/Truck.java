@@ -21,7 +21,7 @@ public class Truck implements Serializable {
     /**
      * 表示货车速度每秒三格子
      */
-    private int speed = 3;
+    private int speed;
     /**
      * 表示货车的每次最大承载量
      */
