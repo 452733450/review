@@ -1,0 +1,42 @@
+java里面代理和反射的作用
+    Java 提供了动态代理机制，通过 java.lang.reflect.Proxy 类和 InvocationHandler 接口，
+    你可以在运行时创建代理类，动态处理对目标对象的方法调用。这在 AOP（面向切面编程）中经常被使用，
+    例如在方法调用前后执行日志记录、性能监控等操作
+    反射是指在运行时检查、获取和操作类的信息的能力
+代理有几种方式？区别是什么？在spring里面代理有哪些应用？
+    AOP
+    事务管理
+    远程调用
+    JPA
+    缓存
+spring是怎么做事务管理的？这块的代码有了解过吗？事务的传播行为有哪几种？默认的是哪个？
+    1. 编程式事务管理：
+    编程式事务管理是通过编写代码来控制事务的开始、提交、回滚等过程。主要涉及到TransactionTemplate和PlatformTransactionManager两个类。
+    TransactionTemplate： 提供了一种简化的事务管理模板，可以在其中执行一些需要事务支持的代码。
+    PlatformTransactionManager： 定义了事务管理的接口，具体实现可以是JDBC、JTA（Java Transaction API）等。
+类加载中，什么是双亲委派？
+java线程池的初始化参数有哪些？
+ThreadLocal是怎么跟线程关联起来的？ThreadLocalMap的key是什么？key是那个线程吗？
+有哪些集合是线程安全的？conCurrentHashMap是怎么实现线程安全的？1.7和1.8为什么要这么弄？
+    Vector
+        java.util.Vector 是一个传统的线程安全的动态数组实现。
+    HashTable
+        是一个散列表实现，它也是线程安全的。
+    CopyOnWriteArrayList：
+        java.util.concurrent.CopyOnWriteArrayList 是一个并发集合，它通过在写操作时复制整个列表来实现线程安全。适用于读多写少的场景。
+    ConcurrentHashMap：
+        java.util.concurrent.ConcurrentHashMap 是一个高效的并发散列表，支持高并发的读和写操作。
+什么是cas
+java并发包里的锁有哪些？
+    ReentrantLock
+    CountDownLatch
+    Semaphore
+    Condition
+mysql里面常见的锁有哪些？什么是间隙锁？什么情况下会加上间隙锁？快照读加间隙锁？读的时候会加锁吗？
+    快照读 ：由 MVCC 机制来保证不出现幻读。
+    当前读 ：使用 Next-Key Lock 进行加锁来保证不出现幻读。
+什么情况下会产生回表查询？
+分布式事务有哪些实现方案？最大努力通知怎么实现？半消息？能举一个TCC的例子吗？资源预留阶段怎么设计比较好？
+消息队列会丢消息吗？消息重复消费怎么处理？
+分布式锁如何实现呢？用redis怎么实现？redis加锁的命令怎么写？lua脚本有什么优势？
+redis的持久化机制有哪些？常用的key的过期策略有什么？

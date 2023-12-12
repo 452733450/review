@@ -12,3 +12,6 @@ Mysql官方给出的幻读解释是：只要在一个事务中，第二次select
 当前读：select…lock in share mode,select…for update
 当前读：update,delete,insert
     读取的是记录的最新版本，所以所以就需要通过加锁（行锁 间隙锁 表锁）的方式， ，换句话说再来一次当前读要返回相同的数据。
+
+快照读 ：由 MVCC 机制来保证不出现幻读。
+当前读 ：使用 Next-Key Lock 进行加锁来保证不出现幻读。

@@ -1,0 +1,27 @@
+分表跨库查询
+ 同步到一张宽表或者搜索引擎
+
+md5加密之后，md5冲突了怎么办？
+    如果MD5碰撞对你的应用程序或系统造成了安全威胁，你应该考虑使用更安全的哈希函数，如SHA-256或SHA-3。这些算法具有更大的输出长度和更强的抗碰撞性能。SHA-256和SHA-3目前被广泛认为是安全的选择。
+如果用户把浏览器关了重新访问如何判断？
+
+可以用ThreadLocal在父子线程之间传递传递参数吗？为啥不行？
+ThreadLocal中想放多个值怎么办？
+
+Lua脚本用过吗？为啥不用redis事务？
+Lua中有一个命令失败了会回滚吗？
+    抛异常，不执行后续命令
+JDK中还有其他的锁优化吗？JIT中？偏向锁和可重入锁的区别是啥？
+    锁粗化，锁消除
+        for循环里面有synchronized，把synchronized放到for循环外面
+
+CAS有锁吗？
+try catch，try中return1，catch中return2，finally中return3，最终得到多少
+int i=1；try{return i+1} finally{i=100} 最终return多少？
+异常有哪些？什么是异常链？
+子线程抛异常，主线程能捕获到吗？
+
+aqs
+    先进先出的队列
+    volatile的状态，state？
+    cas

@@ -1,0 +1,35 @@
+https://artisan.blog.csdn.net/article/details/110847786?spm=1001.2101.3001.6650.4&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-4-110847786-blog-123516880.pc_relevant_paycolumn_v3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-4-110847786-blog-123516880.pc_relevant_paycolumn_v3&utm_relevant_index=9
+ZooKeeper 的客户端可以通过 Watch 机制来订阅当服务器上某一节点的数据或状态发生变化时收到相应的通知，
+我们可以通过向 ZooKeeper 客户端的构造方法中传递 Watcher 参数的方式实现
+
+我们在实现观察者模式时，最核心或者说关键的代码就是创建一个列表来存放观察者。
+在 ZooKeeper 中则是在客户端和服务器端分别实现两个存放观察者列表，即：ZKWatchManager 和 WatchManager。节点相当于订阅的主题
+
+客户端 Watch 注册实现过程 ZKWatchManager
+    在发送一个 Watch 监控事件的会话请求时，ZooKeeper 客户端主要做了两个工作：
+        1. 标记该会话是一个带有 Watch 事件的请求
+        2. 将 Watch 事件存储到 ZKWatchManager
+
+
+服务端 Watch 注册实现过程 WatchManager
+    下面我们来看一下服务端是如何处理一个 Watch 事件。
+        Zookeeper 服务端处理 Watch 事件基本有 2 个过程：
+            1. 解析收到的请求是否带有 Watch 注册事件
+            2. 将对应的 Watch 事件存储到 WatchManager
+
+服务端 Watch 事件的触发过程
+    以 setData 接口即“节点数据内容发生变更”事件为例。在 DataTree#setData 方法内部执行完对节点数据的变更后，
+    会调用 WatchManager.triggerWatch 方法触发数据变更事件。
+    通过调用 process 方法向客户端发送通知。
+
+客户端回调的处理过程
+    其主要工作分为 2 点：
+        第 1 步按照通知的事件类型，从 ZKWatchManager 中查询注册过的客户端 Watch 信息。客户端在查询到对应的 Watch 信息后，
+        会将其从 ZKWatchManager 的管理中删除。因此这里也请你多注意，客户端的 Watcher 机制是一次性的，触发后就会被删除。
+
+        完成了第 1 步工作获取到对应的 Watcher 信息后，将查询到的 Watcher 存储到 waitingEvents 队列中，
+        调用 EventThread 类中的 run 方法会循环取出在 waitingEvents 队列中等待的 Watcher 事件进行处理。
+
+好处
+    避免轮询： 在没有Watch机制的情况下，客户端可能需要定期轮询节点的状态来检查是否发生了变化。使用Watch机制可以避免这种轮询，提高系统效率。
+    节约带宽和资源： Watch机制可以减少不必要的网络通信，因为客户端只在状态变化时才会收到通知。这有助于减轻网络负担，尤其是在大规模分布式系统中。

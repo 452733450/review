@@ -17,5 +17,58 @@ paxos算法
 2023-11-07
 springboot自动装配
 bean生命周期
+    1.创建前准备，比如调用工厂的后置处理器
+    2.对象实例化，根据bean定义，找到类信息，使用反射创建对象
+    3.对象属性装填，装填成员变量，如果成员变量有其他bean，则加载其他bean
+    4.执行初始化，某些对象可能有初始化方法，在此时调用
+    5.销毁
+    注:在实例化和初始化前后都可以放置beanPostProcessor，对bean做各式各样的修改
+
+    实例化： 当容器启动时，Spring会实例化bean。这是通过调用构造函数或工厂方法来完成的。
+    属性设置： 容器会设置bean的属性，包括依赖注入。
+    初始化前（Initialization）： 在bean初始化之前，可以执行一些定制的操作。这个阶段包括BeanPostProcessor接口的postProcessBeforeInitialization方法。
+    初始化（Initialization）： 在这个阶段，执行一些初始化的操作，例如调用初始化方法。这个阶段包括BeanPostProcessor接口的postProcessAfterInitialization方法。
+    销毁前（Destruction）： 在容器关闭时，执行销毁前的操作。这个阶段包括DisposableBean接口的destroy方法。
+    销毁（Destruction）： 在这个阶段执行销毁的操作，例如调用销毁方法。
 循环依赖
+    A在实例化之后，装备属性前，把实例化后的A放入三级缓存，（这一步提前产生最终的需要代理的对象）
 mvc
+
+2023-11-20
+java是值传递还是引用传递
+final、finally、finalize介绍一下
+    final 用于修饰类、方法、变量，表示最终的、不可改变的。
+    finally 用于定义在异常处理块中始终执行的代码块。
+    finalize 是一个方法，用于在对象被垃圾收集前执行一些清理操作。
+dubbo的spi和java的spi有什么区别
+    java是遍历所有spi文件，把他们全部实例化
+    dubbo延迟加载，可以只加载自己想要的扩展实现
+BeanFactory和FactroyBean的关系
+    BeanFactory是Spring IoC容器的核心接口，用于管理Bean的创建、初始化、注入等。
+    FactoryBean是一个接口，允许开发者定义一种工厂类，该工厂类负责创建某个特定类型的Bean，并通过getObject()方法返回实际的Bean实例。
+    在Spring中，当Bean实现了FactoryBean接口时，容器实际上获取的是FactoryBean的getObject()方法返回的实例。这样的设计使得开发者能够更灵活地控制Bean的创建过程。、
+
+2023-11-21
+    基于副本的隔离机制来保证共享变量修改的安全性
+    使用场景
+        1.线程的上下文传递
+            在跨线程调用的场景中，可以使用ThreadLocal在不修改方法签名的情况下传递线程上下文信息
+            框架和中间件中用户信息，请求ID存储在ThreadLocal中，那么在后续的请求处理链路中都可以方便的去访问这些信息
+        2.数据库的连接管理
+            在使用数据库连接池的情况下，可以把数据库的连接存储在ThreadLocal里面，这样每个线程可以去管理自己的数据库连接
+            ，避免了线程的竞争和冲突，比如mybatis的sqlSession对象就使用了ThreadLocal来存储当前线程的数据库会话信息
+        3.事务管理
+            在手动管理事务的场景中，用ThreadLocal来存储事务的上下文，每个线程独立控制自己的事务，保证事务的隔离性
+            Spring中的TransactionSynchronizationManager就使用了ThreadLocal来存储事务的上下文信息
+2023-11-22
+    消息队列
+    sync和reentrant lock区别
+        1.Synchronized是java的关键字
+        2.ReentrantLock是jdk1.5以后引进来的方法,是Lock类的实现类默认的是非公平锁
+        3.Synchronized不需要手动的获取锁和释放锁ReentrantLock是需要手动的获取锁（lock()）和释放锁(unlock())
+        4.reentrantlock支持公平锁和非公平锁 而synchronized 仅支持非公平锁。
+        5. Lock只适用于代码块锁，而synchronized可用于修饰方法、代码块等。
+        6.锁的细粒度和灵活度：很明显ReenTrantLock优于Synchronized
+
+2023-11-25
+   单例模式中的volatile作用是什么？

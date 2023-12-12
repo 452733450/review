@@ -1,0 +1,12 @@
+CPU飙高
+1.top 找到cpu占比最高的那个pid 11481
+    pid 进程id
+    tid 线程id
+2.查询这个进程id下的线程信息
+    ps H -eo pid,tid,%cpu | grep 11481
+    找到cpu占比最高的tid（线程id），从10进制转化为16进制
+3.printf '0x%x\n' 11562
+    0x2d2a
+拿到16进制的线程id之后
+4.jstack 11481 | grep 0x2d2a -A 20
+    就可以看到线程的信息，线程的状态，也可以提示出代码哪一行有问题
