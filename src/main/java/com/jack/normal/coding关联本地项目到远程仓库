@@ -1,0 +1,86 @@
+在远程仓库中创建一个新的仓库：
+
+在远程仓库的网站上（如 GitHub、GitLab 或 Bitbucket），创建一个新的仓库。获取仓库的远程地址（通常是 HTTPS 或 SSH 链接）。
+
+在本地项目目录中初始化 Git 仓库：
+
+打开终端，进入到你的本地项目目录，并运行以下命令：
+
+git init
+    将项目的所有文件添加到 Git 仓库：
+
+git add .
+    这将把项目中的所有文件添加到 Git 暂存区。
+
+提交变更：
+    git commit -m "Initial commit"
+    这将提交暂存区的变更到本地仓库。
+
+关联本地仓库和远程仓库：
+    git remote add origin <远程仓库地址>
+    将 <远程仓库地址> 替换为你在第一步获取的远程仓库地址。
+
+推送到远程仓库：
+    git push -u origin master
+    这将本地的 master 分支推送到远程仓库。如果是第一次推送，你可能需要输入远程仓库的用户名和密码。
+
+push报hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+
+
+
+pull又报 master has no tracked branch
+这个错误通常表示你的本地分支没有与远程分支建立关联。为了解决这个问题，你可以按照以下步骤操作：
+
+检查当前分支：
+    确保你在你想要拉取的分支上。运行以下命令来查看当前分支：
+    git branch
+如果不在你想要更新的分支上，可以切换分支：
+    git checkout master
+    这里的 master 应该替换为你想要拉取的分支名称。
+
+建立本地分支与远程分支的关联：
+    运行以下命令来建立本地分支与远程分支的关联。假设你要与 origin 远程的 master 分支建立关联：
+    git branch --set-upstream-to=origin/master master
+    这会告诉 Git 将本地的 master 分支与远程的 origin/master 建立关联。
+
+再次尝试拉取：
+    运行拉取命令：
+        git pull origin master
+如果你在拉取时遇到冲突，解决冲突并按照之前的步骤提交。
+
+推送本地分支：
+    如果之前的拉取步骤顺利完成，你可能需要推送本地分支到远程仓库：
+    git push origin master
+确保替换上述命令中的 master 为你实际的分支名称。这应该解决 "master has no tracked branch" 错误。
+
+
+
+报fatal: refusing to merge unrelated histories
+这个错误通常是因为你尝试合并两个没有共同祖先的分支。这可能发生在你的本地分支和远程分支之间存在不同的提交历史时。
+解决这个问题的方法是在 git pull 命令中添加 --allow-unrelated-histories 选项。
+
+尝试执行以下步骤：
+    拉取远程分支并合并：
+        git pull origin master --allow-unrelated-histories
+        这会拉取远程的 master 分支并尝试合并到你的本地分支。--allow-unrelated-histories 选项允许合并不相关的历史。
+
+        这个文件保存一下后就OK了
+
+解决合并冲突（如果有的话）：
+    如果在合并时遇到冲突，你需要解决这些冲突。Git 会告诉你哪些文件存在冲突。打开这些文件，手动解决冲突，然后使用以下命令标记为已解决：
+    git add <冲突文件>
+    然后提交合并：
+
+git commit -m "Merge unrelated histories"
+再次推送到远程仓库：
+    如果你是第一次推送本地分支到远程仓库，你可能需要使用 -u 选项指定上游分支：
+
+git push -u origin master
+如果已经推送过，只需运行：
+
+git push origin master
+这些步骤应该能够解决 "fatal: refusing to merge unrelated histories" 错误。如果问题仍然存在，请检查本地分支和远程分支的提交历史，确保它们之间没有冲突

@@ -1,0 +1,18 @@
+ACID是如何实现的
+
+原子性（Atomicity）：事务作为一个整体是不可分割的工作单位，其所有操作的执行要么全部完成，要么全部不完成。
+一致性（Consistency）：事务的执行应确保数据从一个一致的状态转换到另一个一致的状态。
+隔离性（Isolation）：并发执行的事务之间应相互隔离，以防止脏读、不可重复读和幻象读等问题。
+持久性（Durability）：一旦事务提交，其所做的更改就应该是永久性的，即使系统出现故障也不应该丢失。
+
+持久性：
+innodb中的redo log可以保证持久性
+隔离性：
+Mysql利用锁和MVCC多版本并发控制(Multi Version Concurrency Control)来保证隔离性。
+原子性：
+Innodb中的undo log可以是实现原子性的关键，当事务回滚时会撤销所有已经执行完毕的sql语句，但是需要记录回滚的日志信息。
+
+
+MySQL 的分层
+https://www.cnblogs.com/25-lH/p/10932589.html
+MySQL 在大体上可以分为 Server 层和存储引擎层两部分

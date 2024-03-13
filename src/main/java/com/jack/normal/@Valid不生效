@@ -1,0 +1,21 @@
+@Valid不生效
+
+
+要引入这个两个依赖
+<dependency>
+    <groupId>org.hibernate.validator</groupId>
+    <artifactId>hibernate-validator</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+
+
+如果指定使用哪个版本的，可以能无效，比如
+<dependency>
+    <groupId>org.hibernate.validator</groupId>
+    <artifactId>hibernate-validator</artifactId>
+    <version>7.0.2.Final</version> <!-- 根据实际需要替换为最新版本 -->
+</dependency>

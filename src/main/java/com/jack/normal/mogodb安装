@@ -1,0 +1,16 @@
+mongodb 安装的时候
+一个可能是文件读写权限要加
+hxstrive@hxstrivedeMac local % sudo chown hxstrive /usr/local/var/mongodb
+hxstrive@hxstrivedeMac local % sudo chown hxstrive /usr/local/var/log/mongodb
+还有一个配置文件中的，日志的名称要和配置文件中的一致
+port=27017
+dbpath=/usr/local/var/mongodb
+logpath=/usr/local/var/log/mongodb/mongo.log
+fork=false
+
+启动
+先 source ~/.bash_profile
+再 mongod --config /usr/local/etc/mongod.conf
+
+
+"mongodb": "3.1.8",

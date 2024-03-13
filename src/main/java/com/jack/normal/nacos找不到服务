@@ -1,0 +1,3 @@
+nacos找不到服务
+    restTemplate上要加上@LoadBalanced注解
+    pom引入spring-cloud-starter-alibaba-nacos-discovery

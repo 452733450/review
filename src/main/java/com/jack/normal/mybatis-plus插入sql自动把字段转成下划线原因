@@ -1,0 +1,19 @@
+mybatis-plus插入sql自动把字段转成下划线原因
+全局配置
+ mybatis-plus.configuration.map-underscore-to-camel-case=false
+
+ 加了masterSqlSessionFactory配置类
+
+ 配置类里这样写，就会自动转成下划线
+     mybatisSqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/master/*.xml"));
+             //驼峰转换
+             mybatisSqlSessionFactoryBean.getObject().getConfiguration().setMapUnderscoreToCamelCase(true);
+正确：
+    mybatisSqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
+         //驼峰转换
+         mybatisSqlSessionFactoryBean.getObject().getConfiguration().setMapUnderscoreToCamelCase(false);
+
+MasterDataSourceConfig路径中不加master就报 Invalid bound statement (not found): com.ryds.pic.admin.dao.master.CurtainTypeMapper.listByParams
+mybatisSqlSessionFactoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/master/*.xml"));
+
+加了插入数据就报Unknown column 'curtain_type_id' in 'field list'，自动把字段转成下划线

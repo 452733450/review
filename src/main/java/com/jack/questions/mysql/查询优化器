@@ -1,3 +1,4 @@
+查询优化器
 你如果同时使用两个索引 那么他会有限按照 查询最少的那个索引去查
 SELECT * FROM single_table WHERE key1 = 'abc' AND key2 > 1000;
 

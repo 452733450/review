@@ -1,4 +1,4 @@
-https://mp.weixin.qq.com/s/Inocu3vjMG4ivE19HrxR3g
+
 表级锁和行级锁了解吗？有什么区别？
 MyISAM 仅仅支持表级锁(table-level locking)，一锁就锁整张表，这在并发写的情况下性非常差。
 
@@ -60,7 +60,8 @@ MySQL InnoDB 支持三种行锁定方式：
 记录锁（Record Lock） ：也被称为记录锁，属于单个行记录上的锁。
 间隙锁（Gap Lock） ：锁定一个范围，不包括记录本身。
 临键锁（Next-key Lock） ：Record Lock+Gap Lock，锁定一个范围，包含记录本身。记录锁只能锁住已经存在的记录，为了避免插入新记录，需要依赖间隙锁。
-InnoDB 的默认隔离级别 REPEATABLE-READ（可重读）是可以解决幻读问题发生的，主要有下面两种情况：
 
-快照读 ：由 MVCC 机制来保证不出现幻读。
-当前读 ：使用 Next-Key Lock 进行加锁来保证不出现幻读。
+
+InnoDB 的默认隔离级别 REPEATABLE-READ（可重读）是可以解决幻读问题发生的，主要有下面两种情况：
+    快照读 ：由 MVCC 机制来保证不出现幻读。
+    当前读 ：使用 Next-Key Lock 进行加锁来保证不出现幻读。

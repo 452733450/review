@@ -1,0 +1,29 @@
+@Configuration
+@MapperScan({"com.ryds.pic.app.dao.master", "com.ryds.pic.app.dao.slave"})
+public class MybatisPlusConfig {
+
+    /**
+     * 分页
+     **/
+    /*@Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        return interceptor;
+    }
+
+    @Bean
+    ConfigurationCustomizer mybatisConfigurationCustomizer() {
+        return configuration -> {
+            configuration.addInterceptor(new com.github.pagehelper.PageInterceptor());
+            configuration.setMapUnderscoreToCamelCase(false);
+        };
+    }*/
+}
+
+
+把两个@Bean注掉，就可以了，不知道为什么，有知道的大佬可以告诉我一下，谢谢！
+```
+猜测应该是什么被覆盖了
+
+但是没有MybatisPlusConfig这个配置的话，又会导致查数据库库中带下划线的字段，实体类中没有下划线的，查出来没有值

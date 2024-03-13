@@ -1,3 +1,4 @@
+mvcc内容
 https://blog.csdn.net/SnailMann/article/details/94724197
 https://juejin.cn/post/6855129007336521741
 当前读
@@ -11,6 +12,14 @@ https://juejin.cn/post/6855129007336521741
 
 简而言之，MVCC 就是因为大佬们，不满意只让数据库采用悲观锁这样性能不佳的形式去解决读-写冲突问题，
 而提出的解决方案，所以在数据库中，因为有了 MVCC，所以我们可以形成两个组合：
+每行记录除了我们自定义的字段外，还有数据库隐式定义的 DB_TRX_ID, DB_ROLL_PTR, DB_ROW_ID 等字段
+DB_TRX_ID
+    6 byte，最近修改(修改/插入)事务 ID：记录创建这条记录/最后一次修改该记录的事务 ID
+DB_ROLL_PTR
+    7 byte，回滚指针，指向这条记录的上一个版本（存储于 rollback segment 里）
+DB_ROW_ID
+    6 byte，隐含的自增 ID（隐藏主键），如果数据表没有主键，InnoDB 会自动以DB_ROW_ID产生一个聚簇索引
+
 将要被修改的数据的最新记录中的 DB_TRX_ID取出来，即该条数据的最新记录
     MVCC + 悲观锁
     MVCC解决读写冲突，悲观锁解决写写冲突

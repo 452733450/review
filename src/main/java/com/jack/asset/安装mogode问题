@@ -1,0 +1,4 @@
+https://juejin.cn/post/7052585815037673479
+https://developer.aliyun.com/article/1094125
+环境变量里的路劲要配置对
+MongoDB的配置文件fork=false，要选false

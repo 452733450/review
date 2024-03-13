@@ -1,1 +1,24 @@
 mac MySQL密码 root pb951028
+appleId 密码 4527 Pblove951028
+youpanpan123@gmail.com      pb..951028
+
+ipconfig getifaddr en0   192.168.11.127
+
+coding  4527@qq.com pb..951028
+
+elastic 6eZWCaPWvPfq-drLl2BW
+
+HTTP CA certificate SHA-256 fingerprint:
+3fa457b458683f9581eb72c65829db392163e9ed7ace44916fb2cad88ff47559
+
+Copy the following enrollment token and paste it into Kibana in your browser (valid for the next 30 minutes):
+eyJ2ZXIiOiI4LjExLjQiLCJhZHIiOlsiMTkyLjE2OC4xMS4xMjc6OTIwMCJdLCJmZ3IiOiIzZmE0NTdiNDU4NjgzZjk1ODFlYjcyYzY1ODI5ZGIzOTIxNjNlOWVkN2FjZTQ0OTE2ZmIyY2FkODhmZjQ3NTU5Iiwia2V5IjoiUnVaSl9Jd0JHb3l6MjZwT083TkE6V01qZ0JSd1FTWEtZYk9sMk9CaEZrQSJ9
+
+token过期之后去es bin目录下面执行
+./elasticsearch-create-enrollment-token -s kibana --url "https://0.0.0.0:9200"
+生成新的token
+
+
+mysql 密码
+      username: root
+      password: pb951028

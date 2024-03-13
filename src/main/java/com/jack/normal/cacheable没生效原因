@@ -1,0 +1,3 @@
+@Cacheable没有把结果存到redis是什么原因
+
+RedisCacheConfig上要也要加上@EnableCaching注解
