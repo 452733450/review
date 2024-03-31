@@ -1,4 +1,5 @@
 http://redisbook.com/preview/dict/rehashing.html
+ rehash 指的是重新计算键的哈希值和索引值
 随着操作的不断执行， 哈希表保存的键值对会逐渐地增多或者减少
 为了让哈希表的负载因子（load factor）维持在一个合理的范围之内
     负载因子 = 已存在的键值对/总数

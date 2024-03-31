@@ -578,3 +578,6 @@ elExpression
 
 redission wath dog机制
 先看有没有过期时间，有的话才续期，按默认时间做一次超时时间的设置
+
+动态线程池
+    https://mp.weixin.qq.com/s/-mHSZHRS3tfOwUybI98GcA

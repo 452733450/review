@@ -1,0 +1,4 @@
+@PostConstruct、init-method和afterPropertiesSet执行顺序
+ * 1. @PostConstruct注解的方法会在依赖注入完成后被自动调用
+ * 2. init-method属性指定的方法会在依赖注入完成后被自动调用
+ * 3. afterPropertiesSet方法会在依赖注入完成后被自动调用

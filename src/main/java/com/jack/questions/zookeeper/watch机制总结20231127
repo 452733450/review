@@ -1,3 +1,4 @@
+watch机制总结20231127
 https://artisan.blog.csdn.net/article/details/110847786?spm=1001.2101.3001.6650.4&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-4-110847786-blog-123516880.pc_relevant_paycolumn_v3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-4-110847786-blog-123516880.pc_relevant_paycolumn_v3&utm_relevant_index=9
 ZooKeeper 的客户端可以通过 Watch 机制来订阅当服务器上某一节点的数据或状态发生变化时收到相应的通知，
 我们可以通过向 ZooKeeper 客户端的构造方法中传递 Watcher 参数的方式实现
